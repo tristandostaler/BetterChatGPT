@@ -20,6 +20,7 @@ const useCloudAuthStore = create<StoreState>()(
         googleClientId: state.googleClientId,
         googleAccessToken: state.googleAccessToken,
         googleRefreshToken: state.googleRefreshToken,
+        fileId: state.fileId,
       }),
       version: 1,
     }

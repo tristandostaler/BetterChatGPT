@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import useStore from '@store/store';
+import useStore, { StoreState } from '@store/store';
+import useCloudAuthStore from '@store/cloud-auth-store'
+import { updateFile } from '@api/google-api'
 import i18n from './i18n';
 
 import Chat from '@components/Chat';
@@ -16,6 +18,11 @@ function App() {
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
+  const fileId = useCloudAuthStore((state) => state.fileId);
+  const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
+  var needToSave = false;
+  var currentlySaving = false;
+  var mostRecentState: StoreState | null = null;
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -71,6 +78,33 @@ function App() {
         setCurrentChatIndex(0);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    function reset() {
+      needToSave = false;
+      currentlySaving = false;
+      mostRecentState = null;
+    }
+    function save(state: any) {
+      if (state && fileId && googleAccessToken) {
+        return updateFile(googleAccessToken, fileId, JSON.stringify(state)).then(r => {
+          if (needToSave) {
+            save(mostRecentState)?.then(r => reset());
+          }
+        });
+      }
+    }
+    useStore.subscribe((state) => {
+      if (currentlySaving) {
+        mostRecentState = state;
+        needToSave = true;
+      }
+      else {
+        currentlySaving = true;
+        save(state)?.then(r => reset());
+      }
+    })
   }, []);
 
   return (
