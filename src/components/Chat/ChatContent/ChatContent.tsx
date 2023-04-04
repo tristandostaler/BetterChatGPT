@@ -101,7 +101,7 @@ const ChatContent = () => {
               </>
             )}
           </div>
-          <div className='w-full h-36'></div>
+          <div className='w-full h-4'></div>
         </div>
       </ScrollToBottom>
     </div>
