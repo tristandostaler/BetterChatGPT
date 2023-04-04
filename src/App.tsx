@@ -19,7 +19,7 @@ function App() {
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
   const setState = useStore.setState;
-  const currentChatIndex = () => { return useStore((state) => state.currentChatIndex) };
+  const getCurrentChatIndex = () => { return useStore.getState().currentChatIndex };
   const fileId = useCloudAuthStore((state) => state.fileId);
   const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
   var needToSave = false;
@@ -92,7 +92,7 @@ function App() {
 
   useEffect(() => {
     if (fileId && googleAccessToken && !isCurrentlySaving()) {
-      updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, currentChatIndex, setState, setCurrentlySaving);
+      updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving);
     }
 
     function reset() {
@@ -123,7 +123,7 @@ function App() {
     })
     setInterval(() => {
       if (fileId && googleAccessToken && !isCurrentlySaving()) {
-        updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, currentChatIndex, setState, setCurrentlySaving);
+        updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving);
       }
     }, 10 * 1000)
   }, []);
