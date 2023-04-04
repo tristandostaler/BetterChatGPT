@@ -75,3 +75,21 @@ export const updateFile = async (
   );
   return await res.json();
 };
+
+export const updateLocalStateFromDrive = (
+  access_token: string,
+  fileId: string,
+  setCurrentChatIndex: Function,
+  currentChatIndex: number,
+  setState: Function,
+  setCurrentlySaving: Function,
+) => {
+  setCurrentlySaving(true);
+  getFile(access_token, fileId).then((fileContent) => {
+    var state = JSON.parse(fileContent);
+    // console.log(state);
+    setState(state);
+    setCurrentChatIndex(currentChatIndex);
+    setCurrentlySaving(false);
+  });
+};

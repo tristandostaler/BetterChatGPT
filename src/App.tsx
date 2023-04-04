@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import useStore, { StoreState } from '@store/store';
 import useCloudAuthStore from '@store/cloud-auth-store'
-import { updateFile } from '@api/google-api'
+import { updateFile, updateLocalStateFromDrive } from '@api/google-api'
 import i18n from './i18n';
 
 import Chat from '@components/Chat';
@@ -18,11 +18,21 @@ function App() {
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
+  const setState = useStore.setState;
+  const currentChatIndex = useStore((state) => state.currentChatIndex);
   const fileId = useCloudAuthStore((state) => state.fileId);
   const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
   var needToSave = false;
   var currentlySaving = false;
   var mostRecentState: StoreState | null = null;
+
+  function isCurrentlySaving() {
+    return currentlySaving;
+  }
+
+  function setCurrentlySaving(status: boolean) {
+    currentlySaving = status;
+  }
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -81,6 +91,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (fileId && googleAccessToken && !isCurrentlySaving()) {
+      updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, currentChatIndex, setState, setCurrentlySaving);
+    }
+
     function reset() {
       needToSave = false;
       currentlySaving = false;
@@ -91,20 +105,27 @@ function App() {
         return updateFile(googleAccessToken, fileId, JSON.stringify(state)).then(r => {
           if (needToSave) {
             save(mostRecentState)?.then(r => reset());
+          } else {
+            reset()
           }
         });
       }
     }
-    useStore.subscribe((state) => {
-      if (currentlySaving) {
+    useStore.subscribe((state, prevState) => {
+      if (isCurrentlySaving()) {
         mostRecentState = state;
         needToSave = true;
       }
       else {
         currentlySaving = true;
-        save(state)?.then(r => reset());
+        save(state)
       }
     })
+    setInterval(() => {
+      if (fileId && googleAccessToken && !isCurrentlySaving()) {
+        updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, currentChatIndex, setState, setCurrentlySaving);
+      }
+    }, 10 * 1000)
   }, []);
 
   return (
