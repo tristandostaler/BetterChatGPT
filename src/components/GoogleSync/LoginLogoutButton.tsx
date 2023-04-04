@@ -16,7 +16,7 @@ const LoginButton = () => {
   const getCurrentChatIndex = () => { return useLocalStore.getState().currentChatIndex };
   const setState = useLocalStore.setState;
   const ghm = () => { return useLocalStore.getState().hideSideMenu }
-  const shm = useStore(state => state.setHideSideMenu )
+  const shm = useLocalStore(state => state.setHideSideMenu )
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
