@@ -16,7 +16,7 @@ const LoginButton = () => {
   const getCurrentChatIndex = () => { return useLocalStore.getState().currentChatIndex };
   const setState = useLocalStore.setState;
   const ghm = () => { return useLocalStore.getState().hideSideMenu }
-  const shm = useLocalStore(state => state.setHideSideMenu )
+  const shm = useLocalStore(state => state.setHideSideMenu)
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
@@ -24,25 +24,31 @@ const LoginButton = () => {
       setGoogleAccessToken(codeResponse.access_token);
       if (fileId == null) {
         searchFile(codeResponse.access_token).then(resp => {
+          if (!resp) {
+            return;
+          }
           // console.log(resp);
           fileId = resp.files[0].id;
           if (fileId) {
             setFileId(fileId);
-            updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm );
+            updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm);
           } else {
             var fileContent = JSON.stringify(useLocalStore.getState());
             createFile(codeResponse.access_token, fileContent).then((resp) => {
+              if (!resp) {
+                return;
+              }
               // console.log(resp);
               fileId = resp.id;
               if (fileId) {
                 setFileId(fileId);
-                updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm );
+                updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm);
               }
             });
           }
         })
       } else {
-        updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { },ghm, shm );
+        updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm);
       }
     },
     onError: () => {
@@ -59,11 +65,11 @@ const LoginButton = () => {
   return (
     <div>
       {googleAccessToken ? (
-        <button className='btn btn-neutral' onClick={logout}>
+        <button className='btn btn-neutral' id="logout" onClick={logout}>
           Stop syncing data on Google Drive
         </button>
       ) : (
-        <button className='btn btn-neutral' onClick={() => login()}>
+        <button className='btn btn-neutral' id="login" onClick={() => login()}>
           Start syncing data on Google Drive
         </button>
       )}

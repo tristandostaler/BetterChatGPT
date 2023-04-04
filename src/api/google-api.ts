@@ -1,5 +1,22 @@
 const fileName = 'better-chatgpt.json';
 
+const setNextReloginTimeout = (action: Function) => {
+  setTimeout(action, 1000);
+}
+
+const reLogin = () => {
+  document.getElementById('settings')?.click()
+  setNextReloginTimeout(() => {
+    document.getElementById('logout')?.click();
+    setNextReloginTimeout(() => {
+      document.getElementById('login')?.click();
+      setNextReloginTimeout(() => {
+        document.getElementById('settings_modal_close')?.click();
+      })
+    })
+  });
+}
+
 export const searchFile = async (accessToken: string) => {
   const res = await fetch(
     `https://content.googleapis.com/drive/v3/files?q=name+%3d+%27${fileName}%27`,
@@ -11,6 +28,10 @@ export const searchFile = async (accessToken: string) => {
       },
     }
   );
+  if (!res.ok) {
+    reLogin();
+    return null;
+  }
   return await res.json();
 }
 
@@ -31,6 +52,10 @@ export const createFile = async (accessToken: string, fileContent: string) => {
     headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
     body: formData,
   });
+  if (!res.ok) {
+    reLogin();
+    return null;
+  }
   return res.json();
 };
 
@@ -45,6 +70,10 @@ export const getFile = async (accessToken: string, fileId: string) => {
       },
     }
   );
+  if (!res.ok) {
+    reLogin();
+    return null;
+  }
   return await res.text();
 };
 
@@ -73,6 +102,10 @@ export const updateFile = async (
       body: formData,
     }
   );
+  if (!res.ok) {
+    reLogin();
+    return null;
+  }
   return await res.json();
 };
 
@@ -88,13 +121,16 @@ export const updateLocalStateFromDrive = (
 ) => {
   setCurrentlySaving(true);
   getFile(access_token, fileId).then((fileContent) => {
+    if (!fileContent) {
+      return;
+    }
     var state = JSON.parse(fileContent);
     // console.log(state);
     var currentChatIndex = getCurrentChatIndex();
     var hideSideMenu = getHideSideMenu();
     setState(state);
-    setCurrentChatIndex(currentChatIndex );
-    setHideSideMenu(hideSideMenu );
+    setCurrentChatIndex(currentChatIndex);
+    setHideSideMenu(hideSideMenu);
     setCurrentlySaving(false);
   });
 };
