@@ -15,14 +15,13 @@ import GoogleSync from '@components/GoogleSync';
 
 const SettingsMenu = () => {
   const { t } = useTranslation();
-
-  const googleClientId = useCloudAuthStore((state) => state.googleClientId);
   const theme = useStore.getState().theme;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     document.documentElement.className = theme;
   }, [theme]);
+
   return (
     <>
       <a
@@ -49,7 +48,7 @@ const SettingsMenu = () => {
             </div>
             <PromptLibraryMenu />
             <ChatConfigMenu />
-            {googleClientId && <GoogleSync clientId={googleClientId} />}
+            <GoogleSync />
           </div>
         </PopupModal>
       )}

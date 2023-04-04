@@ -4,11 +4,9 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import LoginLogoutButton from './LoginLogoutButton';
 
-const GoogleSync = ({ clientId }: { clientId: string }) => {
+const GoogleSync = () => {
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <LoginLogoutButton />
-    </GoogleOAuthProvider>
+    <LoginLogoutButton />
   );
 };
 

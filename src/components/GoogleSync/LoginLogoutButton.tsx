@@ -1,72 +1,24 @@
 import React from 'react';
 
-import { useGoogleLogin, googleLogout } from '@react-oauth/google';
-
 import useStore from '@store/cloud-auth-store';
-import useLocalStore from '@store/store';
-
-import { createFile, searchFile, updateLocalStateFromDrive } from '@api/google-api'
+import useLogin from '@hooks/GoogleAPI/useLogin';
+import useLogout from '@hooks/GoogleAPI/useLogout';
 
 const LoginButton = () => {
-  const setGoogleAccessToken = useStore((state) => state.setGoogleAccessToken);
   const googleAccessToken = useStore((state) => state.googleAccessToken);
-  var fileId = useStore((state) => state.fileId);
-  const setFileId = useStore((state) => state.setFileId);
-  const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
-  const getCurrentChatIndex = () => { return useLocalStore.getState().currentChatIndex };
-  const setState = useLocalStore.setState;
-  const ghm = () => { return useLocalStore.getState().hideSideMenu }
-  const shm = useLocalStore(state => state.setHideSideMenu)
-
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      console.log(codeResponse);
-      setGoogleAccessToken(codeResponse.access_token);
-      if (fileId == null) {
-        searchFile(codeResponse.access_token).then(resp => {
-          if (!resp) {
-            return;
-          }
-          // console.log(resp);
-          fileId = resp.files[0].id;
-          if (fileId) {
-            setFileId(fileId);
-            updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm);
-          } else {
-            var fileContent = JSON.stringify(useLocalStore.getState());
-            createFile(codeResponse.access_token, fileContent).then((resp) => {
-              if (!resp) {
-                return;
-              }
-              // console.log(resp);
-              fileId = resp.id;
-              if (fileId) {
-                setFileId(fileId);
-                updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm);
-              }
-            });
-          }
-        })
-      } else {
-        updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm);
-      }
-    },
-    onError: () => {
-      console.log('Login Failed');
-    },
-    scope: 'https://www.googleapis.com/auth/drive.file',
-  });
-
-  const logout = () => {
-    setGoogleAccessToken(undefined);
-    googleLogout();
-  };
+  const login = useLogin();
+  const logout = useLogout();
+  const wasGoogleConnected = useStore(state => state.fileId) ? true : false;
 
   return (
     <div>
       {googleAccessToken ? (
         <button className='btn btn-neutral' id="logout" onClick={logout}>
           Stop syncing data on Google Drive
+        </button>
+      ) : wasGoogleConnected ? (
+        <button className='btn btn-primary' id="login" onClick={() => login()}>
+          Reconnect to Google Drive
         </button>
       ) : (
         <button className='btn btn-neutral' id="login" onClick={() => login()}>

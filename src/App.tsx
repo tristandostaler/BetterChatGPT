@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import useStore, { StoreState } from '@store/store';
 import useCloudAuthStore from '@store/cloud-auth-store'
-import { updateFile, updateLocalStateFromDrive } from '@api/google-api'
+import useUpdateFile from '@hooks/GoogleAPI/useUpdateFile';
+import useUpdateLocalStateFromDrive from '@hooks/GoogleAPI/useUpdateLocalStateFromDrive';
 import i18n from './i18n';
 
 import Chat from '@components/Chat';
@@ -12,22 +13,9 @@ import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 
-function App() {
-  const initialiseNewChat = useInitialiseNewChat();
-  const setChats = useStore((state) => state.setChats);
-  const setTheme = useStore((state) => state.setTheme);
-  const setApiKey = useStore((state) => state.setApiKey);
-  const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
-  const setState = useStore.setState;
-  const getCurrentChatIndex = () => { return useStore.getState().currentChatIndex };
-  const fileId = useCloudAuthStore((state) => state.fileId);
-  const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
-  const ghm = () => { return useStore.getState().hideSideMenu }
-  const shm = useStore(state => state.setHideSideMenu )
-  var needToSave = false;
-  var currentlySaving = false;
-  var mostRecentState: StoreState | null = null;
+import useReLogin from '@hooks/GoogleAPI/useReLogin';
 
+function App() {
   function isCurrentlySaving() {
     return currentlySaving;
   }
@@ -35,6 +23,19 @@ function App() {
   function setCurrentlySaving(status: boolean) {
     currentlySaving = status;
   }
+
+  const updateFile = useUpdateFile();
+  const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving);
+  const initialiseNewChat = useInitialiseNewChat();
+  const setChats = useStore((state) => state.setChats);
+  const setTheme = useStore((state) => state.setTheme);
+  const setApiKey = useStore((state) => state.setApiKey);
+  const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
+  const fileId = useCloudAuthStore((state) => state.fileId);
+  var needToSave = false;
+  var currentlySaving = false;
+  var mostRecentState: StoreState | null = null;
+  const reLogin = useReLogin();
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -92,8 +93,8 @@ function App() {
     }
   }, []);
   useEffect(() => {
-    if (fileId && googleAccessToken && !isCurrentlySaving()) {
-      updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving, ghm, shm );
+    if (fileId && !isCurrentlySaving()) {
+      updateLocalStateFromDrive();
     }
 
     function reset() {
@@ -102,8 +103,8 @@ function App() {
       mostRecentState = null;
     }
     function save(state: any) {
-      if (state && fileId && googleAccessToken) {
-        return updateFile(googleAccessToken, fileId, JSON.stringify(state)).then(r => {
+      if (state && fileId) {
+        return updateFile(JSON.stringify(state)).then(r => {
           if (needToSave) {
             save(mostRecentState)?.then(r => reset());
           } else {
@@ -123,8 +124,8 @@ function App() {
       }
     })
     setInterval(() => {
-      if (fileId && googleAccessToken && !isCurrentlySaving()) {
-        updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving, ghm, shm );
+      if (fileId && !isCurrentlySaving()) {
+        updateLocalStateFromDrive();
       }
     }, 10 * 1000)
   }, []);
