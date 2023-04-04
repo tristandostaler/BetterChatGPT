@@ -23,7 +23,7 @@ function App() {
   const fileId = useCloudAuthStore((state) => state.fileId);
   const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
   const ghm = () => { return useStore.getState().hideSideMenu }
-  const shm = useStore(state => state.setHideSideMemu )
+  const shm = useStore(state => state.setHideSideMenu )
   var needToSave = false;
   var currentlySaving = false;
   var mostRecentState: StoreState | null = null;
