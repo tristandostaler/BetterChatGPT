@@ -12,9 +12,9 @@ const LoginButton = () => {
   const googleAccessToken = useStore((state) => state.googleAccessToken);
   var fileId = useStore((state) => state.fileId);
   const setFileId = useStore((state) => state.setFileId);
-  const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex)
-  const currentChatIndex = useLocalStore(state => state.currentChatIndex)
-  const setState = useLocalStore.setState
+  const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
+  const currentChatIndex = () => useLocalStore(state => state.currentChatIndex);
+  const setState = useLocalStore.setState;
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {

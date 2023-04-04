@@ -80,7 +80,7 @@ export const updateLocalStateFromDrive = (
   access_token: string,
   fileId: string,
   setCurrentChatIndex: Function,
-  currentChatIndex: number,
+  currentChatIndex: Function,
   setState: Function,
   setCurrentlySaving: Function,
 ) => {
@@ -89,7 +89,7 @@ export const updateLocalStateFromDrive = (
     var state = JSON.parse(fileContent);
     // console.log(state);
     setState(state);
-    setCurrentChatIndex(currentChatIndex);
+    setCurrentChatIndex(currentChatIndex());
     setCurrentlySaving(false);
   });
 };
