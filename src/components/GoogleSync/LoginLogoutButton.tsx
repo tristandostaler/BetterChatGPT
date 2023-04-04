@@ -15,6 +15,8 @@ const LoginButton = () => {
   const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
   const getCurrentChatIndex = () => { return useLocalStore.getState().currentChatIndex };
   const setState = useLocalStore.setState;
+  const ghm = () => { return useLocalStore.getState().hideSideMenu }
+  const shm = useStore(state => state.setHideSideMenu )
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
@@ -26,7 +28,7 @@ const LoginButton = () => {
           fileId = resp.files[0].id;
           if (fileId) {
             setFileId(fileId);
-            updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { });
+            updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm );
           } else {
             var fileContent = JSON.stringify(useLocalStore.getState());
             createFile(codeResponse.access_token, fileContent).then((resp) => {
@@ -34,13 +36,13 @@ const LoginButton = () => {
               fileId = resp.id;
               if (fileId) {
                 setFileId(fileId);
-                updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { });
+                updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { }, ghm, shm );
               }
             });
           }
         })
       } else {
-        updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { });
+        updateLocalStateFromDrive(codeResponse.access_token, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, () => { },ghm, shm );
       }
     },
     onError: () => {

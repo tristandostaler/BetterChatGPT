@@ -80,16 +80,21 @@ export const updateLocalStateFromDrive = (
   access_token: string,
   fileId: string,
   setCurrentChatIndex: Function,
-  currentChatIndex: Function,
+  getCurrentChatIndex: Function,
   setState: Function,
   setCurrentlySaving: Function,
+  getHideSideMenu: Function,
+  setHideSideMenu: Function,
 ) => {
   setCurrentlySaving(true);
   getFile(access_token, fileId).then((fileContent) => {
     var state = JSON.parse(fileContent);
     // console.log(state);
+    var currentChatIndex = getCurrentChatIndex();
+    var hideSideMenu = getHideSideMenu();
     setState(state);
-    setCurrentChatIndex(currentChatIndex());
+    setCurrentChatIndex(currentChatIndex );
+    setHideSideMenu(hideSideMenu );
     setCurrentlySaving(false);
   });
 };

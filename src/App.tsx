@@ -22,6 +22,8 @@ function App() {
   const getCurrentChatIndex = () => { return useStore.getState().currentChatIndex };
   const fileId = useCloudAuthStore((state) => state.fileId);
   const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
+  const ghm = () => { return useStore.getState().hideSideMenu }
+  const shm = useStore(state => state.setHideSideMemu )
   var needToSave = false;
   var currentlySaving = false;
   var mostRecentState: StoreState | null = null;
@@ -89,10 +91,9 @@ function App() {
       }
     }
   }, []);
-
   useEffect(() => {
     if (fileId && googleAccessToken && !isCurrentlySaving()) {
-      updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving);
+      updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving, ghm, shm );
     }
 
     function reset() {
@@ -123,7 +124,7 @@ function App() {
     })
     setInterval(() => {
       if (fileId && googleAccessToken && !isCurrentlySaving()) {
-        updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving);
+        updateLocalStateFromDrive(googleAccessToken, fileId, setCurrentChatIndex, getCurrentChatIndex, setState, setCurrentlySaving, ghm, shm );
       }
     }, 10 * 1000)
   }, []);
