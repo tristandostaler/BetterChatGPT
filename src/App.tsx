@@ -19,7 +19,7 @@ function App() {
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
   const setState = useStore.setState;
-  const currentChatIndex = () => useStore((state) => state.currentChatIndex);
+  const currentChatIndex = useStore((state) => state.currentChatIndex);
   const fileId = useCloudAuthStore((state) => state.fileId);
   const googleAccessToken = useCloudAuthStore((state) => state.googleAccessToken);
   var needToSave = false;

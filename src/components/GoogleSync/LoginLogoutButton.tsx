@@ -13,7 +13,7 @@ const LoginButton = () => {
   var fileId = useStore((state) => state.fileId);
   const setFileId = useStore((state) => state.setFileId);
   const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
-  const currentChatIndex = () => useLocalStore(state => state.currentChatIndex);
+  const currentChatIndex = useLocalStore(state => state.currentChatIndex);
   const setState = useLocalStore.setState;
 
   const login = useGoogleLogin({
