@@ -17,9 +17,18 @@ const LoginButton = () => {
           Stop syncing data on Google Drive
         </button>
       ) : wasGoogleConnected ? (
-        <button className='btn btn-primary' id="login" onClick={() => login()}>
-          Reconnect to Google Drive
-        </button>
+        <div className='p-6 border-b border-gray-200 dark:border-gray-600 flex flex-col items-center gap-4'>
+          <div>
+            <button className='btn btn-primary' id="login" onClick={() => login()}>
+              Reconnect to Google Drive
+            </button>
+          </div>
+          <div>
+            <button className='btn btn-neutral' id="logout" onClick={logout}>
+              Stop syncing data on Google Drive
+            </button>
+          </div>
+        </div>
       ) : (
         <button className='btn btn-neutral' id="login" onClick={() => login()}>
           Start syncing data on Google Drive
