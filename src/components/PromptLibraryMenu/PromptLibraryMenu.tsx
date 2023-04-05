@@ -11,6 +11,7 @@ import ImportPrompt from './ImportPrompt';
 import ExportPrompt from './ExportPrompt';
 import AddPublicPrompt from './AddPublicPrompt';
 import { matchSorter } from 'match-sorter';
+import { PublicPrompt } from '@type/public-prompt';
 
 const PromptLibraryMenu = () => {
   const { t } = useTranslation();
@@ -37,8 +38,14 @@ const PromptLibraryMenuPopUp = ({
   const setPrompts = useStore((state) => state.setPrompts);
   const prompts = useStore((state) => state.prompts);
 
+  const setPublicPrompts = useStore((state) => state.setPublicPrompts);
+  const publicPrompts = useStore((state) => state.publicPrompts);
+
   const [_prompts, _setPrompts] = useState<Prompt[]>(
     JSON.parse(JSON.stringify(prompts))
+  );
+  const [_publicPrompts, _setPublicPrompts] = useState<PublicPrompt[]>(
+    JSON.parse(JSON.stringify(publicPrompts))
   );
   const container = useRef<HTMLDivElement>(null);
 
@@ -50,6 +57,7 @@ const PromptLibraryMenuPopUp = ({
 
   const handleSave = () => {
     setPrompts(_prompts);
+    setPublicPrompts(_publicPrompts);
     setIsModalOpen(false);
   };
 
@@ -58,10 +66,22 @@ const PromptLibraryMenuPopUp = ({
     updatedPrompts.push({
       id: uuidv4(),
       private: true,
+      publicSourceId: '',
       name: '',
       prompt: '',
     });
     _setPrompts(updatedPrompts);
+  };
+
+  const deletePublicPrompt = (index: number) => {
+    var removedPublicPropt = _publicPrompts[index];
+    const updatedPublicPrompts: PublicPrompt[] = JSON.parse(JSON.stringify(_publicPrompts));
+    updatedPublicPrompts.splice(index, 1);
+    _setPublicPrompts(updatedPublicPrompts);
+    var filteredPrompts = _prompts.filter((prompt, index, array) => {
+      return prompt.private || prompt.publicSourceId != removedPublicPropt.id
+    });
+    _setPrompts(filteredPrompts);
   };
 
   const deletePrompt = (index: number) => {
@@ -85,6 +105,10 @@ const PromptLibraryMenuPopUp = ({
     _setPrompts(prompts);
   }, [prompts]);
 
+  useEffect(() => {
+    _setPublicPrompts(publicPrompts);
+  }, [publicPrompts]);
+
   return (
     <PopupModal
       title={t('promptLibrary') as string}
@@ -105,55 +129,60 @@ const PromptLibraryMenuPopUp = ({
             <div className='sm:w-1/4 max-sm:flex-1'>{t('name')}</div>
             <div className='flex-1'>{t('prompt')}</div>
           </div>
-          {matchSorter(_prompts, 'true', {
-            keys: ['private'],
-          }).map((prompt, index) => (
-            <div
-              key={prompt.id}
-              className='flex items-center border-b border-gray-500/50 mb-1 p-1'
-            >
-              <div className='sm:w-1/4 max-sm:flex-1'>
-                <textarea
-                  className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
-                  onFocus={handleOnFocus}
-                  onBlur={handleOnBlur}
-                  onChange={(e) => {
-                    _setPrompts((prev) => {
-                      const newPrompts = [...prev];
-                      newPrompts[index].name = e.target.value;
-                      return newPrompts;
-                    });
-                  }}
-                  onInput={handleInput}
-                  value={prompt.name}
-                  rows={1}
-                ></textarea>
-              </div>
-              <div className='flex-1'>
-                <textarea
-                  className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
-                  onFocus={handleOnFocus}
-                  onBlur={handleOnBlur}
-                  onChange={(e) => {
-                    _setPrompts((prev) => {
-                      const newPrompts = [...prev];
-                      newPrompts[index].prompt = e.target.value;
-                      return newPrompts;
-                    });
-                  }}
-                  onInput={handleInput}
-                  value={prompt.prompt}
-                  rows={1}
-                ></textarea>
-              </div>
+          {_prompts.map((prompt, index) => {
+            return prompt.private ?
+
               <div
-                className='cursor-pointer'
-                onClick={() => deletePrompt(index)}
+                key={prompt.id}
+                className='flex items-center border-b border-gray-500/50 mb-1 p-1'
               >
-                <CrossIcon />
+                <div className='sm:w-1/4 max-sm:flex-1'>
+                  <textarea
+                    className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
+                    onFocus={handleOnFocus}
+                    onBlur={handleOnBlur}
+                    onChange={(e) => {
+                      _setPrompts((prev) => {
+                        const newPrompts = [...prev];
+                        newPrompts[index].name = e.target.value;
+                        return newPrompts;
+                      });
+                    }}
+                    onInput={handleInput}
+                    value={prompt.name}
+                    rows={1}
+                  ></textarea>
+                </div>
+                <div className='flex-1'>
+                  <textarea
+                    className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
+                    onFocus={handleOnFocus}
+                    onBlur={handleOnBlur}
+                    onChange={(e) => {
+                      _setPrompts((prev) => {
+                        const newPrompts = [...prev];
+                        newPrompts[index].prompt = e.target.value;
+                        return newPrompts;
+                      });
+                    }}
+                    onInput={handleInput}
+                    value={prompt.prompt}
+                    rows={1}
+                  ></textarea>
+                </div>
+                <div
+                  className='cursor-pointer'
+                  onClick={() => deletePrompt(index)}
+                >
+                  <CrossIcon />
+                </div>
               </div>
-            </div>
-          ))}
+
+              : (
+                <div key={prompt.id}></div>
+              )
+          }
+          )}
         </div>
         <div className='flex justify-center cursor-pointer' onClick={addPrompt}>
           <PlusIcon />
@@ -176,11 +205,49 @@ const PromptLibraryMenuPopUp = ({
             <div className='sm:w-1/4 max-sm:flex-1'>{t('name')}</div>
             <div className='flex-1'>{t('prompt')}</div>
           </div>
-          {matchSorter(_prompts, 'false', {
-            keys: ['private'],
-          }).map((prompt, index) => (
+          {_prompts.map((prompt, index) => {
+            return !prompt.private ? (
+              <div
+                key={prompt.id}
+                className='flex items-center border-b border-gray-500/50 mb-1 p-1'
+              >
+                <div className='sm:w-1/4 max-sm:flex-1'>
+                  <textarea
+                    className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
+                    onFocus={handleOnFocus}
+                    onBlur={handleOnBlur}
+                    readOnly
+                    value={prompt.name}
+                    rows={1}
+                  ></textarea>
+                </div>
+                <div className='flex-1'>
+                  <textarea
+                    className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
+                    onFocus={handleOnFocus}
+                    onBlur={handleOnBlur}
+                    readOnly
+                    value={prompt.prompt}
+                    rows={1}
+                  ></textarea>
+                </div>
+              </div>
+            ) : (
+              <div key={prompt.id}></div>
+            )
+          })}
+        </div>
+        <div className='flex flex-col p-2 max-w-full'>
+          <div className='flex font-bold border-b border-gray-500/50 mb-1 p-1'>
+            <div className='flex-1'>Synced prompts sources</div>
+          </div>
+          <div className='flex font-bold border-b border-gray-500/50 mb-1 p-1'>
+            <div className='sm:w-1/4 max-sm:flex-1'>{t('name')}</div>
+            <div className='flex-1'>Source</div>
+          </div>
+          {_publicPrompts.map((publicPrompt, index) => (
             <div
-              key={prompt.id}
+              key={publicPrompt.id}
               className='flex items-center border-b border-gray-500/50 mb-1 p-1'
             >
               <div className='sm:w-1/4 max-sm:flex-1'>
@@ -189,7 +256,7 @@ const PromptLibraryMenuPopUp = ({
                   onFocus={handleOnFocus}
                   onBlur={handleOnBlur}
                   readOnly
-                  value={prompt.name}
+                  value={publicPrompt.name}
                   rows={1}
                 ></textarea>
               </div>
@@ -199,9 +266,15 @@ const PromptLibraryMenuPopUp = ({
                   onFocus={handleOnFocus}
                   onBlur={handleOnBlur}
                   readOnly
-                  value={prompt.prompt}
+                  value={publicPrompt.source}
                   rows={1}
                 ></textarea>
+              </div>
+              <div
+                className='cursor-pointer'
+                onClick={() => deletePublicPrompt(index)}
+              >
+                <CrossIcon />
               </div>
             </div>
           ))}

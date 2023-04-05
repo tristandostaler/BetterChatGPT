@@ -3,8 +3,8 @@ import React from 'react';
 import useStore from '@store/cloud-auth-store';
 import useLocalStore from '@store/store';
 import useGetFile from './useGetFile';
-import { migrateV8 } from '@store/migrate';
-import { LocalStorageInterfaceV8ToV9 } from '@type/chat';
+import { migrateV12, migrateV8 } from '@store/migrate';
+import { LocalStorageInterfaceV8ToV12, LocalStorageInterfaceV8ToV9 } from '@type/chat';
 
 const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySaving: Function, isCurrentlySaving: Function) => {
     const getFile = useGetFile(isLoginProcess);
@@ -33,6 +33,10 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
                     case 9:
                     case 10:
                         migrateV8(state as LocalStorageInterfaceV8ToV9);
+                        migrateV12(state as LocalStorageInterfaceV8ToV12);
+                        break;
+                    case 11:
+                        migrateV12(state as LocalStorageInterfaceV8ToV12);
                         break;
                 }
             }

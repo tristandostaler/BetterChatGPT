@@ -1,4 +1,5 @@
 import { Prompt } from './prompt';
+import { PublicPrompt } from './public-prompt';
 import { Theme } from './theme';
 
 export type Role = 'user' | 'assistant' | 'system';
@@ -145,4 +146,9 @@ export interface LocalStorageInterfaceV7oV8
 export interface LocalStorageInterfaceV8ToV9
   extends LocalStorageInterfaceV7oV8 {
   version: number;
+}
+
+export interface LocalStorageInterfaceV8ToV12
+  extends LocalStorageInterfaceV8ToV9 {
+  publicPrompts: PublicPrompt[];
 }

@@ -15,6 +15,7 @@ import {
   LocalStorageInterfaceV6ToV7,
   LocalStorageInterfaceV7oV8,
   LocalStorageInterfaceV8ToV9,
+  LocalStorageInterfaceV8ToV12,
 } from '@type/chat';
 import {
   migrateV0,
@@ -26,14 +27,17 @@ import {
   migrateV6,
   migrateV7,
   migrateV8,
+  migrateV12,
 } from './migrate';
 import stateVersion from '@constants/stateVersion';
+import { createPublicPromptSlice, PublicPromptSlice } from './public-prompt-sync-slice';
 
 export type StoreState = ChatSlice &
   InputSlice &
   AuthSlice &
   ConfigSlice &
-  PromptSlice;
+  PromptSlice &
+  PublicPromptSlice;
 
 export type StoreSlice<T> = (
   set: StoreApi<StoreState>['setState'],
@@ -48,6 +52,7 @@ const useStore = create<StoreState>()(
       ...createAuthSlice(set, get),
       ...createConfigSlice(set, get),
       ...createPromptSlice(set, get),
+      ...createPublicPromptSlice(set, get),
     }),
     {
       name: 'free-chat-gpt',
@@ -59,6 +64,7 @@ const useStore = create<StoreState>()(
         theme: state.theme,
         autoTitle: state.autoTitle,
         prompts: state.prompts,
+        publicPrompts: state.publicPrompts,
         defaultChatConfig: state.defaultChatConfig,
         defaultSystemMessage: state.defaultSystemMessage,
         hideMenuOptions: state.hideMenuOptions,
@@ -98,6 +104,10 @@ const useStore = create<StoreState>()(
           case 9:
           case 10:
             migrateV8(persistedState as LocalStorageInterfaceV8ToV9);
+            migrateV12(persistedState as LocalStorageInterfaceV8ToV12);
+            break;
+          case 11:
+            migrateV12(persistedState as LocalStorageInterfaceV8ToV12);
             break;
         }
         return persistedState as StoreState;

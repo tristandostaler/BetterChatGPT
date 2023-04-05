@@ -34,6 +34,7 @@ const ImportPrompt = () => {
             return {
               id: uuidv4(),
               private: true,
+              publicSourceId: '',
               name: columns[0],
               prompt: columns[1],
             };
