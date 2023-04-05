@@ -26,6 +26,7 @@ function App() {
 
   const updateFile = useUpdateFile();
   const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving, isCurrentlySaving);
+  const initLocalStateFromDrive = useUpdateLocalStateFromDrive(true, () => {}, () => { return false; });
   const initialiseNewChat = useInitialiseNewChat();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
@@ -33,7 +34,7 @@ function App() {
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
   const fileId = useCloudAuthStore((state) => state.fileId);
   var needToSave = false;
-  var currentlySaving = false;
+  var currentlySaving = true;
   var mostRecentState: StoreState | null = null;
   const reLogin = useReLogin();
 
@@ -93,8 +94,8 @@ function App() {
     }
   }, []);
   useEffect(() => {
-    if (fileId && !isCurrentlySaving()) {
-      updateLocalStateFromDrive();
+    if (fileId) {
+      initLocalStateFromDrive();
     }
 
     function reset() {
