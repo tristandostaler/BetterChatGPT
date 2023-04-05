@@ -12,11 +12,14 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
     const getHideSideMenu = () => { return useLocalStore.getState().hideSideMenu; }
 
     const updateLocalStateFromDrive = () => {
+        if (isCurrentlySaving()) {
+            return;
+        }
+        setCurrentlySaving(true);
         getFile().then((fileContent) => {
-            if (!fileContent || isCurrentlySaving()) {
+            if (!fileContent) {
                 return;
             }
-            setCurrentlySaving(true);
             var state = JSON.parse(fileContent);
             var hsm = getHideSideMenu();
             var cci = getCurrentChatIndex();
