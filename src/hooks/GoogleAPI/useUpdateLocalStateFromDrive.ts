@@ -18,10 +18,12 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
                 return;
             }
             var state = JSON.parse(fileContent);
+            var hsm = getHideSideMenu();
+            var cci = getCurrentChatIndex();
             // console.log(state);
             useLocalStore.setState(state);
-            setCurrentChatIndex(getCurrentChatIndex());
-            setHideSideMenu(getHideSideMenu());
+            setCurrentChatIndex(cci);
+            setHideSideMenu(hsm);
             setCurrentlySaving(false);
         });
     }
