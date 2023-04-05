@@ -15,6 +15,9 @@ import ApiPopup from '@components/ApiPopup';
 
 import useReLogin from '@hooks/GoogleAPI/useReLogin';
 
+// https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
+// https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
+
 function App() {
   function isCurrentlySaving() {
     return currentlySaving;
