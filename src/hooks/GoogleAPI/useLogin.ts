@@ -41,7 +41,6 @@ const useLogin = () => {
                             var fileIdTemp = resp.id;
                             if (fileIdTemp) {
                                 setFileId(fileIdTemp);
-                                updateLocalStateFromDrive();
                             }
                         });
                     }
