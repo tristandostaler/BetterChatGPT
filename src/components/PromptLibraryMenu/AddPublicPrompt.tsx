@@ -1,13 +1,11 @@
+import useSyncPrompt from '@hooks/PublicPrompts/useSyncPrompt';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { v4 as uuidv4 } from 'uuid';
-import useStore from '@store/store';
-
-import { importPromptCSV } from '@utils/prompt';
 
 const AddPublicPrompt = () => {
   const { t } = useTranslation();
 
+  const syncPrompt = useSyncPrompt();
   const inputNameRef = useRef<HTMLInputElement>(null);
   const inputSourceRef = useRef<HTMLInputElement>(null);
   const [alert, setAlert] = useState<{
@@ -23,58 +21,11 @@ const AddPublicPrompt = () => {
       return;
     }
 
-    fetch(inputSourceRef.current.value, {
-      method: 'GET',
-    }).then(res => {
-      if (!res.ok) {
-        setAlert({ message: 'An error occured opening the URL', success: false });
-        return;
-      }
-      return res.text();
-    }).then(csv => {
-      if (!csv) {
-        return
-      }
-      if (!inputNameRef.current || inputNameRef.current.value == "" || !inputSourceRef.current || inputSourceRef.current.value == "") {
-        setAlert({ message: 'Please set both the name and the URL values', success: false });
-        return;
-      }
-
-      try {
-        const results = importPromptCSV(csv);
-
-        const prompts = useStore.getState().prompts;
-        const setPrompts = useStore.getState().setPrompts;
-        const publicPrompts = useStore.getState().publicPrompts;
-        const setPublicPrompts = useStore.getState().setPublicPrompts;
-
-        var publicPromptId = uuidv4()
-
-        const newPrompts = results.map((data) => {
-          const columns = Object.values(data);
-          return {
-            id: uuidv4(),
-            private: false,
-            publicSourceId: publicPromptId,
-            name: columns[0],
-            prompt: columns[1],
-          };
-        });
-
-        setPrompts(prompts.concat(newPrompts));
-
-        setPublicPrompts(publicPrompts.concat([{
-          id: publicPromptId,
-          name: inputNameRef.current.value,
-          source: inputSourceRef.current.value,
-        }]));
-
-        setAlert({ message: 'Succesfully Synced and imported!', success: true });
-      } catch (error: unknown) {
-        setAlert({ message: (error as Error).message, success: false });
-      }
+    syncPrompt(inputSourceRef.current.value, inputNameRef.current.value).then(r => {
+      setAlert({ message: r.message, success: r.isSuccess });
     });
-  };
+
+  }
 
   return (
     <div>

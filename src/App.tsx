@@ -14,6 +14,7 @@ import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 
 import useReLogin from '@hooks/GoogleAPI/useReLogin';
+import usePeriodicSyncPrompt from '@hooks/PublicPrompts/usePeriodicSyncPrompt';
 
 // https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
 // https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
@@ -36,6 +37,7 @@ function App() {
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
   const fileId = () => { return useCloudAuthStore.getState().fileId };
+  const periodicSyncPrompt = usePeriodicSyncPrompt();
   var needToSave = false;
   var currentlySaving = true;
   var mostRecentState: StoreState | null = null;
@@ -138,6 +140,14 @@ function App() {
         reset();
       }
     }, 60 * 1000)
+  }, []);
+
+  useEffect(() => {
+    periodicSyncPrompt();
+
+    setInterval(() => {
+      periodicSyncPrompt();
+    }, 5 * 60 * 1000);
   }, []);
 
   return (

@@ -12,6 +12,7 @@ import ExportPrompt from './ExportPrompt';
 import AddPublicPrompt from './AddPublicPrompt';
 import { matchSorter } from 'match-sorter';
 import { PublicPrompt } from '@type/public-prompt';
+import useRemoveSyncPrompt from '@hooks/PublicPrompts/useRemoveSyncPrompt';
 
 const PromptLibraryMenu = () => {
   const { t } = useTranslation();
@@ -73,16 +74,7 @@ const PromptLibraryMenuPopUp = ({
     _setPrompts(updatedPrompts);
   };
 
-  const deletePublicPrompt = (index: number) => {
-    var removedPublicPropt = _publicPrompts[index];
-    const updatedPublicPrompts: PublicPrompt[] = JSON.parse(JSON.stringify(_publicPrompts));
-    updatedPublicPrompts.splice(index, 1);
-    _setPublicPrompts(updatedPublicPrompts);
-    var filteredPrompts = _prompts.filter((prompt, index, array) => {
-      return prompt.private || prompt.publicSourceId != removedPublicPropt.id
-    });
-    _setPrompts(filteredPrompts);
-  };
+  const deletePublicPrompt = useRemoveSyncPrompt();
 
   const deletePrompt = (index: number) => {
     const updatedPrompts: Prompt[] = JSON.parse(JSON.stringify(_prompts));
