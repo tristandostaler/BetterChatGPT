@@ -6,10 +6,10 @@ import useGetFile from './useGetFile';
 
 const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySaving: Function) => {
     const getFile = useGetFile(isLoginProcess);
-    const getCurrentChatIndex = () => { useLocalStore(state => state.currentChatIndex); }
+    const getCurrentChatIndex = () => { return useLocalStore.getState().currentChatIndex; }
     const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
     const setHideSideMenu = useLocalStore(state => state.setHideSideMenu);
-    const getHideSideMenu = () => { useLocalStore(state => state.hideSideMenu); }
+    const getHideSideMenu = () => { return useLocalStore.getState().hideSideMenu; }
 
     const updateLocalStateFromDrive = () => {
         setCurrentlySaving(true);
