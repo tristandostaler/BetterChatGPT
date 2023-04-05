@@ -13,7 +13,7 @@ const useLogin = () => {
     const fileId = useStore((state) => state.fileId);
     const createFile = useCreateFile(true);
     const searchFile = useSearchFile(true);
-    const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(true, () => { });
+    const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(true, () => { }, () => { return false; });
     const setGoogleAccessToken = useStore((state) => state.setGoogleAccessToken);
     const setFileId = useStore((state) => state.setFileId);
 
