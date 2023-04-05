@@ -32,7 +32,7 @@ function App() {
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
-  const fileId = useCloudAuthStore((state) => state.fileId);
+  const fileId = () => { return useCloudAuthStore.getState().fileId };
   var needToSave = false;
   var currentlySaving = true;
   var mostRecentState: StoreState | null = null;
@@ -94,7 +94,7 @@ function App() {
     }
   }, []);
   useEffect(() => {
-    if (fileId) {
+    if (fileId()) {
       initLocalStateFromDrive();
     }
     currentlySaving = false;
@@ -105,7 +105,7 @@ function App() {
       mostRecentState = null;
     }
     function save(state: any) {
-      if (state && fileId) {
+      if (state && fileId()) {
         if (isCurrentlySaving()) {
           mostRecentState = state;
           needToSave = true;
@@ -131,7 +131,7 @@ function App() {
       save(state)
     })
     setInterval(() => {
-      if (fileId) {
+      if (fileId()) {
         updateLocalStateFromDrive();
       } else {
         reset();
