@@ -6,8 +6,10 @@ import useLogout from '@hooks/GoogleAPI/useLogout';
 
 const LoginButton = () => {
   const googleAccessToken = useStore((state) => state.googleAccessToken);
+  const setFileId = useStore((state) => state.setFileId);
   const login = useLogin();
-  const logout = useLogout();
+  const logoutAction = useLogout();
+  const logout = () => { logoutAction(); setFileId(undefined); };
   const wasGoogleConnected = useStore(state => state.fileId) ? true : false;
 
   return (
