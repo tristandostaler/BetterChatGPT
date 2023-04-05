@@ -130,7 +130,7 @@ function App() {
       if (fileId && !isCurrentlySaving()) {
         updateLocalStateFromDrive();
       }
-    }, 10 * 1000)
+    }, 60 * 1000)
   }, []);
 
   return (
