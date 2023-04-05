@@ -104,6 +104,14 @@ function App() {
     }
     function save(state: any) {
       if (state && fileId) {
+        if (isCurrentlySaving()) {
+          mostRecentState = state;
+          needToSave = true;
+          setTimeout(() => { save(mostRecentState) }, 100);
+          return;
+        }
+        
+        currentlySaving = true;
         return updateFile(JSON.stringify(state)).then(r => {
           if (needToSave) {
             needToSave = false;
@@ -115,14 +123,7 @@ function App() {
       }
     }
     useStore.subscribe((state, prevState) => {
-      if (isCurrentlySaving()) {
-        mostRecentState = state;
-        needToSave = true;
-      }
-      else {
-        currentlySaving = true;
-        save(state)
-      }
+      save(state)
     })
     setInterval(() => {
       if (fileId && !isCurrentlySaving()) {
