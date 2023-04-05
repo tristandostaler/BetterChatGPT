@@ -96,6 +96,7 @@ function App() {
   useEffect(() => {
     if (fileId) {
       initLocalStateFromDrive();
+      currentlySaving = false;
     }
 
     function reset() {
