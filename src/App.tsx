@@ -106,7 +106,8 @@ function App() {
       if (state && fileId) {
         return updateFile(JSON.stringify(state)).then(r => {
           if (needToSave) {
-            save(mostRecentState)?.then(r => reset());
+            needToSave = false;
+            save(mostRecentState);
           } else {
             reset()
           }
