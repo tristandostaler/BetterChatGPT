@@ -52,7 +52,7 @@ const ImportPrompt = () => {
   };
 
   return (
-    <div>
+    <div className='mt-4'>
       <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
         {t('import')} (CSV)
       </label>
@@ -70,8 +70,8 @@ const ImportPrompt = () => {
       {alert && (
         <div
           className={`relative py-2 px-3 w-full mt-3 border rounded-md text-gray-600 dark:text-gray-100 text-sm whitespace-pre-wrap ${alert.success
-              ? 'border-green-500 bg-green-500/10'
-              : 'border-red-500 bg-red-500/10'
+            ? 'border-green-500 bg-green-500/10'
+            : 'border-red-500 bg-red-500/10'
             }`}
         >
           {alert.message}

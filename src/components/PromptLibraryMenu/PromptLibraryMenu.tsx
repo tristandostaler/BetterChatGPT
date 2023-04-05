@@ -9,6 +9,8 @@ import CrossIcon from '@icon/CrossIcon';
 import { v4 as uuidv4 } from 'uuid';
 import ImportPrompt from './ImportPrompt';
 import ExportPrompt from './ExportPrompt';
+import AddPublicPrompt from './AddPublicPrompt';
+import { matchSorter } from 'match-sorter';
 
 const PromptLibraryMenu = () => {
   const { t } = useTranslation();
@@ -91,15 +93,21 @@ const PromptLibraryMenuPopUp = ({
     >
       <div className='p-6 border-b border-gray-200 dark:border-gray-600 w-[90vw] max-w-full text-sm text-gray-900 dark:text-gray-300'>
         <div className='border px-4 py-2 rounded border-gray-200 dark:border-gray-600'>
+          <AddPublicPrompt />
           <ImportPrompt />
           <ExportPrompt />
         </div>
         <div className='flex flex-col p-2 max-w-full' ref={container}>
           <div className='flex font-bold border-b border-gray-500/50 mb-1 p-1'>
+            <div className='flex-1'>Private prompts</div>
+          </div>
+          <div className='flex font-bold border-b border-gray-500/50 mb-1 p-1'>
             <div className='sm:w-1/4 max-sm:flex-1'>{t('name')}</div>
             <div className='flex-1'>{t('prompt')}</div>
           </div>
-          {_prompts.map((prompt, index) => (
+          {matchSorter(_prompts, 'true', {
+            keys: ['private'],
+          }).map((prompt, index) => (
             <div
               key={prompt.id}
               className='flex items-center border-b border-gray-500/50 mb-1 p-1'
@@ -159,6 +167,44 @@ const PromptLibraryMenuPopUp = ({
           >
             awesome-chatgpt-prompts
           </a>
+        </div>
+        <div className='flex flex-col p-2 max-w-full'>
+          <div className='flex font-bold border-b border-gray-500/50 mb-1 p-1'>
+            <div className='flex-1'>Synced prompts</div>
+          </div>
+          <div className='flex font-bold border-b border-gray-500/50 mb-1 p-1'>
+            <div className='sm:w-1/4 max-sm:flex-1'>{t('name')}</div>
+            <div className='flex-1'>{t('prompt')}</div>
+          </div>
+          {matchSorter(_prompts, 'false', {
+            keys: ['private'],
+          }).map((prompt, index) => (
+            <div
+              key={prompt.id}
+              className='flex items-center border-b border-gray-500/50 mb-1 p-1'
+            >
+              <div className='sm:w-1/4 max-sm:flex-1'>
+                <textarea
+                  className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
+                  onFocus={handleOnFocus}
+                  onBlur={handleOnBlur}
+                  readOnly
+                  value={prompt.name}
+                  rows={1}
+                ></textarea>
+              </div>
+              <div className='flex-1'>
+                <textarea
+                  className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden leading-7 p-1 focus:ring-1 focus:ring-blue w-full max-h-10 transition-all'
+                  onFocus={handleOnFocus}
+                  onBlur={handleOnBlur}
+                  readOnly
+                  value={prompt.prompt}
+                  rows={1}
+                ></textarea>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </PopupModal>
