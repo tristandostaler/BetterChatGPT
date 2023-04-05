@@ -109,7 +109,6 @@ function App() {
         if (isCurrentlySaving()) {
           mostRecentState = state;
           needToSave = true;
-          setTimeout(() => { save(mostRecentState) }, 1000);
           return;
         }
 
@@ -132,7 +131,7 @@ function App() {
     })
     setInterval(() => {
       if (fileId()) {
-        updateLocalStateFromDrive();
+        updateLocalStateFromDrive(() => { if (needToSave) { save(mostRecentState); } });
       } else {
         reset();
       }

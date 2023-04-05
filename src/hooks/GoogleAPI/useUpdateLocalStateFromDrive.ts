@@ -11,7 +11,7 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
     const setHideSideMenu = useLocalStore(state => state.setHideSideMenu);
     const getHideSideMenu = () => { return useLocalStore.getState().hideSideMenu; }
 
-    const updateLocalStateFromDrive = () => {
+    const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
         if (isCurrentlySaving()) {
             return;
         }
@@ -28,6 +28,7 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
             setCurrentChatIndex(cci);
             setHideSideMenu(hsm);
             setCurrentlySaving(false);
+            actionToRunWhenDone();
         });
     }
     return updateLocalStateFromDrive;
