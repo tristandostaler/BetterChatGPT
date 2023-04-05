@@ -6,10 +6,10 @@ import useGetFile from './useGetFile';
 
 const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySaving: Function) => {
     const getFile = useGetFile(isLoginProcess);
-    const currentChatIndex = useLocalStore(state => state.currentChatIndex);
+    const getCurrentChatIndex = () => { useLocalStore(state => state.currentChatIndex); }
     const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
     const setHideSideMenu = useLocalStore(state => state.setHideSideMenu);
-    const hideSideMenu = useLocalStore(state => state.hideSideMenu);
+    const getHideSideMenu = () => { useLocalStore(state => state.hideSideMenu); }
 
     const updateLocalStateFromDrive = () => {
         setCurrentlySaving(true);
@@ -20,8 +20,8 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
             var state = JSON.parse(fileContent);
             // console.log(state);
             useLocalStore.setState(state);
-            setCurrentChatIndex(currentChatIndex);
-            setHideSideMenu(hideSideMenu);
+            setCurrentChatIndex(getCurrentChatIndex());
+            setHideSideMenu(getHideSideMenu());
             setCurrentlySaving(false);
         });
     }
