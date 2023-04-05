@@ -25,7 +25,7 @@ function App() {
   }
 
   const updateFile = useUpdateFile();
-  const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving);
+  const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving, isCurrentlySaving);
   const initialiseNewChat = useInitialiseNewChat();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
