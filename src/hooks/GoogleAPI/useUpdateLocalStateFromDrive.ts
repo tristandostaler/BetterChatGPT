@@ -3,6 +3,8 @@ import React from 'react';
 import useStore from '@store/cloud-auth-store';
 import useLocalStore from '@store/store';
 import useGetFile from './useGetFile';
+import { migrateV8 } from '@store/migrate';
+import { LocalStorageInterfaceV8ToV9 } from '@type/chat';
 
 const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySaving: Function, isCurrentlySaving: Function) => {
     const getFile = useGetFile(isLoginProcess);
@@ -21,6 +23,20 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
                 return;
             }
             var state = JSON.parse(fileContent);
+
+            if (!state.version) {
+                migrateV8(state as LocalStorageInterfaceV8ToV9);
+            }
+            else {
+                switch (state.version) {
+                    case 8:
+                    case 9:
+                    case 10:
+                        migrateV8(state as LocalStorageInterfaceV8ToV9);
+                        break;
+                }
+            }
+
             var hsm = getHideSideMenu();
             var cci = getCurrentChatIndex();
             // console.log(state);

@@ -39,7 +39,6 @@ function App() {
   var needToSave = false;
   var currentlySaving = true;
   var mostRecentState: StoreState | null = null;
-  const reLogin = useReLogin();
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;

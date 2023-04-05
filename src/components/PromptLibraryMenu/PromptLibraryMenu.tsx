@@ -55,6 +55,7 @@ const PromptLibraryMenuPopUp = ({
     const updatedPrompts: Prompt[] = JSON.parse(JSON.stringify(_prompts));
     updatedPrompts.push({
       id: uuidv4(),
+      private: true,
       name: '',
       prompt: '',
     });
