@@ -4,8 +4,8 @@ import useStore from '@store/cloud-auth-store';
 import useReLogin from './useReLogin';
 
 const useGetFile = (isLoginProcess: boolean) => {
-    const accessToken = useStore((state) => state.googleAccessToken);
-    const fileId = useStore((state) => state.fileId);
+    const accessToken = () => { return useStore.getState().googleAccessToken };
+    const fileId = () => { return useStore.getState().fileId };
     var reLogin = () => { };
     if (!isLoginProcess) {
         reLogin = useReLogin();
@@ -13,12 +13,12 @@ const useGetFile = (isLoginProcess: boolean) => {
 
     const getFile = () => {
         return fetch(
-            `https://content.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+            `https://content.googleapis.com/drive/v3/files/${fileId()}?alt=media`,
             {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${accessToken()}`,
                 },
             }
         ).then((res) => {

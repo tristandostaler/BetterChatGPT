@@ -4,7 +4,7 @@ import useStore from '@store/cloud-auth-store';
 import useReLogin from './useReLogin';
 
 const useCreateFile = (isLoginProcess: boolean) => {
-    const accessToken = useStore((state) => state.googleAccessToken);
+    const accessToken = () => { return useStore.getState().googleAccessToken };
     const fileName = 'better-chatgpt.json';
     var reLogin = () => { };
     if (!isLoginProcess) {
@@ -25,7 +25,7 @@ const useCreateFile = (isLoginProcess: boolean) => {
 
         return fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
             method: 'POST',
-            headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+            headers: new Headers({ 'Authorization': 'Bearer ' + accessToken() }),
             body: formData,
         }).then(res => {
             if (!res.ok) {

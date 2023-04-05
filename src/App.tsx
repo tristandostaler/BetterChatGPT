@@ -109,10 +109,10 @@ function App() {
         if (isCurrentlySaving()) {
           mostRecentState = state;
           needToSave = true;
-          setTimeout(() => { save(mostRecentState) }, 100);
+          setTimeout(() => { save(mostRecentState) }, 1000);
           return;
         }
-        
+
         currentlySaving = true;
         return updateFile(JSON.stringify(state)).then(r => {
           currentlySaving = false;

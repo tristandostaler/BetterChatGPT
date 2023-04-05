@@ -10,7 +10,7 @@ import useSearchFile from '@hooks/GoogleAPI/useSearchFile';
 import useUpdateLocalStateFromDrive from '@hooks/GoogleAPI/useUpdateLocalStateFromDrive';
 
 const useLogin = () => {
-    const fileId = useStore((state) => state.fileId);
+    const fileId = () => { return useStore.getState().fileId };
     const createFile = useCreateFile(true);
     const searchFile = useSearchFile(true);
     const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(true, () => { }, () => { return false; });
@@ -21,7 +21,7 @@ const useLogin = () => {
         onSuccess: (codeResponse) => {
             console.log(codeResponse);
             setGoogleAccessToken(codeResponse.access_token);
-            if (fileId == null) {
+            if (fileId() == null) {
                 searchFile().then(resp => {
                     if (!resp) {
                         return;

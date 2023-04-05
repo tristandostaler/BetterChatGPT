@@ -4,7 +4,7 @@ import useStore from '@store/cloud-auth-store';
 import useReLogin from './useReLogin';
 
 const useSearchFile = (isLoginProcess: boolean) => {
-    const accessToken = useStore((state) => state.googleAccessToken);
+    const accessToken = () => { return useStore.getState().googleAccessToken };
     const fileName = 'better-chatgpt.json';
     var reLogin = () => { };
     if (!isLoginProcess) {
@@ -18,7 +18,7 @@ const useSearchFile = (isLoginProcess: boolean) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${accessToken()}`,
                 },
             }
         ).then(res => {
