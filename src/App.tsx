@@ -113,6 +113,7 @@ function App() {
         
         currentlySaving = true;
         return updateFile(JSON.stringify(state)).then(r => {
+          currentlySaving = false;
           if (needToSave) {
             needToSave = false;
             save(mostRecentState);
