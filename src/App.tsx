@@ -96,8 +96,8 @@ function App() {
   useEffect(() => {
     if (fileId) {
       initLocalStateFromDrive();
-      currentlySaving = false;
     }
+    currentlySaving = false;
 
     function reset() {
       needToSave = false;
@@ -120,17 +120,21 @@ function App() {
             needToSave = false;
             save(mostRecentState);
           } else {
-            reset()
+            reset();
           }
         });
+      } else {
+        reset();
       }
     }
     useStore.subscribe((state, prevState) => {
       save(state)
     })
     setInterval(() => {
-      if (fileId && !isCurrentlySaving()) {
+      if (fileId) {
         updateLocalStateFromDrive();
+      } else {
+        reset();
       }
     }, 60 * 1000)
   }, []);
