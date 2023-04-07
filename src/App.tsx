@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
-import useStore from '@store/store';
+import useStore, { StoreState } from '@store/store';
+import useCloudAuthStore from '@store/cloud-auth-store'
+import useUpdateFile from '@hooks/GoogleAPI/useUpdateFile';
+import useUpdateLocalStateFromDrive from '@hooks/GoogleAPI/useUpdateLocalStateFromDrive';
 import i18n from './i18n';
 
 import Chat from '@components/Chat';
@@ -10,12 +13,34 @@ import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 
+import useReLogin from '@hooks/GoogleAPI/useReLogin';
+import usePeriodicSyncPrompt from '@hooks/PublicPrompts/usePeriodicSyncPrompt';
+
+// https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
+// https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
+
 function App() {
+  function isCurrentlySaving() {
+    return currentlySaving;
+  }
+
+  function setCurrentlySaving(status: boolean) {
+    currentlySaving = status;
+  }
+
+  const updateFile = useUpdateFile();
+  const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving, isCurrentlySaving);
+  const initLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving, () => { return false; });
   const initialiseNewChat = useInitialiseNewChat();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
+  const fileId = () => { return useCloudAuthStore.getState().fileId };
+  const periodicSyncPrompt = usePeriodicSyncPrompt();
+  var needToSave = false;
+  var currentlySaving = true;
+  var mostRecentState: StoreState | null = null;
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -71,6 +96,58 @@ function App() {
         setCurrentChatIndex(0);
       }
     }
+  }, []);
+  useEffect(() => {
+    if (fileId()) {
+      initLocalStateFromDrive();
+    }
+    currentlySaving = false;
+
+    function reset() {
+      needToSave = false;
+      currentlySaving = false;
+      mostRecentState = null;
+    }
+    function save(state: any) {
+      if (state && fileId()) {
+        if (isCurrentlySaving()) {
+          mostRecentState = state;
+          needToSave = true;
+          return;
+        }
+
+        currentlySaving = true;
+        return updateFile(JSON.stringify(state)).then(r => {
+          currentlySaving = false;
+          if (needToSave) {
+            needToSave = false;
+            save(mostRecentState);
+          } else {
+            reset();
+          }
+        });
+      } else {
+        reset();
+      }
+    }
+    useStore.subscribe((state, prevState) => {
+      save(state)
+    })
+    setInterval(() => {
+      if (fileId()) {
+        updateLocalStateFromDrive(() => { if (needToSave) { save(mostRecentState); } });
+      } else {
+        reset();
+      }
+    }, 5 * 60 * 1000)
+  }, []);
+
+  useEffect(() => {
+    periodicSyncPrompt();
+
+    setInterval(() => {
+      periodicSyncPrompt();
+    }, 5 * 60 * 1000);
   }, []);
 
   return (

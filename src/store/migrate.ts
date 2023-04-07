@@ -11,6 +11,8 @@ import {
   LocalStorageInterfaceV5ToV6,
   LocalStorageInterfaceV6ToV7,
   LocalStorageInterfaceV7oV8,
+  LocalStorageInterfaceV8ToV12,
+  LocalStorageInterfaceV8ToV9,
 } from '@type/chat';
 import {
   _defaultChatConfig,
@@ -19,6 +21,9 @@ import {
 } from '@constants/chat';
 import { officialAPIEndpoint } from '@constants/auth';
 import defaultPrompts from '@constants/prompt';
+import { Prompt } from '@type/prompt';
+import stateVersion from '@constants/stateVersion';
+import defaultPublicPrompts from '@constants/publicPrompt';
 
 export const migrateV0 = (persistedState: LocalStorageInterfaceV0ToV1) => {
   persistedState.chats.forEach((chat) => {
@@ -103,4 +108,19 @@ export const migrateV7 = (persistedState: LocalStorageInterfaceV7oV8) => {
     if (chat.folder) chat.folder = folderNameToIdMap[chat.folder];
     chat.id = uuidv4();
   });
+};
+
+export const migrateV8 = (persistedState: LocalStorageInterfaceV8ToV9) => {
+  // add the private variable to the prompts
+  persistedState.prompts.forEach((p) => {
+    if (p.private == undefined || p.private == null) {
+      p.private = true;
+      p.publicSourceId = '';
+    }
+  });
+  persistedState.version = stateVersion;
+};
+
+export const migrateV12 = (persistedState: LocalStorageInterfaceV8ToV12) => {
+  persistedState.publicPrompts = defaultPublicPrompts;
 };

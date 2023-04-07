@@ -16,7 +16,7 @@ export const importPromptCSV = (csvString: string, header: boolean = true) => {
 
 export const exportPrompts = (prompts: Prompt[]) => {
   const csvString = Papa.unparse(
-    prompts.map((prompt) => ({ name: prompt.name, prompt: prompt.prompt }))
+    prompts.filter((prompt) => { return prompt.private }).map((prompt) => ({ name: prompt.name, prompt: prompt.prompt }))
   );
 
   const blob = new Blob([csvString], {

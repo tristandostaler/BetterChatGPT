@@ -33,6 +33,8 @@ const ImportPrompt = () => {
             const columns = Object.values(data);
             return {
               id: uuidv4(),
+              private: true,
+              publicSourceId: '',
               name: columns[0],
               prompt: columns[1],
             };
@@ -51,7 +53,7 @@ const ImportPrompt = () => {
   };
 
   return (
-    <div>
+    <div className='mt-4'>
       <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
         {t('import')} (CSV)
       </label>
@@ -68,11 +70,10 @@ const ImportPrompt = () => {
       </button>
       {alert && (
         <div
-          className={`relative py-2 px-3 w-full mt-3 border rounded-md text-gray-600 dark:text-gray-100 text-sm whitespace-pre-wrap ${
-            alert.success
-              ? 'border-green-500 bg-green-500/10'
-              : 'border-red-500 bg-red-500/10'
-          }`}
+          className={`relative py-2 px-3 w-full mt-3 border rounded-md text-gray-600 dark:text-gray-100 text-sm whitespace-pre-wrap ${alert.success
+            ? 'border-green-500 bg-green-500/10'
+            : 'border-red-500 bg-red-500/10'
+            }`}
         >
           {alert.message}
         </div>

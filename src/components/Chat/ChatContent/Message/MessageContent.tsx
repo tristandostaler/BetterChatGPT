@@ -341,13 +341,23 @@ const EditView = ({
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
   };
 
+  var setDropDownCallback: Function;
+  const _setDropDownCallbackFunctionBuilder = (f: Function) => { setDropDownCallback = f };
+  var setInputCallback: Function;
+  const _setInputCallbackFunctionBuilder = (f: Function) => { setInputCallback = f };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const isMobile =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|playbook|silk/i.test(
         navigator.userAgent
       );
 
-    if (e.key === 'Enter' && !isMobile && !e.nativeEvent.isComposing) {
+    if (e.currentTarget.value.startsWith('/')) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter' || e.key === 'Escape') {
+        e.preventDefault();
+        setInputCallback(e.key);
+      }
+    } else if (e.key === 'Enter' && !isMobile && !e.nativeEvent.isComposing) {
       const enterToSubmit = useStore.getState().enterToSubmit;
       if (sticky) {
         if (
@@ -426,17 +436,25 @@ const EditView = ({
   return (
     <>
       <div
-        className={`w-full ${
-          sticky
-            ? 'py-2 md:py-3 px-2 md:px-4 border border-black/10 bg-white dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]'
-            : ''
-        }`}
+        className={`w-full ${sticky
+          ? 'py-2 md:py-3 px-2 md:px-4 border border-black/10 bg-white dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]'
+          : ''
+          }`}
       >
+        <CommandPrompt _setContent={_setContent} _setDropDownCallbackFunctionBuilder={_setDropDownCallbackFunctionBuilder} _setInputCallbackFunctionBuilder={_setInputCallbackFunctionBuilder} />
         <textarea
           ref={textareaRef}
           className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
           onChange={(e) => {
             _setContent(e.target.value);
+            if (e.target.value === "") {
+              setInputCallback('');
+              setDropDownCallback(false);
+            }
+            if (e.target.value.startsWith('/')) {
+              setDropDownCallback(true);
+              setInputCallback(e.target.value.slice(1));
+            }
           }}
           value={_content}
           placeholder={t('submitPlaceholder') as string}
@@ -450,7 +468,6 @@ const EditView = ({
         handleSave={handleSave}
         setIsModalOpen={setIsModalOpen}
         setIsEdit={setIsEdit}
-        _setContent={_setContent}
       />
       {isModalOpen && (
         <PopupModal
@@ -471,14 +488,12 @@ const EditViewButtons = React.memo(
     handleSave,
     setIsModalOpen,
     setIsEdit,
-    _setContent,
   }: {
     sticky?: boolean;
     handleSaveAndSubmit: () => void;
     handleSave: () => void;
     setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
-    _setContent: React.Dispatch<React.SetStateAction<string>>;
   }) => {
     const { t } = useTranslation();
 
@@ -497,9 +512,8 @@ const EditViewButtons = React.memo(
           )}
 
           <button
-            className={`btn relative mr-2 ${
-              sticky ? 'btn-neutral' : 'btn-primary'
-            }`}
+            className={`btn relative mr-2 ${sticky ? 'btn-neutral' : 'btn-primary'
+              }`}
             onClick={handleSave}
           >
             <div className='flex items-center justify-center gap-2'>
@@ -532,7 +546,6 @@ const EditViewButtons = React.memo(
           )}
         </div>
         {sticky && <TokenCount />}
-        <CommandPrompt _setContent={_setContent} />
       </div>
     );
   }
