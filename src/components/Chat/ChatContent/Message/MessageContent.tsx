@@ -343,7 +343,6 @@ const EditView = ({
   };
 
   const [isCommandPromptSearching, setIsCommandPromptSearching] = useState<boolean>(false);
-  const [commandPromptSearchInput, setCommandPromptSearchInput] = useState<string>('');
   var setDropDownCallback: Function;
   const _setDropDownCallbackFunctionBuilder = (f: Function) => { setDropDownCallback = f };
   var setInputCallback: Function;
@@ -351,19 +350,12 @@ const EditView = ({
 
   useEffect(() => {
     setIsCommandPromptSearching(false);
-    setCommandPromptSearchInput('');
-    _setContent(_content.replace('/' + commandPromptSearchInput, '') + _remoteContent);
-    _remoteSetContent('');
+    _setContent(_remoteContent);
   }, [_remoteContent]);
-
-  useEffect(() => {
-    setInputCallback(commandPromptSearchInput);
-  }, [commandPromptSearchInput]);
 
   const resetCommantPromptSearching = () => {
     setIsCommandPromptSearching(false);
     setDropDownCallback(false);
-    setCommandPromptSearchInput('');
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -480,7 +472,7 @@ const EditView = ({
               if (e.target.value == "") {
                 resetCommantPromptSearching();
               } else {
-                setCommandPromptSearchInput(e.target.value.slice(1));
+                setInputCallback(e.target.value.slice(1));
               }
             }
           }}
