@@ -447,11 +447,11 @@ const EditView = ({
           className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
           onChange={(e) => {
             _setContent(e.target.value);
-            if (e.target.value === "" || e.target.value.indexOf(' ') > 0) {
+            if (e.target.value === "") {
               setInputCallback('');
               setDropDownCallback(false);
             }
-            if (e.target.value.startsWith('/') && e.target.value.indexOf(' ') == -1) {
+            if (e.target.value.startsWith('/')) {
               setDropDownCallback(true);
               setInputCallback(e.target.value.slice(1));
             }

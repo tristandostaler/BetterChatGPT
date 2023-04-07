@@ -35,7 +35,16 @@ const CommandPrompt = ({
         view: window,
       }))
     } else {
-      setInput(s);
+      const filteredPrompts = matchSorter(useStore.getState().prompts, s, {
+        keys: ['name'],
+      });
+
+      if (filteredPrompts.length > 0) {
+        setInput(s);
+      } else {
+        setInput('');
+        setDropDown(false);
+      }
     }
   })
 
