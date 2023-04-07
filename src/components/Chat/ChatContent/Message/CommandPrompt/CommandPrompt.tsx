@@ -26,7 +26,7 @@ const CommandPrompt = ({
 
   _setDropDownCallbackFunctionBuilder((d: boolean) => { setDropDown(d); setSelectedIndex(-1); setSelectedId(''); })
   _setInputCallbackFunctionBuilder((s: string) => {
-    if (s == 'ArrowUp' || s == 'ArrowDown' || s == 'Enter') {
+    if (s === 'ArrowUp' || s === 'ArrowDown' || s === 'Enter' || s === 'Escape') {
       // console.log(s)
       searchInputRef.current?.dispatchEvent(new KeyboardEvent('keydown', {
         key: s,
@@ -94,10 +94,10 @@ const CommandPrompt = ({
             setInput(e.target.value);
           }}
           onKeyDown={(e) => {
-            if (e.key == 'Escape') {
+            if (e.key === 'Escape') {
               setDropDown(!dropDown); setDropDownLocal(!dropDown);
             }
-            else if (e.key == 'ArrowDown' || e.key == 'ArrowUp' || e.key == 'Enter') {
+            else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
               e.preventDefault();
               var childs = e.currentTarget.parentElement?.children;
               if (!childs) {

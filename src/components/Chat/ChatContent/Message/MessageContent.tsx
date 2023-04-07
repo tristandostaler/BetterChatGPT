@@ -353,7 +353,7 @@ const EditView = ({
       );
 
     if (e.currentTarget.value.startsWith('/')) {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter' || e.key === 'Escape') {
         e.preventDefault();
         setInputCallback(e.key);
       }
