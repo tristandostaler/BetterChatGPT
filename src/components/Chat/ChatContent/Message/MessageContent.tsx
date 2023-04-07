@@ -331,7 +331,6 @@ const EditView = ({
   const setChats = useStore((state) => state.setChats);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
 
-  const [_remoteContent, _remoteSetContent] = useState<string>(content);
   const [_content, _setContent] = useState<string>(content);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const textareaRef = React.createRef<HTMLTextAreaElement>();
@@ -342,21 +341,10 @@ const EditView = ({
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
   };
 
-  const [isCommandPromptSearching, setIsCommandPromptSearching] = useState<boolean>(false);
   var setDropDownCallback: Function;
   const _setDropDownCallbackFunctionBuilder = (f: Function) => { setDropDownCallback = f };
   var setInputCallback: Function;
   const _setInputCallbackFunctionBuilder = (f: Function) => { setInputCallback = f };
-
-  useEffect(() => {
-    setIsCommandPromptSearching(false);
-    _setContent(_remoteContent);
-  }, [_remoteContent]);
-
-  const resetCommantPromptSearching = () => {
-    setIsCommandPromptSearching(false);
-    setDropDownCallback(false);
-  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const isMobile =
@@ -364,7 +352,12 @@ const EditView = ({
         navigator.userAgent
       );
 
-    if (e.key === 'Enter' && !isMobile && !e.nativeEvent.isComposing && !isCommandPromptSearching) {
+    if (e.currentTarget.value.startsWith('/')) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
+        e.preventDefault();
+        setInputCallback(e.key);
+      }
+    } else if (e.key === 'Enter' && !isMobile && !e.nativeEvent.isComposing) {
       const enterToSubmit = useStore.getState().enterToSubmit;
       if (sticky) {
         if (
@@ -381,20 +374,6 @@ const EditView = ({
           handleSaveAndSubmit();
           resetTextAreaHeight();
         } else if (e.ctrlKey || e.shiftKey) handleSave();
-      }
-    } else if (e.key == '/' && !isCommandPromptSearching && e.currentTarget.value == "") {
-      // console.log(e.key)
-      setIsCommandPromptSearching(true);
-      setDropDownCallback(true);
-    } else {
-      if (isCommandPromptSearching) {
-        // console.log(e.key)
-        if (e.key == ' ' || e.key == 'Escape') {
-          resetCommantPromptSearching();
-        } else if (e.key == 'ArrowUp' || e.key == 'ArrowDown' || e.key == 'Enter') {
-          e.preventDefault();
-          setInputCallback(e.key);
-        }
       }
     }
   };
@@ -462,18 +441,19 @@ const EditView = ({
           : ''
           }`}
       >
-        <CommandPrompt _setContent={_remoteSetContent} _setDropDownCallbackFunctionBuilder={_setDropDownCallbackFunctionBuilder} _setInputCallbackFunctionBuilder={_setInputCallbackFunctionBuilder} />
+        <CommandPrompt _setContent={_setContent} _setDropDownCallbackFunctionBuilder={_setDropDownCallbackFunctionBuilder} _setInputCallbackFunctionBuilder={_setInputCallbackFunctionBuilder} />
         <textarea
           ref={textareaRef}
           className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
           onChange={(e) => {
             _setContent(e.target.value);
-            if (isCommandPromptSearching) {
-              if (e.target.value == "") {
-                resetCommantPromptSearching();
-              } else {
-                setInputCallback(e.target.value.slice(1));
-              }
+            if (e.target.value === "" || e.target.value.indexOf(' ') > 0) {
+              setInputCallback('');
+              setDropDownCallback(false);
+            }
+            if (e.target.value.startsWith('/') && e.target.value.indexOf(' ') == -1) {
+              setDropDownCallback(true);
+              setInputCallback(e.target.value.slice(1));
             }
           }}
           value={_content}
@@ -488,9 +468,6 @@ const EditView = ({
         handleSave={handleSave}
         setIsModalOpen={setIsModalOpen}
         setIsEdit={setIsEdit}
-        _remoteSetContent={_remoteSetContent}
-        _setDropDownCallbackFunctionBuilder={_setDropDownCallbackFunctionBuilder}
-        _setInputCallbackFunctionBuilder={_setInputCallbackFunctionBuilder}
       />
       {isModalOpen && (
         <PopupModal
@@ -511,18 +488,12 @@ const EditViewButtons = React.memo(
     handleSave,
     setIsModalOpen,
     setIsEdit,
-    _remoteSetContent,
-    _setDropDownCallbackFunctionBuilder,
-    _setInputCallbackFunctionBuilder,
   }: {
     sticky?: boolean;
     handleSaveAndSubmit: () => void;
     handleSave: () => void;
     setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
-    _remoteSetContent: React.Dispatch<React.SetStateAction<string>>;
-    _setDropDownCallbackFunctionBuilder: Function;
-    _setInputCallbackFunctionBuilder: Function;
   }) => {
     const { t } = useTranslation();
 
