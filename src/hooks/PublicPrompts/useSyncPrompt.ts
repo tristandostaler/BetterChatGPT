@@ -10,7 +10,7 @@ const useSyncPrompt = () => {
     const setPrompts = useStore.getState().setPrompts;
     const setPublicPrompts = useStore.getState().setPublicPrompts;
 
-    const syncPrompt = async (url: string, name: string) => {
+    const syncPrompt = async (url: string, name: string, isNew: boolean) => {
         return await fetch(url, {
             method: 'GET',
         }).then(res => {
@@ -29,7 +29,7 @@ const useSyncPrompt = () => {
                 const publicPrompts = useStore.getState().publicPrompts;
 
                 return sha1Hash(url).then((publicPromptId) => {
-                    if (publicPrompts.filter(p => p.id === publicPromptId).length > 0) {
+                    if (isNew && publicPrompts.filter(p => p.id === publicPromptId).length > 0) {
                         return { message: 'This source is already synced', isSuccess: false };
                     }
                     try {
