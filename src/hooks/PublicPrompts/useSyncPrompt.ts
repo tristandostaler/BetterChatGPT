@@ -46,11 +46,13 @@ const useSyncPrompt = () => {
 
                         setPrompts(prompts.concat(newPrompts));
 
+                        if(publicPrompts.filter(p => p.id === publicPromptId).length === 0) {
                         setPublicPrompts(publicPrompts.concat([{
                             id: publicPromptId,
                             name: name,
                             source: url,
                         }]));
+                        };
 
                         return { message: 'Succesfully Synced and imported!', isSuccess: true };
                     } catch (error: unknown) {
