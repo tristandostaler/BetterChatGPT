@@ -21,7 +21,7 @@ const AddPublicPrompt = () => {
       return;
     }
 
-    syncPrompt(inputSourceRef.current.value, inputNameRef.current.value, true ).then(r => {
+    syncPrompt(inputSourceRef.current.value, inputNameRef.current.value, true).then(r => {
       setAlert({ message: r.message, success: r.isSuccess });
     });
 

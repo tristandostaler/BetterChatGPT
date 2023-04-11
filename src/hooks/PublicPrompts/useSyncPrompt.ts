@@ -7,8 +7,9 @@ import { sha1Hash } from '@utils/hash';
 
 
 const useSyncPrompt = () => {
-    const setPrompts = useStore.getState().setPrompts;
-    const setPublicPrompts = useStore.getState().setPublicPrompts;
+    const setPrompts = useStore((state) => state.setPrompts);
+    const setPublicPrompts = useStore((state) => state.setPublicPrompts);
+    const getPrompts = () => { return useStore.getState().prompts };
 
     const syncPrompt = async (url: string, name: string, isNew: boolean) => {
         return await fetch(url, {
@@ -24,11 +25,10 @@ const useSyncPrompt = () => {
             }
 
             try {
-                const results = importPromptCSV(csv);
-                const prompts = useStore.getState().prompts;
-                const publicPrompts = useStore.getState().publicPrompts;
-
                 return sha1Hash(url).then((publicPromptId) => {
+                    const results = importPromptCSV(csv);
+
+                    const publicPrompts = useStore.getState().publicPrompts;
                     if (isNew && publicPrompts.filter(p => p.id === publicPromptId).length > 0) {
                         return { message: 'This source is already synced', isSuccess: false };
                     }
@@ -44,14 +44,18 @@ const useSyncPrompt = () => {
                             };
                         });
 
-                        setPrompts(prompts.concat(newPrompts));
+                        var filteredPrompts = getPrompts().filter((prompt) => {
+                            return prompt.private || prompt.publicSourceId != publicPromptId
+                        });
 
-                        if(publicPrompts.filter(p => p.id === publicPromptId).length === 0) {
-                        setPublicPrompts(publicPrompts.concat([{
-                            id: publicPromptId,
-                            name: name,
-                            source: url,
-                        }]));
+                        setPrompts(filteredPrompts.concat(newPrompts));
+
+                        if (publicPrompts.filter(p => p.id === publicPromptId).length === 0) {
+                            setPublicPrompts(publicPrompts.concat([{
+                                id: publicPromptId,
+                                name: name,
+                                source: url,
+                            }]));
                         };
 
                         return { message: 'Succesfully Synced and imported!', isSuccess: true };

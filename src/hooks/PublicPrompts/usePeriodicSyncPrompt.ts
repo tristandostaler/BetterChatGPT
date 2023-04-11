@@ -5,15 +5,16 @@ import useSyncPrompt from './useSyncPrompt';
 
 
 const usePeriodicSyncPrompt = () => {
-    const setPrompts = useStore.getState().setPrompts;
+    const setPrompts = useStore((state) => state.setPrompts);
     const syncPrompt = useSyncPrompt();
+    const getPrompts = () => { return useStore.getState().prompts };
 
-    const periodicSyncPrompt = () => {
-        const prompts = useStore.getState().prompts;
-        const privatePrompts = prompts.filter((prompt) => { return prompt.private });
+
+    const periodicSyncPrompt = async () => {
+        const privatePrompts = getPrompts().filter((prompt) => { return prompt.private });
         setPrompts(privatePrompts);
         var currentPrompts = useStore.getState().publicPrompts;
-        currentPrompts.forEach(p => syncPrompt(p.source, p.name, false));
+        currentPrompts.forEach(async (p, index) => { await syncPrompt(p.source, p.name, false) });
     }
     return periodicSyncPrompt;
 };
