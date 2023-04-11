@@ -14,8 +14,11 @@ const dateString =
 export const _defaultSystemMessage =
   import.meta.env.VITE_DEFAULT_SYSTEM_MESSAGE ??
   `You are ChatGPT, a large language model trained by OpenAI.
-Carefully heed the user's instructions. 
-Respond using Markdown.`;
+Carefully heed the user's instructions.
+Respond using Markdown.
+Respond with the smallest message possible while giving clear and complete answers.
+If needed, provide a link to a search in google using this link template:
+https://www.google.com/search?q=query`;
 
 export const modelOptions: ModelOptions[] = [
   'gpt-3.5-turbo',
