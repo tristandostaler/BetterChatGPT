@@ -13,10 +13,7 @@ const usePeriodicSyncPrompt = () => {
         const privatePrompts = prompts.filter((prompt) => { return prompt.private });
         setPrompts(privatePrompts);
         var currentPrompts = useStore.getState().publicPrompts;
-        for (var i = 0; i < currentPrompts.length; i++) {
-            var p = currentPrompts[0];
-            syncPrompt(p.source, p.name, false )
-        }
+        currentPrompts.forEach(p => syncPrompt(p.source, p.name, false));
     }
     return periodicSyncPrompt;
 };
