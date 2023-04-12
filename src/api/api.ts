@@ -6,6 +6,7 @@ export const getChatCompletion = async (
   endpoint: string,
   messages: MessageInterface[],
   config: ConfigInterface,
+  orgId: string,
   apiKey?: string,
   customHeaders?: Record<string, string>
 ) => {
@@ -15,6 +16,7 @@ export const getChatCompletion = async (
   };
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
+  if (orgId && orgId != '') headers['OpenAI-Organization'] = orgId;
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -35,6 +37,7 @@ export const getChatCompletionStream = async (
   endpoint: string,
   messages: MessageInterface[],
   config: ConfigInterface,
+  orgId: string,
   apiKey?: string,
   customHeaders?: Record<string, string>
 ) => {
@@ -44,6 +47,7 @@ export const getChatCompletionStream = async (
   };
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
+  if (orgId && orgId != '') headers['OpenAI-Organization'] = orgId;
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -60,7 +64,7 @@ export const getChatCompletionStream = async (
     if (text.includes('model_not_found')) {
       throw new Error(
         text +
-          '\nMessage from Better ChatGPT:\nPlease ensure that you have access to the GPT-4 API!'
+        '\nMessage from Better ChatGPT:\nPlease ensure that you have access to the GPT-4 API!'
       );
     } else {
       throw new Error(

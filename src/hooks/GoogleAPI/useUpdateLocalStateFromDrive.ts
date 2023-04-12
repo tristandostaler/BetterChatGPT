@@ -18,7 +18,7 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
             return;
         }
         setCurrentlySaving(true);
-        getFile().then((fileContent) => {
+        return getFile().then((fileContent) => {
             if (!fileContent) {
                 return;
             }

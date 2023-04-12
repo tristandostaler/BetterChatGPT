@@ -3,13 +3,15 @@ import React from 'react';
 import useStore from '@store/store';
 import { importPromptCSV } from '@utils/prompt';
 import { v4 as uuidv4 } from 'uuid';
+import { sha1Hash } from '@utils/hash';
 
 
 const useSyncPrompt = () => {
-    const setPrompts = useStore.getState().setPrompts;
-    const setPublicPrompts = useStore.getState().setPublicPrompts;
+    const setPrompts = useStore((state) => state.setPrompts);
+    const setPublicPrompts = useStore((state) => state.setPublicPrompts);
+    const getPrompts = () => { return useStore.getState().prompts };
 
-    const syncPrompt = async (url: string, name: string) => {
+    const syncPrompt = async (url: string, name: string, isNew: boolean) => {
         return await fetch(url, {
             method: 'GET',
         }).then(res => {
@@ -23,32 +25,44 @@ const useSyncPrompt = () => {
             }
 
             try {
-                const results = importPromptCSV(csv);
-                const prompts = useStore.getState().prompts;
-                const publicPrompts = useStore.getState().publicPrompts;
+                return sha1Hash(url).then((publicPromptId) => {
+                    const results = importPromptCSV(csv);
 
-                var publicPromptId = uuidv4()
+                    const publicPrompts = useStore.getState().publicPrompts;
+                    if (isNew && publicPrompts.filter(p => p.id === publicPromptId).length > 0) {
+                        return { message: 'This source is already synced', isSuccess: false };
+                    }
+                    try {
+                        const newPrompts = results.map((data) => {
+                            const columns = Object.values(data);
+                            return {
+                                id: uuidv4(),
+                                private: false,
+                                publicSourceId: publicPromptId,
+                                name: columns[0],
+                                prompt: columns[1],
+                            };
+                        });
 
-                const newPrompts = results.map((data) => {
-                    const columns = Object.values(data);
-                    return {
-                        id: uuidv4(),
-                        private: false,
-                        publicSourceId: publicPromptId,
-                        name: columns[0],
-                        prompt: columns[1],
-                    };
+                        var filteredPrompts = getPrompts().filter((prompt) => {
+                            return prompt.private || prompt.publicSourceId != publicPromptId
+                        });
+
+                        setPrompts(filteredPrompts.concat(newPrompts));
+
+                        if (publicPrompts.filter(p => p.id === publicPromptId).length === 0) {
+                            setPublicPrompts(publicPrompts.concat([{
+                                id: publicPromptId,
+                                name: name,
+                                source: url,
+                            }]));
+                        };
+
+                        return { message: 'Succesfully Synced and imported!', isSuccess: true };
+                    } catch (error: unknown) {
+                        return { message: (error as Error).message, isSuccess: false };
+                    }
                 });
-
-                setPrompts(prompts.concat(newPrompts));
-
-                setPublicPrompts(publicPrompts.concat([{
-                    id: publicPromptId,
-                    name: name,
-                    source: url,
-                }]));
-
-                return { message: 'Succesfully Synced and imported!', isSuccess: true };
             } catch (error: unknown) {
                 return { message: (error as Error).message, isSuccess: false };
             }

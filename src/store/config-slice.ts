@@ -29,7 +29,7 @@ export const createConfigSlice: StoreSlice<ConfigSlice> = (set, get) => ({
   theme: 'dark',
   hideMenuOptions: false,
   hideSideMenu: false,
-  autoTitle: false,
+  autoTitle: true,
   enterToSubmit: true,
   version: stateVersion,
   defaultChatConfig: _defaultChatConfig,

@@ -14,6 +14,7 @@ const useSubmit = () => {
   const setError = useStore((state) => state.setError);
   const apiEndpoint = useStore((state) => state.apiEndpoint);
   const apiKey = useStore((state) => state.apiKey);
+  const orgId = useStore((state) => state.orgId);
   const setGenerating = useStore((state) => state.setGenerating);
   const generating = useStore((state) => state.generating);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
@@ -33,7 +34,8 @@ const useSubmit = () => {
       data = await getChatCompletion(
         useStore.getState().apiEndpoint,
         message,
-        _defaultChatConfig
+        _defaultChatConfig,
+        orgId
       );
     } else if (apiKey) {
       // own apikey
@@ -41,6 +43,7 @@ const useSubmit = () => {
         useStore.getState().apiEndpoint,
         message,
         _defaultChatConfig,
+        orgId,
         apiKey
       );
     }
@@ -84,7 +87,8 @@ const useSubmit = () => {
         stream = await getChatCompletionStream(
           useStore.getState().apiEndpoint,
           messages,
-          chats[currentChatIndex].config
+          chats[currentChatIndex].config,
+          orgId
         );
       } else if (apiKey) {
         // own apikey
@@ -92,6 +96,7 @@ const useSubmit = () => {
           useStore.getState().apiEndpoint,
           messages,
           chats[currentChatIndex].config,
+          orgId,
           apiKey
         );
       }

@@ -50,104 +50,106 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // legacy local storage
-    const oldChats = localStorage.getItem('chats');
-    const apiKey = localStorage.getItem('apiKey');
-    const theme = localStorage.getItem('theme');
-
-    if (apiKey) {
+    const setup = async () => {
+      // --------------- Section: Migration
       // legacy local storage
-      setApiKey(apiKey);
-      localStorage.removeItem('apiKey');
-    }
+      const oldChats = localStorage.getItem('chats');
+      const apiKey = localStorage.getItem('apiKey');
+      const theme = localStorage.getItem('theme');
 
-    if (theme) {
-      // legacy local storage
-      setTheme(theme as Theme);
-      localStorage.removeItem('theme');
-    }
+      if (apiKey) {
+        // legacy local storage
+        setApiKey(apiKey);
+        localStorage.removeItem('apiKey');
+      }
 
-    if (oldChats) {
-      // legacy local storage
-      try {
-        const chats: ChatInterface[] = JSON.parse(oldChats);
-        if (chats.length > 0) {
-          setChats(chats);
-          setCurrentChatIndex(0);
-        } else {
+      if (theme) {
+        // legacy local storage
+        setTheme(theme as Theme);
+        localStorage.removeItem('theme');
+      }
+
+      if (oldChats) {
+        // legacy local storage
+        try {
+          const chats: ChatInterface[] = JSON.parse(oldChats);
+          if (chats.length > 0) {
+            setChats(chats);
+            setCurrentChatIndex(0);
+          } else {
+            initialiseNewChat();
+          }
+        } catch (e: unknown) {
+          console.log(e);
           initialiseNewChat();
         }
-      } catch (e: unknown) {
-        console.log(e);
-        initialiseNewChat();
-      }
-      localStorage.removeItem('chats');
-    } else {
-      // existing local storage
-      const chats = useStore.getState().chats;
-      const currentChatIndex = useStore.getState().currentChatIndex;
-      if (!chats || chats.length === 0) {
-        initialiseNewChat();
-      }
-      if (
-        chats &&
-        !(currentChatIndex >= 0 && currentChatIndex < chats.length)
-      ) {
-        setCurrentChatIndex(0);
-      }
-    }
-  }, []);
-  useEffect(() => {
-    if (fileId()) {
-      initLocalStateFromDrive();
-    }
-    currentlySaving = false;
-
-    function reset() {
-      needToSave = false;
-      currentlySaving = false;
-      mostRecentState = null;
-    }
-    function save(state: any) {
-      if (state && fileId()) {
-        if (isCurrentlySaving()) {
-          mostRecentState = state;
-          needToSave = true;
-          return;
+        localStorage.removeItem('chats');
+      } else {
+        // existing local storage
+        const chats = useStore.getState().chats;
+        const currentChatIndex = useStore.getState().currentChatIndex;
+        if (!chats || chats.length === 0) {
+          initialiseNewChat();
         }
-
-        currentlySaving = true;
-        return updateFile(JSON.stringify(state)).then(r => {
-          currentlySaving = false;
-          if (needToSave) {
-            needToSave = false;
-            save(mostRecentState);
-          } else {
-            reset();
-          }
-        });
-      } else {
-        reset();
+        if (
+          chats &&
+          !(currentChatIndex >= 0 && currentChatIndex < chats.length)
+        ) {
+          setCurrentChatIndex(0);
+        }
       }
-    }
-    useStore.subscribe((state, prevState) => {
-      save(state)
-    })
-    setInterval(() => {
+
+      // --------------- Section: Google drive
       if (fileId()) {
-        updateLocalStateFromDrive(() => { if (needToSave) { save(mostRecentState); } });
-      } else {
-        reset();
+        await initLocalStateFromDrive();
       }
-    }, 5 * 60 * 1000)
-  }, []);
+      currentlySaving = false;
 
-  useEffect(() => {
-    periodicSyncPrompt();
+      function reset() {
+        needToSave = false;
+        currentlySaving = false;
+        mostRecentState = null;
+      }
+      function save(state: any) {
+        if (state && fileId()) {
+          if (isCurrentlySaving()) {
+            mostRecentState = state;
+            needToSave = true;
+            return;
+          }
 
-    setInterval(() => {
-      periodicSyncPrompt();
-    }, 5 * 60 * 1000);
+          currentlySaving = true;
+          return updateFile(JSON.stringify(state)).then(r => {
+            currentlySaving = false;
+            if (needToSave) {
+              needToSave = false;
+              save(mostRecentState);
+            } else {
+              reset();
+            }
+          });
+        } else {
+          reset();
+        }
+      }
+      useStore.subscribe((state, prevState) => {
+        save(state)
+      })
+      setInterval(() => {
+        if (fileId()) {
+          updateLocalStateFromDrive(() => { if (needToSave) { save(mostRecentState); } });
+        } else {
+          reset();
+        }
+      }, 5 * 60 * 1000)
+
+      // --------------- Section: Public prompt sync
+      await periodicSyncPrompt();
+
+      setInterval(periodicSyncPrompt, 5 * 60 * 1000);
+    }
+
+    setup().catch(console.error);
   }, []);
 
   return (
