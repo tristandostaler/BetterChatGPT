@@ -37,6 +37,7 @@ const ChatFolder = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const folderRef = useRef<HTMLDivElement>(null);
   const gradientRef = useRef<HTMLDivElement>(null);
+  const paletteRef = useRef<HTMLDivElement>(null);
 
   const [_folderName, _setFolderName] = useState<string>(folderName);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -144,20 +145,39 @@ const ChatFolder = ({
     if (inputRef && inputRef.current) inputRef.current.focus();
   }, [isEdit]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        paletteRef.current &&
+        !paletteRef.current.contains(event.target as Node)
+      ) {
+        setShowPalette(false);
+      }
+    };
+
+    if (showPalette) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [paletteRef, showPalette]);
+
   return (
     <div
-      className={`w-full transition-colors group/folder ${
-        isHover ? 'bg-gray-800/40' : ''
-      }`}
+      className={`w-full transition-colors group/folder ${isHover ? 'bg-gray-800/40' : ''
+        }`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
     >
       <div
         style={{ background: color || '' }}
-        className={`${
-          color ? '' : 'hover:bg-gray-850'
-        } transition-colors flex py-2 pl-2 pr-1 items-center gap-3 relative rounded-md break-all cursor-pointer parent-sibling`}
+        className={`${color ? '' : 'hover:bg-gray-850'
+          } transition-colors flex py-2 pl-2 pr-1 items-center gap-3 relative rounded-md break-all cursor-pointer parent-sibling`}
         onClick={toggleExpanded}
         ref={folderRef}
         onMouseEnter={() => {
@@ -195,8 +215,7 @@ const ChatFolder = ({
               style={{
                 background:
                   color &&
-                  `linear-gradient(to left, ${
-                    color || 'var(--color-900)'
+                  `linear-gradient(to left, ${color || 'var(--color-900)'
                   }, rgb(32 33 35 / 0))`,
               }}
             />
@@ -217,7 +236,7 @@ const ChatFolder = ({
             </>
           ) : (
             <>
-              <div className='relative md:hidden group-hover/folder:md:inline'>
+              <div className='relative md:hidden group-hover/folder:md:inline' ref={paletteRef}>
                 <button
                   className='p-1 hover:text-white'
                   onClick={() => {
@@ -265,9 +284,8 @@ const ChatFolder = ({
               </button>
               <button className='p-1 hover:text-white' onClick={toggleExpanded}>
                 <DownChevronArrow
-                  className={`${
-                    isExpanded ? 'rotate-180' : ''
-                  } transition-transform`}
+                  className={`${isExpanded ? 'rotate-180' : ''
+                    } transition-transform`}
                 />
               </button>
             </>

@@ -379,7 +379,7 @@ const EditView = ({
   };
 
   const handleSave = () => {
-    if (sticky && _content === '') return;
+    if (sticky && (_content === '' || useStore.getState().generating)) return;
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
@@ -397,6 +397,7 @@ const EditView = ({
 
   const { handleSubmit } = useSubmit();
   const handleSaveAndSubmit = () => {
+    if (useStore.getState().generating) return;
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
@@ -496,13 +497,15 @@ const EditViewButtons = React.memo(
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
     const { t } = useTranslation();
+    const generating = useStore.getState().generating;
 
     return (
       <div className='flex'>
         <div className='flex-1 text-center mt-2 flex justify-center'>
           {sticky && (
             <button
-              className='btn relative mr-2 btn-primary'
+              className={`btn relative mr-2 btn-primary ${generating ? 'cursor-not-allowed opacity-40' : ''
+                }`}
               onClick={handleSaveAndSubmit}
             >
               <div className='flex items-center justify-center gap-2'>
@@ -512,7 +515,10 @@ const EditViewButtons = React.memo(
           )}
 
           <button
-            className={`btn relative mr-2 ${sticky ? 'btn-neutral' : 'btn-primary'
+            className={`btn relative mr-2 ${sticky
+              ? `btn-neutral ${generating ? 'cursor-not-allowed opacity-40' : ''
+              }`
+              : 'btn-primary'
               }`}
             onClick={handleSave}
           >
@@ -525,7 +531,7 @@ const EditViewButtons = React.memo(
             <button
               className='btn relative mr-2 btn-neutral'
               onClick={() => {
-                setIsModalOpen(true);
+                !generating && setIsModalOpen(true);
               }}
             >
               <div className='flex items-center justify-center gap-2'>

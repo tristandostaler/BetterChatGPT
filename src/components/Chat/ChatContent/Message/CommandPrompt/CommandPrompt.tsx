@@ -20,6 +20,7 @@ const CommandPrompt = ({
   const [dropDownLocal, setDropDownLocal] = useState<boolean>(false);
   const [_prompts, _setPrompts] = useState<Prompt[]>(prompts);
   const [input, setInput] = useState<string>('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedId, setSelectedId] = useState<string>('');
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -55,6 +56,27 @@ const CommandPrompt = ({
   }, [dropDownLocal])
 
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropDown(false);
+      }
+    };
+
+    if (dropDown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef, dropDown]);
+
+  useEffect(() => {
     const filteredPrompts = matchSorter(useStore.getState().prompts, input, {
       keys: ['name'],
     });
@@ -67,7 +89,7 @@ const CommandPrompt = ({
   }, [prompts]);
 
   return (
-    <div className='absolute top-[-30px] right-0'>
+    <div className='absolute top-[-30px] right-0' ref={dropdownRef}>
       <button
         className='btn btn-neutral btn-small'
         onClick={() => { setDropDown(!dropDown); setDropDownLocal(!dropDown); }}
