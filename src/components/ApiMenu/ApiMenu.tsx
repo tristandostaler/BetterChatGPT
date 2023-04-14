@@ -119,7 +119,7 @@ const ApiMenu = ({
         <div>
           <div className='flex gap-2 items-center justify-center mt-6'>
             <div className='min-w-fit text-gray-900 dark:text-gray-300 text-sm'>
-              (Optional) Add Organisation ID:
+              (Option) Org ID
             </div>
             <OrgIdSelector
               _orgId={_orgId}
@@ -204,7 +204,8 @@ export const OrgIdSelector = ({
   return (
     <div className='w-full relative'>
       <button
-        className='btn btn-neutral btn-small flex w-32 flex justify-between w-full'
+        className='btn btn-neutral btn-small flex w-32 flex justify-between w-full text-sm'
+        style={{ whiteSpace: 'nowrap' }}
         type='button'
         onClick={() => setDropDown((prev) => !prev)}
       >
@@ -222,7 +223,7 @@ export const OrgIdSelector = ({
         >
           {_availableOrgIds.map((orgId) => (
             <li
-              className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer'
+              className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer text-sm'
               onClick={() => {
                 _setOrgId(orgId);
                 setDropDown(false);
