@@ -17,9 +17,14 @@ export const getChatCompletion = async (
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
   if (orgId && orgId != '') {
-    var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9]+)\\)")
-    if (orgIdToUse) {
-      headers['OpenAI-Organization'] = orgIdToUse[0];
+    if (orgId.indexOf(" - ") == -1) {
+      headers['OpenAI-Organization'] = orgId;
+    }
+    else {
+      var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
+      if (orgIdToUse) {
+        headers['OpenAI-Organization'] = orgIdToUse[1];
+      }
     }
   }
 
@@ -53,9 +58,14 @@ export const getChatCompletionStream = async (
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
   if (orgId && orgId != '') {
-    var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
-    if (orgIdToUse) {
-      headers['OpenAI-Organization'] = orgIdToUse[1];
+    if (orgId.indexOf(" - ") == -1) {
+      headers['OpenAI-Organization'] = orgId;
+    }
+    else {
+      var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
+      if (orgIdToUse) {
+        headers['OpenAI-Organization'] = orgIdToUse[1];
+      }
     }
   }
 
