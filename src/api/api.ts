@@ -16,7 +16,12 @@ export const getChatCompletion = async (
   };
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
-  if (orgId && orgId != '') headers['OpenAI-Organization'] = orgId;
+  if (orgId && orgId != '') {
+    var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9]+)\\)")
+    if (orgIdToUse) {
+      headers['OpenAI-Organization'] = orgIdToUse[0];
+    }
+  }
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -47,7 +52,12 @@ export const getChatCompletionStream = async (
   };
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
-  if (orgId && orgId != '') headers['OpenAI-Organization'] = orgId;
+  if (orgId && orgId != '') {
+    var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
+    if (orgIdToUse) {
+      headers['OpenAI-Organization'] = orgIdToUse[1];
+    }
+  }
 
   const response = await fetch(endpoint, {
     method: 'POST',
