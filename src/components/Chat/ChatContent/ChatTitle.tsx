@@ -11,9 +11,9 @@ const ChatTitle = React.memo(() => {
   const config = useStore(
     (state) =>
       state.chats &&
-      state.chats.length > 0 &&
-      state.currentChatIndex >= 0 &&
-      state.currentChatIndex < state.chats.length
+        state.chats.length > 0 &&
+        state.currentChatIndex >= 0 &&
+        state.currentChatIndex < state.chats.length
         ? state.chats[state.currentChatIndex].config
         : undefined,
     shallow
@@ -50,6 +50,9 @@ const ChatTitle = React.memo(() => {
       >
         <div className='text-center p-1 rounded-md bg-gray-300/20 dark:bg-gray-900/10 hover:bg-gray-300/50 dark:hover:bg-gray-900/50'>
           {t('model')}: {config.model}
+        </div>
+        <div className='text-center p-1 rounded-md bg-gray-300/20 dark:bg-gray-900/10 hover:bg-gray-300/50 dark:hover:bg-gray-900/50'>
+          Org Id: {config.orgId}
         </div>
         <div className='text-center p-1 rounded-md bg-gray-300/20 dark:bg-gray-900/10 hover:bg-gray-300/50 dark:hover:bg-gray-900/50'>
           {t('token.label')}: {config.max_tokens}

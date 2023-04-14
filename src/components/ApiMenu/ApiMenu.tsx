@@ -190,7 +190,7 @@ const ApiMenu = ({
   );
 };
 
-const OrgIdSelector = ({
+export const OrgIdSelector = ({
   _orgId,
   _setOrgId,
   _availableOrgIds,

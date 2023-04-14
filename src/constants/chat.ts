@@ -53,6 +53,7 @@ export const defaultUserMaxToken = 4000;
 
 export const _defaultChatConfig: ConfigInterface = {
   model: defaultModel,
+  orgId: '',
   max_tokens: defaultUserMaxToken,
   temperature: 1,
   presence_penalty: 0,

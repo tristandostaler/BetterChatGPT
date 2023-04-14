@@ -14,6 +14,7 @@ import {
 
 import { ModelOptions } from '@type/chat';
 import { _defaultChatConfig, _defaultSystemMessage } from '@constants/chat';
+import { OrgIdSelector } from '@components/ApiMenu/ApiMenu';
 
 const ChatConfigMenu = () => {
   const { t } = useTranslation('model');
@@ -43,6 +44,7 @@ const ChatConfigPopup = ({
     useStore.getState().defaultSystemMessage
   );
   const [_model, _setModel] = useState<ModelOptions>(config.model);
+  const [_orgId, _setOrgId] = useState<string>(config.orgId ?? '');
   const [_maxToken, _setMaxToken] = useState<number>(config.max_tokens);
   const [_temperature, _setTemperature] = useState<number>(config.temperature);
   const [_topP, _setTopP] = useState<number>(config.top_p);
@@ -54,10 +56,12 @@ const ChatConfigPopup = ({
   );
 
   const { t } = useTranslation('model');
+  const availableOrgIds = useStore(store => store.availableOrgIds);
 
   const handleSave = () => {
     setDefaultChatConfig({
       model: _model,
+      orgId: _orgId,
       max_tokens: _maxToken,
       temperature: _temperature,
       top_p: _topP,
@@ -70,6 +74,7 @@ const ChatConfigPopup = ({
 
   const handleReset = () => {
     _setModel(_defaultChatConfig.model);
+    _setOrgId(_defaultChatConfig.orgId ?? '');
     _setMaxToken(_defaultChatConfig.max_tokens);
     _setTemperature(_defaultChatConfig.temperature);
     _setTopP(_defaultChatConfig.top_p);
@@ -89,6 +94,9 @@ const ChatConfigPopup = ({
           _systemMessage={_systemMessage}
           _setSystemMessage={_setSystemMessage}
         />
+        <div className='mb-4'>
+          <OrgIdSelector _orgId={_orgId} _setOrgId={_setOrgId} _availableOrgIds={availableOrgIds} />
+        </div>
         <ModelSelector _model={_model} _setModel={_setModel} />
         <MaxTokenSlider
           _maxToken={_maxToken}

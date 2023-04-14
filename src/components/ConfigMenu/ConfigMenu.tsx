@@ -5,6 +5,7 @@ import PopupModal from '@components/PopupModal';
 import { ConfigInterface, ModelOptions } from '@type/chat';
 import DownChevronArrow from '@icon/DownChevronArrow';
 import { modelMaxToken, modelOptions } from '@constants/chat';
+import { OrgIdSelector } from '@components/ApiMenu/ApiMenu';
 
 const ConfigMenu = ({
   setIsModalOpen,
@@ -17,6 +18,7 @@ const ConfigMenu = ({
 }) => {
   const [_maxToken, _setMaxToken] = useState<number>(config.max_tokens);
   const [_model, _setModel] = useState<ModelOptions>(config.model);
+  const [_orgId, _setOrgId] = useState<string>(config.orgId ?? '');
   const [_temperature, _setTemperature] = useState<number>(config.temperature);
   const [_presencePenalty, _setPresencePenalty] = useState<number>(
     config.presence_penalty
@@ -26,11 +28,13 @@ const ConfigMenu = ({
     config.frequency_penalty
   );
   const { t } = useTranslation('model');
+  const availableOrgIds = useStore(store => store.availableOrgIds);
 
   const handleConfirm = () => {
     setConfig({
       max_tokens: _maxToken,
       model: _model,
+      orgId: _orgId,
       temperature: _temperature,
       presence_penalty: _presencePenalty,
       top_p: _topP,
@@ -48,6 +52,9 @@ const ConfigMenu = ({
     >
       <div className='p-6 border-b border-gray-200 dark:border-gray-600'>
         <ModelSelector _model={_model} _setModel={_setModel} />
+        <div className='mb-4'>
+          <OrgIdSelector _orgId={_orgId} _setOrgId={_setOrgId} _availableOrgIds={availableOrgIds} />
+        </div>
         <MaxTokenSlider
           _maxToken={_maxToken}
           _setMaxToken={_setMaxToken}
@@ -67,7 +74,7 @@ const ConfigMenu = ({
           _setFrequencyPenalty={_setFrequencyPenalty}
         />
       </div>
-    </PopupModal>
+    </PopupModal >
   );
 };
 

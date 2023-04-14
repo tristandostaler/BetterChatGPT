@@ -6,7 +6,6 @@ export const getChatCompletion = async (
   endpoint: string,
   messages: MessageInterface[],
   config: ConfigInterface,
-  orgId: string,
   apiKey?: string,
   customHeaders?: Record<string, string>
 ) => {
@@ -14,14 +13,24 @@ export const getChatCompletion = async (
     'Content-Type': 'application/json',
     ...customHeaders,
   };
+
+  const tempConfig: ConfigInterface = {
+    model: config.model,
+    max_tokens: config.max_tokens,
+    temperature: config.temperature,
+    presence_penalty: config.presence_penalty,
+    top_p: config.top_p,
+    frequency_penalty: config.frequency_penalty,
+  };
+
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
-  if (orgId && orgId != '') {
-    if (orgId.indexOf(" - ") == -1) {
-      headers['OpenAI-Organization'] = orgId;
+  if (config.orgId && config.orgId != '') {
+    if (config.orgId.indexOf(" - ") == -1) {
+      headers['OpenAI-Organization'] = config.orgId;
     }
     else {
-      var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
+      var orgIdToUse = config.orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
       if (orgIdToUse) {
         headers['OpenAI-Organization'] = orgIdToUse[1];
       }
@@ -33,7 +42,7 @@ export const getChatCompletion = async (
     headers,
     body: JSON.stringify({
       messages,
-      ...config,
+      ...tempConfig,
       max_tokens: null,
     }),
   });
@@ -47,7 +56,6 @@ export const getChatCompletionStream = async (
   endpoint: string,
   messages: MessageInterface[],
   config: ConfigInterface,
-  orgId: string,
   apiKey?: string,
   customHeaders?: Record<string, string>
 ) => {
@@ -55,14 +63,24 @@ export const getChatCompletionStream = async (
     'Content-Type': 'application/json',
     ...customHeaders,
   };
+
+  const tempConfig: ConfigInterface = {
+    model: config.model,
+    max_tokens: config.max_tokens,
+    temperature: config.temperature,
+    presence_penalty: config.presence_penalty,
+    top_p: config.top_p,
+    frequency_penalty: config.frequency_penalty,
+  };
+
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
-  if (orgId && orgId != '') {
-    if (orgId.indexOf(" - ") == -1) {
-      headers['OpenAI-Organization'] = orgId;
+  if (config.orgId && config.orgId != '') {
+    if (config.orgId.indexOf(" - ") == -1) {
+      headers['OpenAI-Organization'] = config.orgId;
     }
     else {
-      var orgIdToUse = orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
+      var orgIdToUse = config.orgId.match(".*? - \\(([A-Za-z0-9\\-]+)\\)")
       if (orgIdToUse) {
         headers['OpenAI-Organization'] = orgIdToUse[1];
       }
@@ -74,7 +92,7 @@ export const getChatCompletionStream = async (
     headers,
     body: JSON.stringify({
       messages,
-      ...config,
+      ...tempConfig,
       max_tokens: null,
       stream: true,
     }),
