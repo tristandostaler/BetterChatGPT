@@ -76,25 +76,24 @@ const useSubmit = () => {
   // msg.lang = document.documentElement.lang;
 
   const read = () => {
-    window.speechSynthesis.pause()
-    window.speechSynthesis.resume()
+    // window.speechSynthesis.pause()
+    // window.speechSynthesis.resume()
     if (!window.speechSynthesis.speaking && sentences.length > 0) {
       var s = sentences.shift();
       if (!s) return;
       // console.log('reading sentence: ' + s);
       msg.text = s;
+      window.speechSynthesis.cancel();
       window.speechSynthesis.speak(msg);
-    } else if (!useStore.getState().generating) {
-      if (!window.speechSynthesis.speaking && sentences.length == 0) {
-        if (textToReadCache != '') {
-          // console.log('reading remiainder: ' + textToReadCache);
-          sentences.push(textToReadCache);
-          textToReadCache = '';
-          read();
-        } else {
-          if (needSetGeneratingFalse) {
-            setGenerating(false);
-          }
+    } else if (!window.speechSynthesis.speaking && sentences.length == 0) {
+      if (textToReadCache != '') {
+        // console.log('reading remiainder: ' + textToReadCache);
+        sentences.push(textToReadCache);
+        textToReadCache = '';
+        read();
+      } else {
+        if (needSetGeneratingFalse) {
+          setGenerating(false);
         }
       }
     }
