@@ -76,6 +76,8 @@ const useSubmit = () => {
   // msg.lang = document.documentElement.lang;
 
   const read = () => {
+    window.speechSynthesis.pause()
+    window.speechSynthesis.resume()
     if (!window.speechSynthesis.speaking && sentences.length > 0) {
       var s = sentences.shift();
       if (!s) return;
