@@ -5,16 +5,19 @@ export interface AuthSlice {
   apiKey?: string;
   apiEndpoint: string;
   orgId: string;
+  availableOrgIds: string[];
   firstVisit: boolean;
   setApiKey: (apiKey: string) => void;
   setApiEndpoint: (apiEndpoint: string) => void;
   setOrgId: (orgId: string) => void;
+  setAvailableOrgIds: (orgIds: string[]) => void;
   setFirstVisit: (firstVisit: boolean) => void;
 }
 
 export const createAuthSlice: StoreSlice<AuthSlice> = (set, get) => ({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY || undefined,
   orgId: '',
+  availableOrgIds: [''],
   apiEndpoint: defaultAPIEndpoint,
   firstVisit: true,
   setApiKey: (apiKey: string) => {
@@ -33,6 +36,12 @@ export const createAuthSlice: StoreSlice<AuthSlice> = (set, get) => ({
     set((prev: AuthSlice) => ({
       ...prev,
       orgId: orgId,
+    }));
+  },
+  setAvailableOrgIds: (availableOrgIds: string[]) => {
+    set((prev: AuthSlice) => ({
+      ...prev,
+      availableOrgIds: availableOrgIds,
     }));
   },
   setFirstVisit: (firstVisit: boolean) => {
