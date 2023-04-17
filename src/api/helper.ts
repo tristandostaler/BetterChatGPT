@@ -2,7 +2,13 @@ import { modelOptions } from '@constants/chat';
 import { EventSourceData } from '@type/api';
 import { ConfigInterface, MessageInterface } from '@type/chat';
 
-const regex = /(?:~ Max Tokens: (?<tokens>[0-9]+) ~)?(?:~ Temperature: (?<temp>[0-9\.]+) ~)?(?:~ Top-p: (?<topp>[0-9\.]+) ~)?(?:~ Presence Penalty: (?<presence>[0-9\.]+) ~)?(?:~ Frequency Penalty: (?<frequency>[0-9\.]+) ~)?/;
+const regexes = {
+  'tokens': /(?:~ Max Tokens: (?<match>[0-9]+) ~)/gm,
+  'temp': /(?:~ Temperature: (?<match>[0-9\.]+) ~)/gm,
+  'topp': /(?:~ Top-p: (?<match>[0-9\.]+) ~)/gm,
+  'presence': /(?:~ Presence Penalty: (?<match>[0-9\.]+) ~)/gm,
+  'frequency': /(?:~ Frequency Penalty: (?<match>[0-9\.]+) ~)/gm,
+}
 
 export const parseEventSource = (
   data: string
@@ -40,7 +46,12 @@ export const replaceDynamicContentInMessages = (
   }
 
   messages.forEach((m) => {
-    var newContent = m.content.replace(regex, '');
+    var newContent = m.content.replace(regexes.tokens, '')
+      .replace(regexes.temp, '')
+      .replace(regexes.topp, '')
+      .replace(regexes.presence, '')
+      .replace(regexes.frequency, '');
+
     for (let [key, value] of Object.entries(replacements)) {
       newContent = newContent.replaceAll('{{' + key + '}}', value);
     }
@@ -67,24 +78,33 @@ export const adjustConfigBasedOnMessages = (
     top_p: config.top_p,
   };
 
-  messages.forEach((m) => {
-    let result = regex.exec(m.content);
+  const getMatch = (content: string, regex: RegExp) => {
+    let result = regex.exec(content);
     if (!result || !result.groups)
       return;
-    if (result.groups.tokens) {
-      adjustedConfig.max_tokens = +result.groups.tokens
+    return result.groups.match;
+  };
+
+  messages.forEach((m) => {
+    let result = getMatch(m.content, regexes.tokens)
+    if (result) {
+      adjustedConfig.max_tokens = +result
     }
-    if (result.groups.temp) {
-      adjustedConfig.temperature = +result.groups.temp
+    result = getMatch(m.content, regexes.temp)
+    if (result) {
+      adjustedConfig.temperature = +result
     }
-    if (result.groups.topp) {
-      adjustedConfig.top_p = +result.groups.topp
+    result = getMatch(m.content, regexes.topp)
+    if (result) {
+      adjustedConfig.top_p = +result
     }
-    if (result.groups.presence) {
-      adjustedConfig.presence_penalty = +result.groups.presence
+    result = getMatch(m.content, regexes.presence)
+    if (result) {
+      adjustedConfig.presence_penalty = +result
     }
-    if (result.groups.frequency) {
-      adjustedConfig.frequency_penalty = +result.groups.frequency
+    result = getMatch(m.content, regexes.frequency)
+    if (result) {
+      adjustedConfig.frequency_penalty = +result
     }
   });
 
