@@ -2,6 +2,8 @@ import { modelOptions } from '@constants/chat';
 import { EventSourceData } from '@type/api';
 import { ConfigInterface, MessageInterface } from '@type/chat';
 
+const regex = /(?:~ Max Tokens: (?<tokens>[0-9]+) ~)?(?:~ Temperature: (?<temp>[0-9\.]+) ~)?(?:~ Top-p: (?<topp>[0-9\.]+) ~)?(?:~ Presence Penalty: (?<presence>[0-9\.]+) ~)?(?:~ Frequency Penalty: (?<frequency>[0-9\.]+) ~)?/;
+
 export const parseEventSource = (
   data: string
 ): '[DONE]' | EventSourceData[] => {
@@ -38,7 +40,7 @@ export const replaceDynamicContentInMessages = (
   }
 
   messages.forEach((m) => {
-    var newContent = m.content;
+    var newContent = m.content.replace(regex, '');
     for (let [key, value] of Object.entries(replacements)) {
       newContent = newContent.replaceAll('{{' + key + '}}', value);
     }
@@ -64,8 +66,6 @@ export const adjustConfigBasedOnMessages = (
     temperature: config.temperature,
     top_p: config.top_p,
   };
-
-  let regex = /(?:~ Max Tokens: (?<tokens>[0-9]+) ~)?(?:~ Temperature: (?<temp>[0-9\.]+) ~)?(?:~ Top-p: (?<topp>[0-9\.]+) ~)?(?:~ Presence Penalty: (?<presence>[0-9\.]+) ~)?(?:~ Frequency Penalty: (?<frequency>[0-9\.]+) ~)?/;
 
   messages.forEach((m) => {
     let result = regex.exec(m.content);
