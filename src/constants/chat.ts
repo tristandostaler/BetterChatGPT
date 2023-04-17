@@ -51,7 +51,7 @@ export const modelCost = {
   'gpt-4-32k-0314': { price: 0.06, unit: 1000 },
 };
 
-export const defaultUserMaxToken = 4000;
+export const defaultUserMaxToken = 4096;
 
 export const _defaultChatConfig: ConfigInterface = {
   model: defaultModel,
