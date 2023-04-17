@@ -57,7 +57,7 @@ export const _defaultChatConfig: ConfigInterface = {
   model: defaultModel,
   orgId: '',
   max_tokens: defaultUserMaxToken,
-  temperature: 1,
+  temperature: 0.7,
   presence_penalty: 0,
   top_p: 1,
   frequency_penalty: 0,
