@@ -1,7 +1,7 @@
 import { ShareGPTSubmitBodyInterface } from '@type/api';
 import { ConfigInterface, MessageInterface } from '@type/chat';
 import { isAzureEndpoint } from '@utils/api';
-import { replaceDynamicContentInMessages } from './helper';
+import { adjustConfigBasedOnMessages, replaceDynamicContentInMessages } from './helper';
 
 export const getChatCompletion = async (
   endpoint: string,
@@ -15,14 +15,7 @@ export const getChatCompletion = async (
     ...customHeaders,
   };
 
-  const tempConfig: ConfigInterface = {
-    model: config.model,
-    max_tokens: config.max_tokens,
-    temperature: config.temperature,
-    presence_penalty: config.presence_penalty,
-    top_p: config.top_p,
-    frequency_penalty: config.frequency_penalty,
-  };
+  const tempConfig = adjustConfigBasedOnMessages(messagesToSend, config);
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -67,14 +60,7 @@ export const getChatCompletionStream = async (
     ...customHeaders,
   };
 
-  const tempConfig: ConfigInterface = {
-    model: config.model,
-    max_tokens: config.max_tokens,
-    temperature: config.temperature,
-    presence_penalty: config.presence_penalty,
-    top_p: config.top_p,
-    frequency_penalty: config.frequency_penalty,
-  };
+  const tempConfig = adjustConfigBasedOnMessages(messagesToSend, config);
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
