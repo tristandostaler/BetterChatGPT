@@ -106,6 +106,7 @@ const PromptLibraryMenuPopUp = ({
       title={t('promptLibrary') as string}
       setIsModalOpen={setIsModalOpen}
       handleConfirm={handleSave}
+      handleClickBackdrop={handleSave}
     >
       <div className='p-6 border-b border-gray-200 dark:border-gray-600 w-[90vw] max-w-full text-sm text-gray-900 dark:text-gray-300'>
         <div className='border px-4 py-2 rounded border-gray-200 dark:border-gray-600'>

@@ -88,6 +88,7 @@ const ChatConfigPopup = ({
       title={t('defaultChatConfig') as string}
       setIsModalOpen={setIsModalOpen}
       handleConfirm={handleSave}
+      handleClickBackdrop={handleSave}
     >
       <div className='p-6 border-b border-gray-200 dark:border-gray-600 w-[90vw] max-w-full text-sm text-gray-900 dark:text-gray-300'>
         <DefaultSystemChat
