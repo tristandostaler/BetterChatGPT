@@ -35,7 +35,9 @@ const useUpdateFile = () => {
                 return null;
             }
             return res.json();
-        }).catch(() => { reLogin(); });
+        }).catch((reason) => {
+            reLogin();
+        });
     }
     return updateFile;
 };

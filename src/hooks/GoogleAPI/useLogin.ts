@@ -15,11 +15,13 @@ const useLogin = () => {
     const searchFile = useSearchFile(true);
     const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(true, () => { }, () => { return false; });
     const setGoogleAccessToken = useStore((state) => state.setGoogleAccessToken);
+    const setGoogleRefreshTokenExpirationTime = useStore((state) => state.setGoogleRefreshTokenExpirationTime);
     const setFileId = useStore((state) => state.setFileId);
 
     const googleLogin = useGoogleLogin({
         onSuccess: (codeResponse) => {
             console.log(codeResponse);
+            setGoogleRefreshTokenExpirationTime(Date.now() + ((codeResponse.expires_in - 60) * 1000))
             setGoogleAccessToken(codeResponse.access_token);
             if (fileId() == null) {
                 searchFile().then(resp => {

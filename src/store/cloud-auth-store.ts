@@ -19,6 +19,7 @@ const useCloudAuthStore = create<StoreState>()(
       partialize: (state) => ({
         googleAccessToken: state.googleAccessToken,
         googleRefreshToken: state.googleRefreshToken,
+        googleRefreshTokenExpirationTime: state.googleRefreshTokenExpirationTime,
         fileId: state.fileId,
       }),
       version: 1,
