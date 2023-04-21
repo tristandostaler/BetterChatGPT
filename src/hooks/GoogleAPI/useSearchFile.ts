@@ -27,7 +27,7 @@ const useSearchFile = (isLoginProcess: boolean) => {
                 return null;
             }
             return res.json();
-        });
+        }).catch(() => { reLogin(); });
     }
     return searchFile;
 };

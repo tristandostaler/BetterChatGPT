@@ -47,9 +47,7 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
             useLocalStore.setState(state);
             setCurrentChatIndex(cci);
             setHideSideMenu(hsm);
-            setCurrentlySaving(false);
-            actionToRunWhenDone();
-        });
+        }).finally(() => { setCurrentlySaving(false); actionToRunWhenDone(); });
     }
     return updateLocalStateFromDrive;
 };

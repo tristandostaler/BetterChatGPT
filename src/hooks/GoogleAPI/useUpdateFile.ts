@@ -35,7 +35,7 @@ const useUpdateFile = () => {
                 return null;
             }
             return res.json();
-        });
+        }).catch(() => { reLogin(); });
     }
     return updateFile;
 };
