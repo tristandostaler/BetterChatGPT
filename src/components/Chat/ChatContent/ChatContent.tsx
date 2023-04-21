@@ -59,6 +59,7 @@ const ChatContent = () => {
             ref={saveRef}
           >
             <ChatTitle />
+            <div style={{ marginTop: '50px' }}></div>
             {!generating && messages?.length === 0 && (
               <NewMessageButton messageIndex={-1} />
             )}
@@ -97,8 +98,8 @@ const ChatContent = () => {
           )}
           <div
             className={`mt-4 w-full m-auto  ${hideSideMenu
-                ? 'md:max-w-5xl lg:max-w-5xl xl:max-w-6xl'
-                : 'md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'
+              ? 'md:max-w-5xl lg:max-w-5xl xl:max-w-6xl'
+              : 'md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'
               }`}
           >
             {useStore.getState().generating || (

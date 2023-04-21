@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 import useStore from '@store/store';
@@ -40,10 +40,34 @@ const ChatTitle = React.memo(() => {
     }
   }, [currentChatIndex]);
 
+  const [_isSticky, _setIsSticky] = useState<boolean>(false);
+  const windowWidthRef = useRef<number>(window.innerWidth);
+
+  useEffect(() => {
+    if (window.innerWidth < 1392) {
+      _setIsSticky(false);
+    }
+    else {
+      _setIsSticky(true);
+    }
+    window.addEventListener('resize', () => {
+      if (
+        windowWidthRef.current !== window.innerWidth &&
+        window.innerWidth < 1392
+      ) {
+        _setIsSticky(false);
+      }
+      else {
+        _setIsSticky(true);
+      }
+    });
+  }, []);
+
   return config ? (
     <>
       <div
         className='flex gap-x-4 gap-y-1 flex-wrap w-full items-center justify-center border-b border-black/10 bg-gray-50 p-3 dark:border-gray-900/50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-pointer'
+        style={_isSticky ? { position: 'absolute', top: '0', zIndex: '998' } : {}}
         onClick={() => {
           setIsModalOpen(true);
         }}
