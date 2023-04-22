@@ -41,7 +41,6 @@ const ChatTitle = React.memo(() => {
   }, [currentChatIndex]);
 
   const [_isSticky, _setIsSticky] = useState<boolean>(false);
-  const windowWidthRef = useRef<number>(window.innerWidth);
 
   useEffect(() => {
     if (window.innerWidth < 1392) {
@@ -52,7 +51,6 @@ const ChatTitle = React.memo(() => {
     }
     window.addEventListener('resize', () => {
       if (
-        windowWidthRef.current !== window.innerWidth &&
         window.innerWidth < 1392
       ) {
         _setIsSticky(false);
