@@ -7,30 +7,30 @@
 <h4 align="center"><b>免费、无限、强大、智能、迷人</b></h4>
 
 <p align="center">
-<a href="https://github.com/ztjhz/BetterChatGPT/blob/main/LICENSE" target="_blank">
-<img src="https://img.shields.io/github/license/ztjhz/BetterChatGPT?style=flat-square" alt="licence" />
+<a href="https://github.com/tristandostaler/BetterChatGPT/blob/main/LICENSE" target="_blank">
+<img src="https://img.shields.io/github/license/tristandostaler/BetterChatGPT?style=flat-square" alt="licence" />
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/fork" target="_blank">
-<img src="https://img.shields.io/github/forks/ztjhz/BetterChatGPT?style=flat-square" alt="forks"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/fork" target="_blank">
+<img src="https://img.shields.io/github/forks/tristandostaler/BetterChatGPT?style=flat-square" alt="forks"/>
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/stargazers" target="_blank">
-<img src="https://img.shields.io/github/stars/ztjhz/BetterChatGPT?style=flat-square" alt="stars"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/stargazers" target="_blank">
+<img src="https://img.shields.io/github/stars/tristandostaler/BetterChatGPT?style=flat-square" alt="stars"/>
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/issues" target="_blank">
-<img src="https://img.shields.io/github/issues/ztjhz/BetterChatGPT?style=flat-square" alt="issues"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/issues" target="_blank">
+<img src="https://img.shields.io/github/issues/tristandostaler/BetterChatGPT?style=flat-square" alt="issues"/>
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/pulls" target="_blank">
-<img src="https://img.shields.io/github/issues-pr/ztjhz/BetterChatGPT?style=flat-square" alt="pull-requests"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/pulls" target="_blank">
+<img src="https://img.shields.io/github/issues-pr/tristandostaler/BetterChatGPT?style=flat-square" alt="pull-requests"/>
 </a>
-<a href="https://twitter.com/intent/tweet?text=👋看看这个惊人的存储库%20https://github.com/ztjhz/BetterChatGPT，由%20@nikushii_%20创建。"><img src="https://img.shields.io/twitter/url?label=%E5%88%86%E4%BA%AB%E5%88%B0%E6%8E%A8%E7%89%B9&style=social&url=https%3A%2F%2Fgithub.com%2Fztjhz%2FBetterChatGPT"></a>
+<a href="https://twitter.com/intent/tweet?text=👋看看这个惊人的存储库%20https://github.com/tristandostaler/BetterChatGPT，由%20@nikushii_%20创建。"><img src="https://img.shields.io/twitter/url?label=%E5%88%86%E4%BA%AB%E5%88%B0%E6%8E%A8%E7%89%B9&style=social&url=https%3A%2F%2Fgithub.com%2Ftristandostaler%2FBetterChatGPT"></a>
 </p>
 
 <p align="center">
     <a href="https://bettergpt.chat">进入网站</a>
     ·
-    <a href="https://github.com/ztjhz/BetterChatGPT/issues/new/choose">反馈问题</a>
+    <a href="https://github.com/tristandostaler/BetterChatGPT/issues/new/choose">反馈问题</a>
     ·
-    <a href="https://github.com/ztjhz/BetterChatGPT/issues/new/choose">请求功能</a>
+    <a href="https://github.com/tristandostaler/BetterChatGPT/issues/new/choose">请求功能</a>
 </p>
 <p align="center"><i>您喜欢使用 Better ChatGPT 吗？请给它一个星星以示支持！🌟</i></p>
 
@@ -77,7 +77,7 @@ Better ChatGPT 已经包含了大量的功能。您可以使用以下功能：
 
 ## 桌面应用
 
-在此下载桌面应用程序：<https://github.com/ztjhz/BetterChatGPT/releases/>
+在此下载桌面应用程序：<https://github.com/tristandostaler/BetterChatGPT/releases/>
 
 | 操作系统 | 下载      |
 | -------- | --------- |
@@ -98,15 +98,15 @@ Better ChatGPT 已经包含了大量的功能。您可以使用以下功能：
 
 使用 Vercel 一键部署
 
-[![Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fztjhz%2FBetterChatGPT)
+[![Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftristandostaler%2FBetterChatGPT)
 
 ## GitHub 页面
 
 ### 步骤
 
 1. 创建一个 GitHub 账户（如果您还没有账户）。
-1. 给此[存储库](https://github.com/ztjhz/BetterChatGPT) 一个星星 ⭐️
-1. Fork 此[存储库](https://github.com/ztjhz/BetterChatGPT)
+1. 给此[存储库](https://github.com/tristandostaler/BetterChatGPT) 一个星星 ⭐️
+1. Fork 此[存储库](https://github.com/tristandostaler/BetterChatGPT)
 1. 在 fork 之后的存储库中点击 `Settings` 选项卡
    ![image](https://user-images.githubusercontent.com/59118459/223753577-9b6f8266-26e8-471b-8f45-a1a02fbab232.png)
 1. 在左侧边栏中，单击 `Pages` ，在右侧区域中，为 `Source` 选择 `GitHub Actions`。
@@ -129,14 +129,14 @@ Better ChatGPT 已经包含了大量的功能。您可以使用以下功能：
    - [node.js](https://nodejs.org/en/)
    - [yarn](https://yarnpkg.com/) 或者 [npm](https://www.npmjs.com/)
 
-2. 通过运行 `git clone https://github.com/ztjhz/BetterChatGPT.git` 克隆此[存储库](https://github.com/ztjhz/BetterChatGPT)。
+2. 通过运行 `git clone https://github.com/tristandostaler/BetterChatGPT.git` 克隆此[存储库](https://github.com/tristandostaler/BetterChatGPT)。
 3. 进入目录通过 `cd BetterChatGPT`
 4. 运行 `yarn` 或 `npm install`，具体取决于您是否安装了 yarn 或 npm。
 5. 运行 `yarn dev` 或 `npm run dev` 来启动应用程序。
 
 # ⭐️ 星星历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=ztjhz/BetterChatGPT&type=Date)](https://github.com/ztjhz/BetterChatGPT/stargazers)
+[![Star History Chart](https://api.star-history.com/svg?repos=tristandostaler/BetterChatGPT&type=Date)](https://github.com/tristandostaler/BetterChatGPT/stargazers)
 
 <h3 align="center">
     给 <b>Better ChatGPT</b> 一个星星 ⭐️ 可以让它更加锦上添花，让更多人受益匪浅。
@@ -146,8 +146,8 @@ Better ChatGPT 已经包含了大量的功能。您可以使用以下功能：
 
 感谢所有贡献者！
 
-<a href="https://github.com/ztjhz/BetterChatGPT/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ztjhz/BetterChatGPT" />
+<a href="https://github.com/tristandostaler/BetterChatGPT/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tristandostaler/BetterChatGPT" />
 </a>
 
 # 🙏 支持
@@ -158,11 +158,11 @@ Better ChatGPT 已经包含了大量的功能。您可以使用以下功能：
 
 如果您想支持我们的团队，请考虑通过以下方法之一赞助我们。每一份贡献，无论多小，都有助于我们维护和改善我们的服务。
 
-| 付款方式       | 链接                                                                                                                                                 |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 支付宝 (Ayaka) | <img src="https://ayaka14732.github.io/sponsor/alipay.jpg" width=150 />                                                                              |
-| 微信 (Ayaka)   | <img src="https://ayaka14732.github.io/sponsor/wechat.png" width=150 />                                                                              |
-| GitHub         | [![GitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/ztjhz) |
-| KoFi           | [![support](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/betterchatgpt)                                                             |
+| 付款方式       | 链接                                                                                                                                                           |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 支付宝 (Ayaka) | <img src="https://ayaka14732.github.io/sponsor/alipay.jpg" width=150 />                                                                                        |
+| 微信 (Ayaka)   | <img src="https://ayaka14732.github.io/sponsor/wechat.png" width=150 />                                                                                        |
+| GitHub         | [![GitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/tristandostaler) |
+| KoFi           | [![support](https://ko-fi.com/img/githubbutton_sm.svg)](https://www.buymeacoffee.com/tristandostaler)                                                          |
 
 感谢您成为我们社区的一员，我们期待着在未来为您提供更好的服务。

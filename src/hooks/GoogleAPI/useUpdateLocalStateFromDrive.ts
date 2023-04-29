@@ -12,6 +12,12 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
     const setCurrentChatIndex = useLocalStore(state => state.setCurrentChatIndex);
     const setHideSideMenu = useLocalStore(state => state.setHideSideMenu);
     const getHideSideMenu = () => { return useLocalStore.getState().hideSideMenu; }
+    const setToastStatus = useLocalStore((state) => state.setToastStatus);
+    const getToastStatus = () => { return useLocalStore((state) => state.toastStatus); }
+    const setToastMessage = useLocalStore((state) => state.setToastMessage);
+    const getToastMessage = () => { return useLocalStore((state) => state.toastMessage); }
+    const setToastShow = useLocalStore((state) => state.setToastShow);
+    const getToastShow = () => { return useLocalStore((state) => state.toastShow); }
 
     const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
         if (isCurrentlySaving()) {
@@ -43,10 +49,16 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
 
             var hsm = getHideSideMenu();
             var cci = getCurrentChatIndex();
+            var tm = getToastMessage();
+            var tsw = getToastShow();
+            var ts = getToastStatus();
             // console.log(state);
             useLocalStore.setState(state);
             setCurrentChatIndex(cci);
             setHideSideMenu(hsm);
+            setToastMessage(tm);
+            setToastShow(tsw);
+            setToastStatus(ts);
         }).finally(() => { setCurrentlySaving(false); actionToRunWhenDone(); });
     }
     return updateLocalStateFromDrive;

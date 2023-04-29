@@ -17,10 +17,17 @@ const useLogin = () => {
     const setGoogleAccessToken = useStore((state) => state.setGoogleAccessToken);
     const setGoogleRefreshTokenExpirationTime = useStore((state) => state.setGoogleRefreshTokenExpirationTime);
     const setFileId = useStore((state) => state.setFileId);
+    const setToastStatus = useLocalStore((state) => state.setToastStatus);
+    const setToastMessage = useLocalStore((state) => state.setToastMessage);
+    const setToastShow = useLocalStore((state) => state.setToastShow);
 
     const googleLogin = useGoogleLogin({
         onSuccess: (codeResponse) => {
-            console.log(codeResponse);
+            setToastStatus('success');
+            setToastMessage('Logged in!');
+            setToastShow(true);
+
+            // console.log(codeResponse);
             setGoogleRefreshTokenExpirationTime(Date.now() + ((codeResponse.expires_in - 60) * 1000))
             setGoogleAccessToken(codeResponse.access_token);
             if (fileId() == null) {
@@ -55,7 +62,10 @@ const useLogin = () => {
             }
         },
         onError: () => {
-            console.log('Login Failed');
+            // console.log('Login Failed');
+            setToastStatus('error');
+            setToastMessage('Login Failed!');
+            setToastShow(true);
         },
         scope: 'https://www.googleapis.com/auth/drive.file',
     });

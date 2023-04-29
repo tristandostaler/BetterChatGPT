@@ -13,8 +13,8 @@ import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 
-import useReLogin from '@hooks/GoogleAPI/useReLogin';
 import usePeriodicSyncPrompt from '@hooks/PublicPrompts/usePeriodicSyncPrompt';
+import Toast from '@components/Toast';
 
 // https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
 // https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
@@ -157,6 +157,7 @@ function App() {
       <Menu />
       <Chat />
       <ApiPopup />
+      <Toast />
     </div>
   );
 }
