@@ -13,11 +13,11 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
     const setHideSideMenu = useLocalStore(state => state.setHideSideMenu);
     const getHideSideMenu = () => { return useLocalStore.getState().hideSideMenu; }
     const setToastStatus = useLocalStore((state) => state.setToastStatus);
-    const getToastStatus = () => { return useLocalStore((state) => state.toastStatus); }
+    const getToastStatus = () => { return useLocalStore.getState().toastStatus; }
     const setToastMessage = useLocalStore((state) => state.setToastMessage);
-    const getToastMessage = () => { return useLocalStore((state) => state.toastMessage); }
+    const getToastMessage = () => { return useLocalStore.getState().toastMessage; }
     const setToastShow = useLocalStore((state) => state.setToastShow);
-    const getToastShow = () => { return useLocalStore((state) => state.toastShow); }
+    const getToastShow = () => { return useLocalStore.getState().toastShow; }
 
     const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
         if (isCurrentlySaving()) {
