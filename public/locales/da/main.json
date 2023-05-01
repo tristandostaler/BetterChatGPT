@@ -37,5 +37,5 @@
   "cloneChat": "Klon Chat",
   "cloned": "Klonet",
   "enterToSubmit": "Tryk Enter for at sende",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type "/help" and select "help" in the prompt library to get help on this application or select [/] to use a prompt template..."
 }

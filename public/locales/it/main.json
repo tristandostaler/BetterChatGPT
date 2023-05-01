@@ -37,5 +37,5 @@
   "cloneChat": "Duplica Conversazione",
   "cloned": "Duplicata",
   "enterToSubmit": "Invio per inviare",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }
