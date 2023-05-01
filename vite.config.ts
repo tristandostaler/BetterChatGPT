@@ -11,7 +11,7 @@ export default defineConfig({
     includeAssets: ['apple-touch-icon.png', 'favicon-32x32.png', 'favicon-16x16.png'],
     manifest: {
       name: 'Better ChatGPT',
-      short_name: 'BtrChatGPT',
+      short_name: 'Better ChatGPT',
       description: 'Play and chat smarter with BetterChatGPT - an amazing open-source web app with a better UI for exploring OpenAI\'s ChatGPT API!',
       theme_color: '#000000',
       background_color: '#000000',
