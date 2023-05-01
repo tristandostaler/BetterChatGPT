@@ -39,7 +39,7 @@ export const HelperPrompt: Prompt = {
   id: '1d3e9cb7-b585-43fa-acc3-840c189f6b93',
   private: true,
   publicSourceId: '',
-  name: 'Help',
+  name: 'help',
   prompt: '{{HelperPrompt}} - Submit or Enter a Question: ',
 };
 
