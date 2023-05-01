@@ -7,7 +7,32 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), wasm(), topLevelAwait(), VitePWA({ registerType: 'autoUpdate' })],
+  plugins: [react(), wasm(), topLevelAwait(), VitePWA({
+    includeAssets: ['apple-touch-icon.png', 'favicon-32x32.png', 'favicon-16x16.png'],
+    manifest: {
+      name: 'Better ChatGPT',
+      short_name: 'BtrChatGPT',
+      description: 'Play and chat smarter with BetterChatGPT - an amazing open-source web app with a better UI for exploring OpenAI\'s ChatGPT API!',
+      theme_color: '#000000',
+      background_color: '#000000',
+      icons: [
+        {
+          src: 'favicon-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'favicon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    },
+    registerType: 'autoUpdate',
+    devOptions: {
+      enabled: true
+    },
+  })],
   resolve: {
     alias: {
       '@icon/': new URL('./src/assets/icons/', import.meta.url).pathname,
