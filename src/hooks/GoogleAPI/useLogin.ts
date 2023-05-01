@@ -23,10 +23,6 @@ const useLogin = () => {
 
     const googleLogin = useGoogleLogin({
         onSuccess: (codeResponse) => {
-            setToastStatus('success');
-            setToastMessage('Logged in!');
-            setToastShow(true);
-
             // console.log(codeResponse);
             setGoogleRefreshTokenExpirationTime(Date.now() + ((codeResponse.expires_in - 60) * 1000))
             setGoogleAccessToken(codeResponse.access_token);
@@ -60,6 +56,9 @@ const useLogin = () => {
             } else {
                 updateLocalStateFromDrive();
             }
+            setToastStatus('success');
+            setToastMessage('Logged in!');
+            setToastShow(true);
         },
         onError: () => {
             // console.log('Login Failed');

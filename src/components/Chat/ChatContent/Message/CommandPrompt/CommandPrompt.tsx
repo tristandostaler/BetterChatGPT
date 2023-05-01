@@ -3,7 +3,7 @@ import useStore from '@store/store';
 import { useTranslation } from 'react-i18next';
 import { matchSorter } from 'match-sorter';
 import { Prompt } from '@type/prompt';
-import { borderBottomStyle } from 'html2canvas/dist/types/css/property-descriptors/border-style';
+import { HelperPrompt } from '@constants/prompt';
 
 const CommandPrompt = ({
   _setContent,
@@ -15,10 +15,12 @@ const CommandPrompt = ({
   _setInputCallbackFunctionBuilder: Function;
 }) => {
   const { t } = useTranslation();
-  const prompts = useStore((state) => state.prompts);
+  const getPrompts = () => {
+    return useStore.getState().prompts.concat(HelperPrompt);
+  }
   const [dropDown, setDropDown] = useState<boolean>(false);
   const [dropDownLocal, setDropDownLocal] = useState<boolean>(false);
-  const [_prompts, _setPrompts] = useState<Prompt[]>(prompts);
+  const [_prompts, _setPrompts] = useState<Prompt[]>(getPrompts());
   const [input, setInput] = useState<string>('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedId, setSelectedId] = useState<string>('');
@@ -36,7 +38,7 @@ const CommandPrompt = ({
         view: window,
       }))
     } else {
-      const filteredPrompts = matchSorter(useStore.getState().prompts, s, {
+      const filteredPrompts = matchSorter(getPrompts(), s, {
         keys: ['name'],
       });
 
@@ -77,16 +79,16 @@ const CommandPrompt = ({
   }, [dropdownRef, dropDown]);
 
   useEffect(() => {
-    const filteredPrompts = matchSorter(useStore.getState().prompts, input, {
+    const filteredPrompts = matchSorter(getPrompts(), input, {
       keys: ['name'],
     });
     _setPrompts(filteredPrompts);
   }, [input]);
 
   useEffect(() => {
-    _setPrompts(prompts);
+    _setPrompts(getPrompts());
     setInput('');
-  }, [prompts]);
+  }, [useStore(store => store.prompts)]);
 
   return (
     <div className='absolute top-[-30px] right-0' ref={dropdownRef}>
