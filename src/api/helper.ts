@@ -1,7 +1,7 @@
 import { modelOptions } from '@constants/chat';
 import { EventSourceData } from '@type/api';
 import { ConfigInterface, MessageInterface } from '@type/chat';
-import { HelperPromptText } from '@constants/prompt';
+import { HelperPromptText, SystemPromptText } from '@constants/prompt';
 
 const regexes = {
   'tokens': /(?:~ Max Tokens: (?<match>[0-9]+) ~)/gm,
@@ -45,6 +45,7 @@ export const replaceDynamicContentInMessages = (
     'dateiso': now.toISOString(),
     'model': config.model,
     'HelperPrompt': HelperPromptText,
+    'SystemPrompt': SystemPromptText,
   }
 
   messages.forEach((m) => {

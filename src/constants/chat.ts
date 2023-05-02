@@ -13,14 +13,7 @@ const dateString =
 // default system message obtained using the following method: https://twitter.com/DeminDimin/status/1619935545144279040
 export const _defaultSystemMessage =
   import.meta.env.VITE_DEFAULT_SYSTEM_MESSAGE ??
-  `You are ChatGPT, a large language model trained by OpenAI, based on the {{model}} architecture.
-Carefully heed the user's instructions.
-Respond using Markdown.
-Respond with the smallest message possible while giving clear and complete answers.
-Knowledge cutoff: 2021-09.
-Current date: {{date}}.
-If needed, provide a link to a search in google using this link template:
-https://www.google.com/search?q=query`;
+  '{{SystemPrompt}}';
 
 export const modelOptions: ModelOptions[] = [
   'gpt-3.5-turbo',
