@@ -9,7 +9,7 @@
   "clearConversation": "清除會話",
   "import": "匯入",
   "export": "匯出",
-  "author": "由 Jing Hua 製作",
+  "author": "由 Tristan Dostaler & Jing Hua 製作",
   "about": "關於和贊助",
   "api": "API",
   "personal": "個人",
@@ -37,5 +37,5 @@
   "cloneChat": "創建聊天副本",
   "cloned": "已創建副本",
   "enterToSubmit": "按回車鍵提交",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }

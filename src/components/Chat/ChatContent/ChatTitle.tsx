@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 import useStore from '@store/store';
@@ -11,9 +11,9 @@ const ChatTitle = React.memo(() => {
   const config = useStore(
     (state) =>
       state.chats &&
-      state.chats.length > 0 &&
-      state.currentChatIndex >= 0 &&
-      state.currentChatIndex < state.chats.length
+        state.chats.length > 0 &&
+        state.currentChatIndex >= 0 &&
+        state.currentChatIndex < state.chats.length
         ? state.chats[state.currentChatIndex].config
         : undefined,
     shallow
@@ -40,16 +40,41 @@ const ChatTitle = React.memo(() => {
     }
   }, [currentChatIndex]);
 
+  const [_isSticky, _setIsSticky] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.innerWidth < 1392) {
+      _setIsSticky(false);
+    }
+    else {
+      _setIsSticky(true);
+    }
+    window.addEventListener('resize', () => {
+      if (
+        window.innerWidth < 1392
+      ) {
+        _setIsSticky(false);
+      }
+      else {
+        _setIsSticky(true);
+      }
+    });
+  }, []);
+
   return config ? (
     <>
       <div
         className='flex gap-x-4 gap-y-1 flex-wrap w-full items-center justify-center border-b border-black/10 bg-gray-50 p-3 dark:border-gray-900/50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-pointer'
+        style={_isSticky ? { position: 'absolute', top: '0', zIndex: '998' } : {}}
         onClick={() => {
           setIsModalOpen(true);
         }}
       >
         <div className='text-center p-1 rounded-md bg-gray-300/20 dark:bg-gray-900/10 hover:bg-gray-300/50 dark:hover:bg-gray-900/50'>
           {t('model')}: {config.model}
+        </div>
+        <div className='text-center p-1 rounded-md bg-gray-300/20 dark:bg-gray-900/10 hover:bg-gray-300/50 dark:hover:bg-gray-900/50'>
+          Org Id: {config.orgId}
         </div>
         <div className='text-center p-1 rounded-md bg-gray-300/20 dark:bg-gray-900/10 hover:bg-gray-300/50 dark:hover:bg-gray-900/50'>
           {t('token.label')}: {config.max_tokens}

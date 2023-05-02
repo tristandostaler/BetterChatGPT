@@ -9,7 +9,7 @@
   "clearConversation": "清空傾偈",
   "import": "匯入",
   "export": "匯出",
-  "author": "由 Jing Hua 製作",
+  "author": "由 Tristan Dostaler & Jing Hua 製作",
   "about": "關於同贊助",
   "api": "API",
   "personal": "個人",
@@ -37,5 +37,5 @@
   "cloneChat": "建立傾偈副本",
   "cloned": "建立成功",
   "enterToSubmit": "撳 Enter 鍵提交",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }

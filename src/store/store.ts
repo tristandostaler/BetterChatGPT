@@ -5,6 +5,7 @@ import { InputSlice, createInputSlice } from './input-slice';
 import { AuthSlice, createAuthSlice } from './auth-slice';
 import { ConfigSlice, createConfigSlice } from './config-slice';
 import { PromptSlice, createPromptSlice } from './prompt-slice';
+import { ToastSlice, createToastSlice } from './toast-slice';
 import {
   LocalStorageInterfaceV0ToV1,
   LocalStorageInterfaceV1ToV2,
@@ -37,7 +38,8 @@ export type StoreState = ChatSlice &
   AuthSlice &
   ConfigSlice &
   PromptSlice &
-  PublicPromptSlice;
+  PublicPromptSlice &
+  ToastSlice;
 
 export type StoreSlice<T> = (
   set: StoreApi<StoreState>['setState'],
@@ -53,6 +55,7 @@ const useStore = create<StoreState>()(
       ...createConfigSlice(set, get),
       ...createPromptSlice(set, get),
       ...createPublicPromptSlice(set, get),
+      ...createToastSlice(set, get),
     }),
     {
       name: 'free-chat-gpt',
@@ -62,8 +65,10 @@ const useStore = create<StoreState>()(
         apiKey: state.apiKey,
         apiEndpoint: state.apiEndpoint,
         orgId: state.orgId,
+        availableOrgIds: state.availableOrgIds,
         theme: state.theme,
         autoTitle: state.autoTitle,
+        textToSpeech: state.textToSpeech,
         prompts: state.prompts,
         publicPrompts: state.publicPrompts,
         defaultChatConfig: state.defaultChatConfig,

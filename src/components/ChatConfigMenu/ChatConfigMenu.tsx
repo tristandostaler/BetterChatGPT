@@ -14,6 +14,7 @@ import {
 
 import { ModelOptions } from '@type/chat';
 import { _defaultChatConfig, _defaultSystemMessage } from '@constants/chat';
+import { OrgIdSelector } from '@components/ApiMenu/ApiMenu';
 
 const ChatConfigMenu = () => {
   const { t } = useTranslation('model');
@@ -43,6 +44,7 @@ const ChatConfigPopup = ({
     useStore.getState().defaultSystemMessage
   );
   const [_model, _setModel] = useState<ModelOptions>(config.model);
+  const [_orgId, _setOrgId] = useState<string>(config.orgId ?? '');
   const [_maxToken, _setMaxToken] = useState<number>(config.max_tokens);
   const [_temperature, _setTemperature] = useState<number>(config.temperature);
   const [_topP, _setTopP] = useState<number>(config.top_p);
@@ -54,10 +56,12 @@ const ChatConfigPopup = ({
   );
 
   const { t } = useTranslation('model');
+  const availableOrgIds = useStore(store => store.availableOrgIds);
 
   const handleSave = () => {
     setDefaultChatConfig({
       model: _model,
+      orgId: _orgId,
       max_tokens: _maxToken,
       temperature: _temperature,
       top_p: _topP,
@@ -70,6 +74,7 @@ const ChatConfigPopup = ({
 
   const handleReset = () => {
     _setModel(_defaultChatConfig.model);
+    _setOrgId(_defaultChatConfig.orgId ?? '');
     _setMaxToken(_defaultChatConfig.max_tokens);
     _setTemperature(_defaultChatConfig.temperature);
     _setTopP(_defaultChatConfig.top_p);
@@ -83,6 +88,7 @@ const ChatConfigPopup = ({
       title={t('defaultChatConfig') as string}
       setIsModalOpen={setIsModalOpen}
       handleConfirm={handleSave}
+      handleClickBackdrop={handleSave}
     >
       <div className='p-6 border-b border-gray-200 dark:border-gray-600 w-[90vw] max-w-full text-sm text-gray-900 dark:text-gray-300'>
         <DefaultSystemChat
@@ -90,6 +96,9 @@ const ChatConfigPopup = ({
           _setSystemMessage={_setSystemMessage}
         />
         <ModelSelector _model={_model} _setModel={_setModel} />
+        <div className='mb-4'>
+          <OrgIdSelector _orgId={_orgId} _setOrgId={_setOrgId} _availableOrgIds={availableOrgIds} />
+        </div>
         <MaxTokenSlider
           _maxToken={_maxToken}
           _setMaxToken={_setMaxToken}

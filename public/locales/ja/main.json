@@ -9,7 +9,7 @@
   "clearConversation": "会話をクリア",
   "import": "インポート",
   "export": "エクスポート",
-  "author": "Jing Hua作",
+  "author": "Tristan Dostaler & Jing Hua作",
   "about": "概要 & スポンサー",
   "api": "API",
   "personal": "個人",
@@ -37,5 +37,5 @@
   "cloneChat": "チャットのコピーを作成",
   "cloned": "完了しました",
   "enterToSubmit": "Enterキーを押して送信",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }

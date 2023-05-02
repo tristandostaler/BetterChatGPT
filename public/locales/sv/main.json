@@ -9,7 +9,7 @@
   "clearConversation": "Rensa konversation",
   "import": "Importera",
   "export": "Exportera",
-  "author": "Skapad av Jing Hua",
+  "author": "Skapad av Tristan Dostaler & Jing Hua",
   "about": "Om & Sponsor",
   "api": "API",
   "personal": "Personlig",
@@ -37,5 +37,5 @@
   "cloneChat": "Klona chatt",
   "cloned": "Klonad",
   "enterToSubmit": "Tryck på Enter för att skicka",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }

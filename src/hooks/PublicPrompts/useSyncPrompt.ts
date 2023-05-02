@@ -14,6 +14,7 @@ const useSyncPrompt = () => {
     const syncPrompt = async (url: string, name: string, isNew: boolean) => {
         return await fetch(url, {
             method: 'GET',
+            cache: "no-cache",
         }).then(res => {
             if (!res.ok) {
                 return null;

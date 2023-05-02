@@ -9,7 +9,7 @@
   "clearConversation": "Tøm samtale",
   "import": "Importer",
   "export": "Eksporter",
-  "author": "Laget av Jing Hua",
+  "author": "Laget av Tristan Dostaler & Jing Hua",
   "about": "Om & Sponsor",
   "api": "API",
   "personal": "Personlig",
@@ -37,5 +37,5 @@
   "cloneChat": "Klone chat",
   "cloned": "Klonet",
   "enterToSubmit": "Trykk enter for å sende",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }

@@ -12,6 +12,7 @@ import PromptLibraryMenu from '@components/PromptLibraryMenu';
 import ChatConfigMenu from '@components/ChatConfigMenu';
 import EnterToSubmitToggle from './EnterToSubmitToggle';
 import GoogleSync from '@components/GoogleSync';
+import TextToSpeechToggle from './TextToSpeechToggle';
 
 const SettingsMenu = () => {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ const SettingsMenu = () => {
             <div className='flex flex-col gap-3'>
               <AutoTitleToggle />
               <EnterToSubmitToggle />
+              <TextToSpeechToggle />
             </div>
             <PromptLibraryMenu />
             <ChatConfigMenu />

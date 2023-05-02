@@ -35,7 +35,7 @@ const AboutMenu = () => {
                   ns='about'
                   components={[
                     <a
-                      href='https://github.com/ztjhz/BetterChatGPT'
+                      href='https://github.com/tristandostaler/BetterChatGPT'
                       target='_blank'
                       className='link'
                     />,
@@ -87,7 +87,7 @@ const AboutMenu = () => {
                     ns='about'
                     components={[
                       <a
-                        href='https://github.com/ztjhz/BetterChatGPT'
+                        href='https://github.com/tristandostaler/BetterChatGPT'
                         target='_blank'
                         className='link'
                       />,
@@ -97,20 +97,20 @@ const AboutMenu = () => {
                 <p>{t('support.paragraph3', { ns: 'about' })}</p>
 
                 <div className='flex flex-col items-center gap-4 my-4'>
-                  <a href='https://github.com/sponsors/ztjhz' target='_blank'>
+                  <a href='https://github.com/sponsors/tristandostaler' target='_blank'>
                     <img
                       src='https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86'
                       width='120px'
                       alt='Support us through GitHub Sponsors'
                     />
                   </a>
-                  <a href='https://ko-fi.com/betterchatgpt' target='_blank'>
+                  <a href='https://www.buymeacoffee.com/tristandostaler' target='_blank'>
                     <img
-                      src='./kofi.svg'
-                      alt='Support us through the Ko-fi platform.'
+                      src='./buymeacofee.png'
+                      alt='Support us through the Buy me a coffee platform.'
                     />
                   </a>
-                  <div className='flex gap-x-10 gap-y-4 flex-wrap justify-center'>
+                  {/* <div className='flex gap-x-10 gap-y-4 flex-wrap justify-center'>
                     <div className='flex flex-col items-center justify-center gap-1'>
                       <div>{t('support.alipay', { ns: 'about' })} (Ayaka)</div>
                       <img
@@ -129,7 +129,7 @@ const AboutMenu = () => {
                         alt='Support us through WeChat Pay'
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <p>{t('support.paragraph4', { ns: 'about' })}</p>
               </>

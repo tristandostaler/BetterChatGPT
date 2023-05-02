@@ -14,30 +14,30 @@
 <h4 align="center"><b>Free, Powerful, Limitless, Intelligent, Engaging</b></h4>
 
 <p align="center">
-<a href="https://github.com/ztjhz/BetterChatGPT/blob/main/LICENSE" target="_blank">
-<img src="https://img.shields.io/github/license/ztjhz/BetterChatGPT?style=flat-square" alt="licence" />
+<a href="https://github.com/tristandostaler/BetterChatGPT/blob/main/LICENSE" target="_blank">
+<img src="https://img.shields.io/github/license/tristandostaler/BetterChatGPT?style=flat-square" alt="licence" />
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/fork" target="_blank">
-<img src="https://img.shields.io/github/forks/ztjhz/BetterChatGPT?style=flat-square" alt="forks"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/fork" target="_blank">
+<img src="https://img.shields.io/github/forks/tristandostaler/BetterChatGPT?style=flat-square" alt="forks"/>
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/stargazers" target="_blank">
-<img src="https://img.shields.io/github/stars/ztjhz/BetterChatGPT?style=flat-square" alt="stars"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/stargazers" target="_blank">
+<img src="https://img.shields.io/github/stars/tristandostaler/BetterChatGPT?style=flat-square" alt="stars"/>
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/issues" target="_blank">
-<img src="https://img.shields.io/github/issues/ztjhz/BetterChatGPT?style=flat-square" alt="issues"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/issues" target="_blank">
+<img src="https://img.shields.io/github/issues/tristandostaler/BetterChatGPT?style=flat-square" alt="issues"/>
 </a>
-<a href="https://github.com/ztjhz/BetterChatGPT/pulls" target="_blank">
-<img src="https://img.shields.io/github/issues-pr/ztjhz/BetterChatGPT?style=flat-square" alt="pull-requests"/>
+<a href="https://github.com/tristandostaler/BetterChatGPT/pulls" target="_blank">
+<img src="https://img.shields.io/github/issues-pr/tristandostaler/BetterChatGPT?style=flat-square" alt="pull-requests"/>
 </a>
-<a href="https://twitter.com/intent/tweet?text=👋%20Check%20this%20amazing%20repo%20https://github.com/ztjhz/BetterChatGPT,%20created%20by%20@nikushii_"><img src="https://img.shields.io/twitter/url?label=Share%20on%20Twitter&style=social&url=https%3A%2F%2Fgithub.com%2Fztjhz%2FBetterChatGPT"></a>
+<a href="https://twitter.com/intent/tweet?text=👋%20Check%20this%20amazing%20repo%20https://github.com/tristandostaler/BetterChatGPT,%20created%20by%20@nikushii_"><img src="https://img.shields.io/twitter/url?label=Share%20on%20Twitter&style=social&url=https%3A%2F%2Fgithub.com%2Ftristandostaler%2FBetterChatGPT"></a>
 </p>
 
 <p align="center">
     <a href="https://bettergpt.chat">Enter Website</a>
     ·
-    <a href="https://github.com/ztjhz/BetterChatGPT/issues/new/choose">Report Bug</a>
+    <a href="https://github.com/tristandostaler/BetterChatGPT/issues/new/choose">Report Bug</a>
     ·
-    <a href="https://github.com/ztjhz/BetterChatGPT/issues/new/choose">Request Feature</a>
+    <a href="https://github.com/tristandostaler/BetterChatGPT/issues/new/choose">Request Feature</a>
 </p>
 <p align="center"><i>Did you enjoy using Better ChatGPT? Give it some love with a star! 🌟</i></p>
 
@@ -84,7 +84,7 @@ To get started, simply visit our website at <https://bettergpt.chat/>. There are
 
 ## Desktop App
 
-Download the desktop app [here](https://github.com/ztjhz/BetterChatGPT/releases)
+Download the desktop app [here](https://github.com/tristandostaler/BetterChatGPT/releases)
 
 | OS      | Download  |
 | ------- | --------- |
@@ -105,15 +105,15 @@ If you'd like to run your own instance of Better ChatGPT, you can easily do so b
 
 One click deploy with Vercel
 
-[![Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fztjhz%2FBetterChatGPT)
+[![Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftristandostaler%2FBetterChatGPT)
 
 ## GitHub Pages
 
 ### Steps
 
 1. Create a GitHub account (if you don't have one already)
-1. Star this [repository](https://github.com/ztjhz/BetterChatGPT) ⭐️
-1. Fork this [repository](https://github.com/ztjhz/BetterChatGPT)
+1. Star this [repository](https://github.com/tristandostaler/BetterChatGPT) ⭐️
+1. Fork this [repository](https://github.com/tristandostaler/BetterChatGPT)
 1. In your forked repository, navigate to the `Settings` tab
    ![image](https://user-images.githubusercontent.com/59118459/223753577-9b6f8266-26e8-471b-8f45-a1a02fbab232.png)
 1. In the left sidebar, click on `Pages` and in the right section, select `GitHub Actions` for `source`.
@@ -136,14 +136,14 @@ One click deploy with Vercel
    - [node.js](https://nodejs.org/en/)
    - [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
 
-2. Clone this [repository](https://github.com/ztjhz/BetterChatGPT) by running `git clone https://github.com/ztjhz/BetterChatGPT.git`
+2. Clone this [repository](https://github.com/tristandostaler/BetterChatGPT) by running `git clone https://github.com/tristandostaler/BetterChatGPT.git`
 3. Navigate into the directory by running `cd BetterChatGPT`
 4. Run `yarn` or `npm install`, depending on whether you have yarn or npm installed.
 5. Launch the app by running `yarn dev` or `npm run dev`
 
 # ⭐️ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=ztjhz/BetterChatGPT&type=Date)](https://github.com/ztjhz/BetterChatGPT/stargazers)
+[![Star History Chart](https://api.star-history.com/svg?repos=tristandostaler/BetterChatGPT&type=Date)](https://github.com/tristandostaler/BetterChatGPT/stargazers)
 
 <h3 align="center">
 A ⭐️ to <b>Better ChatGPT</b> is to make it shine brighter and benefit more people.
@@ -153,8 +153,8 @@ A ⭐️ to <b>Better ChatGPT</b> is to make it shine brighter and benefit more 
 
 Thanks to all the contributors!
 
-<a href="https://github.com/ztjhz/BetterChatGPT/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ztjhz/BetterChatGPT" />
+<a href="https://github.com/tristandostaler/BetterChatGPT/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tristandostaler/BetterChatGPT" />
 </a>
 
 # 🙏 Support
@@ -165,11 +165,26 @@ If you have enjoyed using our app, we kindly ask you to give this project a ⭐�
 
 If you would like to support the team, consider sponsoring us through one of the methods below. Every contribution, no matter how small, helps us to maintain and improve our service.
 
-| Payment Method | Link                                                                                                                                                 |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GitHub         | [![GitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/ztjhz) |
-| KoFi           | [![support](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/betterchatgpt)                                                             |
-| Alipay (Ayaka) | <img src="https://ayaka14732.github.io/sponsor/alipay.jpg" width=150 />                                                                              |
-| Wechat (Ayaka) | <img src="https://ayaka14732.github.io/sponsor/wechat.png" width=150 />                                                                              |
+| Payment Method | Link                                                                                                                                                           |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GitHub         | [![GitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/tristandostaler) |
+| KoFi           | [![support](https://ko-fi.com/img/githubbutton_sm.svg)](https://www.buymeacoffee.com/tristandostaler)                                                          |
+| Alipay (Ayaka) | <img src="https://ayaka14732.github.io/sponsor/alipay.jpg" width=150 />                                                                                        |
+| Wechat (Ayaka) | <img src="https://ayaka14732.github.io/sponsor/wechat.png" width=150 />                                                                                        |
 
 Thank you for being a part of our community, and we look forward to serving you better in the future.
+
+
+
+
+TODO:
+
+Tones
+
+
+
+<div name="writingStyle" class="sc-hhGHuG jHVpGP neko-select show-options" data-is-disabled="false"><div class="sc-gXSCqU bFwdaa neko-select-option"><span class="neko-select-option-label">Creative</span><div class="rightContent"><svg xmlns="http://www.w3.org/2000/svg" focusable="false" width="24" height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style="transform: rotate(360deg);"><path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6l1.41 1.41Z"></path></svg></div></div><div class="sc-cjERFW fBASgQ neko-select-options"><div class="sc-jegxcv icBUrU"><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="informative"><div class="option"><div class="option-group">Informative</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="descriptive"><div class="option"><div class="option-group">Descriptive</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="creative" checked=""><div class="option"><div class="option-group">Creative</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="narrative"><div class="option"><div class="option-group">Narrative</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="persuasive"><div class="option"><div class="option-group">Persuasive</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="reflective"><div class="option"><div class="option-group">Reflective</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="argumentative"><div class="option"><div class="option-group">Argumentative</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="analytical"><div class="option"><div class="option-group">Analytical</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="evaluative"><div class="option"><div class="option-group">Evaluative</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="journalistic"><div class="option"><div class="option-group">Journalistic</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingStyle" type="radio" value="technical"><div class="option"><div class="option-group">Technical</div></div></div></div></div></div>
+
+
+
+<div name="writingTone" class="sc-hhGHuG jHVpGP neko-select show-options" data-is-disabled="false"><div class="sc-gXSCqU bFwdaa neko-select-option"><span class="neko-select-option-label">Cheerful</span><div class="rightContent"><svg xmlns="http://www.w3.org/2000/svg" focusable="false" width="24" height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style="transform: rotate(360deg);"><path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6l1.41 1.41Z"></path></svg></div></div><div class="sc-cjERFW fBASgQ neko-select-options"><div class="sc-jegxcv icBUrU"><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="neutral"><div class="option"><div class="option-group">Neutral</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="formal"><div class="option"><div class="option-group">Formal</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="assertive"><div class="option"><div class="option-group">Assertive</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="cheerful" checked=""><div class="option"><div class="option-group">Cheerful</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="humorous"><div class="option"><div class="option-group">Humorous</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="informal"><div class="option"><div class="option-group">Informal</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="inspirational"><div class="option"><div class="option-group">Inspirational</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="professional"><div class="option"><div class="option-group">Professional</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="confvalueent"><div class="option"><div class="option-group">Confvalueent</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="emotional"><div class="option"><div class="option-group">Emotional</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="persuasive"><div class="option"><div class="option-group">Persuasive</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="supportive"><div class="option"><div class="option-group">Supportive</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="sarcastic"><div class="option"><div class="option-group">Sarcastic</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="condescending"><div class="option"><div class="option-group">Condescending</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="skeptical"><div class="option"><div class="option-group">Skeptical</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="narrative"><div class="option"><div class="option-group">Narrative</div></div></div><div class="sc-iVFRtF cVKdmP neko-select-option"><input name="writingTone" type="radio" value="journalistic"><div class="option"><div class="option-group">Journalistic</div></div></div></div></div></div>

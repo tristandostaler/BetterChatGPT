@@ -21,6 +21,7 @@ export interface ChatInterface {
 
 export interface ConfigInterface {
   model: ModelOptions;
+  orgId?: string;
   max_tokens: number;
   temperature: number;
   presence_penalty: number;

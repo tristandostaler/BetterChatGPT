@@ -9,7 +9,7 @@
   "clearConversation": "Elimina Conversazione",
   "import": "Importa",
   "export": "Esporta",
-  "author": "Realizzato da Jing Hua",
+  "author": "Realizzato da Tristan Dostaler & Jing Hua",
   "about": "Info & Sponsor",
   "api": "API",
   "personal": "Personale",
@@ -37,5 +37,5 @@
   "cloneChat": "Duplica Conversazione",
   "cloned": "Duplicata",
   "enterToSubmit": "Invio per inviare",
-  "submitPlaceholder": "Type a message or select [/] for a predefined prompt..."
+  "submitPlaceholder": "Type a message, type [/help] or click [/] to use a prompt template..."
 }

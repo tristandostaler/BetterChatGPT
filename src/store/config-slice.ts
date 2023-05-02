@@ -8,6 +8,7 @@ export interface ConfigSlice {
   openConfig: boolean;
   theme: Theme;
   autoTitle: boolean;
+  textToSpeech: boolean;
   hideMenuOptions: boolean;
   defaultChatConfig: ConfigInterface;
   defaultSystemMessage: string;
@@ -17,6 +18,7 @@ export interface ConfigSlice {
   setOpenConfig: (openConfig: boolean) => void;
   setTheme: (theme: Theme) => void;
   setAutoTitle: (autoTitle: boolean) => void;
+  setTextToSpeech: (textToSpeech: boolean) => void;
   setDefaultChatConfig: (defaultChatConfig: ConfigInterface) => void;
   setDefaultSystemMessage: (defaultSystemMessage: string) => void;
   setHideMenuOptions: (hideMenuOptions: boolean) => void;
@@ -30,6 +32,7 @@ export const createConfigSlice: StoreSlice<ConfigSlice> = (set, get) => ({
   hideMenuOptions: false,
   hideSideMenu: false,
   autoTitle: true,
+  textToSpeech: false,
   enterToSubmit: true,
   version: stateVersion,
   defaultChatConfig: _defaultChatConfig,
@@ -50,6 +53,12 @@ export const createConfigSlice: StoreSlice<ConfigSlice> = (set, get) => ({
     set((prev: ConfigSlice) => ({
       ...prev,
       autoTitle: autoTitle,
+    }));
+  },
+  setTextToSpeech: (textToSpeech: boolean) => {
+    set((prev: ConfigSlice) => ({
+      ...prev,
+      textToSpeech: textToSpeech,
     }));
   },
   setDefaultChatConfig: (defaultChatConfig: ConfigInterface) => {
