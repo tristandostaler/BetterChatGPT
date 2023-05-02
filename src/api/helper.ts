@@ -55,8 +55,10 @@ export const replaceDynamicContentInMessages = (
       .replace(regexes.presence, '')
       .replace(regexes.frequency, '');
 
-    for (let [key, value] of Object.entries(replacements)) {
-      newContent = newContent.replaceAll('{{' + key + '}}', value);
+    for (let i = 0; i < 3; i++) { // If a replacement has other raplcements, ex: systemprompt uses model and date
+      for (let [key, value] of Object.entries(replacements)) {
+        newContent = newContent.replaceAll('{{' + key + '}}', value);
+      }
     }
     var tempM: MessageInterface = {
       role: m.role,
