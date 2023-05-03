@@ -5,6 +5,8 @@ import useStore from '@store/store';
 import PopupModal from '@components/PopupModal';
 import { availableEndpoints, defaultAPIEndpoint } from '@constants/auth';
 import DownChevronArrow from '@icon/DownChevronArrow';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const ApiMenu = ({
   setIsModalOpen,
@@ -25,6 +27,8 @@ const ApiMenu = ({
 
   const inputOrgIdRef = useRef<HTMLInputElement>(null);
   const inputOrgNameRef = useRef<HTMLInputElement>(null);
+  const apiKeyRef = useRef<HTMLInputElement>(null);
+  const [isEyeSlash, setIsEyeSlash] = useState<boolean>(false);
 
   const [_apiKey, _setApiKey] = useState<string>(apiKey || '');
   const [_apiEndpoint, _setApiEndpoint] = useState<string>(apiEndpoint);
@@ -63,6 +67,18 @@ const ApiMenu = ({
     else _setApiEndpoint('');
     _setCustomEndpoint((prev) => !prev);
   };
+
+  const showPassword = () => {
+    var a = apiKeyRef.current;
+    if (a == null)
+      return;
+    if (a.type == "password") {
+      a.type = "text"
+    } else {
+      a.type = "password"
+    }
+    setIsEyeSlash(!isEyeSlash);
+  }
 
   return (
     <PopupModal
@@ -107,13 +123,15 @@ const ApiMenu = ({
             {t('apiKey.inputLabel', { ns: 'api' })}
           </div>
           <input
-            type='text'
+            type='password'
             className='text-gray-800 dark:text-white p-3 text-sm border-none bg-gray-200 dark:bg-gray-600 rounded-md m-0 w-full mr-0 h-8 focus:outline-none'
             value={_apiKey}
             onChange={(e) => {
               _setApiKey(e.target.value);
             }}
+            ref={apiKeyRef}
           />
+          <FontAwesomeIcon icon={isEyeSlash ? faEyeSlash : faEye} style={{ marginLeft: '-30px' }} className="dark:text-white" onClick={showPassword} />
         </div>
 
         <div>

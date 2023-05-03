@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useStore from '@store/store';
 import { useTranslation, Trans } from 'react-i18next';
 
 import PopupModal from '@components/PopupModal';
 import CrossIcon from '@icon/CrossIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const ApiPopup = () => {
   const { t } = useTranslation(['main', 'api']);
@@ -18,6 +20,8 @@ const ApiPopup = () => {
     !apiKey && firstVisit
   );
   const [error, setError] = useState<string>('');
+  const apiKeyRef = useRef<HTMLInputElement>(null);
+  const [isEyeSlash, setIsEyeSlash] = useState<boolean>(false);
 
   const handleConfirm = () => {
     if (_apiKey.length === 0) {
@@ -33,6 +37,18 @@ const ApiPopup = () => {
     setFirstVisit(false);
   }, []);
 
+  const showPassword = () => {
+    var a = apiKeyRef.current;
+    if (a == null)
+      return;
+    if (a.type == "password") {
+      a.type = "text"
+    } else {
+      a.type = "password"
+    }
+    setIsEyeSlash(!isEyeSlash);
+  }
+
   return isModalOpen ? (
     <PopupModal
       title='Setup your API key'
@@ -46,13 +62,15 @@ const ApiPopup = () => {
             {t('apiKey.inputLabel', { ns: 'api' })}
           </div>
           <input
-            type='text'
+            type='password'
             className='text-gray-800 dark:text-white p-3 text-sm border-none bg-gray-200 dark:bg-gray-600 rounded-md m-0 w-full mr-0 h-8 focus:outline-none'
             value={_apiKey}
             onChange={(e) => {
               _setApiKey(e.target.value);
             }}
+            ref={apiKeyRef}
           />
+          <FontAwesomeIcon icon={isEyeSlash ? faEyeSlash : faEye} style={{ marginLeft: '-30px' }} className="dark:text-white" onClick={showPassword} />
         </div>
 
         <div className='min-w-fit text-gray-900 dark:text-gray-300 text-sm mt-4'>
