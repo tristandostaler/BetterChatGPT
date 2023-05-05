@@ -161,6 +161,7 @@ const useSubmit = () => {
     updatedChats[currentChatIndex].messages.push({
       role: 'assistant',
       content: '',
+      locked: false,
     });
 
     setChats(updatedChats);

@@ -1,6 +1,6 @@
 import { modelOptions } from '@constants/chat';
 import { EventSourceData } from '@type/api';
-import { ConfigInterface, MessageInterface } from '@type/chat';
+import { ConfigInterface, MessageInterface, ModelOptions } from '@type/chat';
 import { HelperPromptText, SystemPromptText } from '@constants/prompt';
 
 const regexes = {
@@ -35,7 +35,7 @@ export const parseEventSource = (
 
 export const replaceDynamicContentInMessages = (
   messages: MessageInterface[],
-  config: ConfigInterface,
+  model: ModelOptions,
 ): MessageInterface[] => {
   const transformedMessages: MessageInterface[] = [];
   const now = new Date();
@@ -43,26 +43,22 @@ export const replaceDynamicContentInMessages = (
     'date': now.toLocaleDateString(),
     'datetime': now.toLocaleString(),
     'dateiso': now.toISOString(),
-    'model': config.model,
+    'model': model,
     'HelperPrompt': HelperPromptText,
     'SystemPrompt': SystemPromptText,
   }
 
   messages.forEach((m) => {
-    var newContent = m.content.replace(regexes.tokens, '')
-      .replace(regexes.temp, '')
-      .replace(regexes.topp, '')
-      .replace(regexes.presence, '')
-      .replace(regexes.frequency, '');
-
+    var content = m.content;
     for (let i = 0; i < 3; i++) { // If a replacement has other raplcements, ex: systemprompt uses model and date
       for (let [key, value] of Object.entries(replacements)) {
-        newContent = newContent.replaceAll('{{' + key + '}}', value);
+        content = content.replaceAll('{{' + key + '}}', value);
       }
     }
     var tempM: MessageInterface = {
       role: m.role,
-      content: newContent,
+      content: content,
+      locked: m.locked,
     }
     transformedMessages.push(tempM);
   });
@@ -70,7 +66,7 @@ export const replaceDynamicContentInMessages = (
   return transformedMessages
 }
 
-export const adjustConfigBasedOnMessages = (
+export const adjustConfigAndRemoveConfigContentInMessages = (
   messages: MessageInterface[],
   config: ConfigInterface,
 ): ConfigInterface => {
@@ -111,6 +107,12 @@ export const adjustConfigBasedOnMessages = (
     if (result) {
       adjustedConfig.frequency_penalty = +result
     }
+
+    m.content = m.content.replace(regexes.tokens, '')
+      .replace(regexes.temp, '')
+      .replace(regexes.topp, '')
+      .replace(regexes.presence, '')
+      .replace(regexes.frequency, '');
   });
 
   return adjustedConfig

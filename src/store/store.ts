@@ -17,6 +17,7 @@ import {
   LocalStorageInterfaceV7oV8,
   LocalStorageInterfaceV8ToV9,
   LocalStorageInterfaceV8ToV12,
+  LocalStorageInterfaceV12ToV13,
 } from '@type/chat';
 import {
   migrateV0,
@@ -29,6 +30,7 @@ import {
   migrateV7,
   migrateV8,
   migrateV12,
+  migrateV13,
 } from './migrate';
 import stateVersion from '@constants/stateVersion';
 import { createPublicPromptSlice, PublicPromptSlice } from './public-prompt-sync-slice';
@@ -114,6 +116,9 @@ const useStore = create<StoreState>()(
             break;
           case 11:
             migrateV12(persistedState as LocalStorageInterfaceV8ToV12);
+            break;
+          case 12:
+            migrateV13(persistedState as LocalStorageInterfaceV12ToV13);
             break;
         }
         return persistedState as StoreState;

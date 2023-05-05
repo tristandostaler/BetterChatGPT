@@ -25,8 +25,7 @@ export const getChatGPTEncoding = (
   const msgSep = isGpt3 ? '\n' : '';
   const roleSep = isGpt3 ? '\n' : '<|im_sep|>';
 
-  // The only used info is the model. The rest is just to build a valid config object
-  const m = replaceDynamicContentInMessages(messages, { model: model, max_tokens: 4096, temperature: 0.7, presence_penalty: 0.0, frequency_penalty: 0.0, top_p: 1.0 });
+  const m = replaceDynamicContentInMessages(messages, model);
 
   const serialized = [
     m
@@ -46,18 +45,32 @@ const countTokens = (messages: MessageInterface[], model: ModelOptions) => {
 };
 
 export const limitMessageTokens = (
-  messages: MessageInterface[],
+  messagesToSend: MessageInterface[],
   limit: number = 4096,
   model: ModelOptions
 ): MessageInterface[] => {
+
+  const messages = replaceDynamicContentInMessages(messagesToSend, model);
+
   const limitedMessages: MessageInterface[] = [];
   let tokenCount = 0;
 
   for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].locked) {
+      const count = countTokens([messages[i]], model);
+      tokenCount += count;
+    }
+  }
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].locked) {
+      limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content } });
+      continue;
+    }
     const count = countTokens([messages[i]], model);
-    if (count + tokenCount > limit) break;
     tokenCount += count;
-    limitedMessages.unshift({ ...messages[i] });
+    if (tokenCount > limit) { continue; }
+    limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content } });
   }
 
   return limitedMessages;

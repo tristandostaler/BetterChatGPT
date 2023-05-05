@@ -30,6 +30,8 @@ import TokenCount from '@components/TokenCount';
 import CommandPrompt from './CommandPrompt';
 import CodeBlock from './CodeBlock';
 import { codeLanguageSubset } from '@constants/chat';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 
 const MessageContent = ({
   role,
@@ -86,18 +88,42 @@ const ContentView = React.memo(
       state.chats ? state.chats[state.currentChatIndex].messages.length - 1 : 0
     );
 
-    const handleDelete = () => {
-      const updatedChats: ChatInterface[] = JSON.parse(
+    const getChats = () => {
+      return JSON.parse(
         JSON.stringify(useStore.getState().chats)
       );
+    }
+
+    const getCurrentMessageLockStatus = () => {
+      var defaultLocked = false;
+      try {
+        defaultLocked = getChats()[currentChatIndex].messages[messageIndex].locked
+      } catch { }
+      return defaultLocked
+    }
+
+    const setCurrentMessageLockStatus = (locked: boolean) => {
+      try {
+        const updatedChats = getChats();
+        updatedChats[currentChatIndex].messages[messageIndex].locked = locked
+        setChats(updatedChats);
+      } catch { }
+    }
+
+    const [isLocked, setIsLocked] = useState<boolean>(getCurrentMessageLockStatus());
+
+    useEffect(() => {
+      setCurrentMessageLockStatus(isLocked);
+    }, [isLocked]);
+
+    const handleDelete = () => {
+      const updatedChats = getChats();
       updatedChats[currentChatIndex].messages.splice(messageIndex, 1);
       setChats(updatedChats);
     };
 
     const handleMove = (direction: 'up' | 'down') => {
-      const updatedChats: ChatInterface[] = JSON.parse(
-        JSON.stringify(useStore.getState().chats)
-      );
+      const updatedChats = getChats();
       const updatedMessages = updatedChats[currentChatIndex].messages;
       const temp = updatedMessages[messageIndex];
       if (direction === 'up') {
@@ -119,9 +145,7 @@ const ContentView = React.memo(
     };
 
     const handleRefresh = () => {
-      const updatedChats: ChatInterface[] = JSON.parse(
-        JSON.stringify(useStore.getState().chats)
-      );
+      const updatedChats = getChats();
       const updatedMessages = updatedChats[currentChatIndex].messages;
       updatedMessages.splice(updatedMessages.length - 1, 1);
       setChats(updatedChats);
@@ -176,6 +200,7 @@ const ContentView = React.memo(
               <CopyButton onClick={handleCopy} />
               <EditButton setIsEdit={setIsEdit} />
               <DeleteButton setIsDelete={setIsDelete} />
+              <LockButton setIsLocked={setIsLocked} isLocked={isLocked} />
             </>
           )}
           {isDelete && (
@@ -242,6 +267,20 @@ const MessageButton = ({
     </div>
   );
 };
+
+const LockButton = React.memo(
+  ({
+    setIsLocked,
+    isLocked,
+  }: {
+    setIsLocked: React.Dispatch<React.SetStateAction<boolean>>;
+    isLocked: boolean;
+  }) => {
+    return (
+      <MessageButton icon={<FontAwesomeIcon icon={isLocked ? faLock : faLockOpen} className="dark:text-white" onClick={() => setIsLocked(!isLocked)} />} onClick={() => setIsLocked(!isLocked)} />
+    );
+  }
+);
 
 const EditButton = React.memo(
   ({
@@ -385,7 +424,7 @@ const EditView = ({
     );
     const updatedMessages = updatedChats[currentChatIndex].messages;
     if (sticky) {
-      updatedMessages.push({ role: inputRole, content: _content });
+      updatedMessages.push({ role: inputRole, content: _content, locked: false });
       _setContent('');
       resetTextAreaHeight();
     } else {
@@ -404,7 +443,7 @@ const EditView = ({
     const updatedMessages = updatedChats[currentChatIndex].messages;
     if (sticky) {
       if (_content !== '') {
-        updatedMessages.push({ role: inputRole, content: _content });
+        updatedMessages.push({ role: inputRole, content: _content, locked: false });
       }
       _setContent('');
       resetTextAreaHeight();

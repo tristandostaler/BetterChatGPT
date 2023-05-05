@@ -8,6 +8,7 @@ export const roles: Role[] = ['user', 'assistant', 'system'];
 export interface MessageInterface {
   role: Role;
   content: string;
+  locked?: Boolean; // If true, this chat will never get removed when the tokens limit is reached
 }
 
 export interface ChatInterface {
@@ -153,3 +154,8 @@ export interface LocalStorageInterfaceV8ToV12
   extends LocalStorageInterfaceV8ToV9 {
   publicPrompts: PublicPrompt[];
 }
+
+export interface LocalStorageInterfaceV12ToV13
+  extends LocalStorageInterfaceV8ToV12 {
+}
+

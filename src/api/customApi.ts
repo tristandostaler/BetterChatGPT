@@ -1,4 +1,5 @@
 import { ConfigInterface, MessageInterface } from '@type/chat';
+import { adjustConfigAndRemoveConfigContentInMessages } from './helper';
 
 export const endpoint = 'https://api.openai.com/v1/chat/completions';
 
@@ -48,6 +49,8 @@ export const getChatCompletionStream = async (
   messages: MessageInterface[],
   config: ConfigInterface
 ) => {
+  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
+
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
@@ -56,7 +59,7 @@ export const getChatCompletionStream = async (
     },
     body: JSON.stringify({
       messages,
-      ...config,
+      ...tempConfig,
       stream: true,
     }),
   });

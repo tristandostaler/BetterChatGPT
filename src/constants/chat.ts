@@ -79,7 +79,7 @@ export const generateDefaultChat = (title?: string, folder?: string): ChatInterf
   title: title ? title : 'New Chat',
   messages:
     useStore.getState().defaultSystemMessage.length > 0
-      ? [{ role: 'system', content: useStore.getState().defaultSystemMessage }]
+      ? [{ role: 'system', content: useStore.getState().defaultSystemMessage, locked: true }]
       : [],
   config: { ...useStore.getState().defaultChatConfig },
   titleSet: false,

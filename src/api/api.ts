@@ -1,11 +1,11 @@
 import { ShareGPTSubmitBodyInterface } from '@type/api';
 import { ConfigInterface, MessageInterface } from '@type/chat';
 import { isAzureEndpoint } from '@utils/api';
-import { adjustConfigBasedOnMessages, replaceDynamicContentInMessages } from './helper';
+import { adjustConfigAndRemoveConfigContentInMessages } from './helper';
 
 export const getChatCompletion = async (
   endpoint: string,
-  messagesToSend: MessageInterface[],
+  messages: MessageInterface[],
   config: ConfigInterface,
   apiKey?: string,
   customHeaders?: Record<string, string>
@@ -15,7 +15,7 @@ export const getChatCompletion = async (
     ...customHeaders,
   };
 
-  const tempConfig = adjustConfigBasedOnMessages(messagesToSend, config);
+  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -30,8 +30,6 @@ export const getChatCompletion = async (
       }
     }
   }
-
-  const messages = replaceDynamicContentInMessages(messagesToSend, config);
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -50,7 +48,7 @@ export const getChatCompletion = async (
 
 export const getChatCompletionStream = async (
   endpoint: string,
-  messagesToSend: MessageInterface[],
+  messages: MessageInterface[],
   config: ConfigInterface,
   apiKey?: string,
   customHeaders?: Record<string, string>
@@ -60,7 +58,7 @@ export const getChatCompletionStream = async (
     ...customHeaders,
   };
 
-  const tempConfig = adjustConfigBasedOnMessages(messagesToSend, config);
+  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -75,8 +73,6 @@ export const getChatCompletionStream = async (
       }
     }
   }
-
-  const messages = replaceDynamicContentInMessages(messagesToSend, config);
 
   const response = await fetch(endpoint, {
     method: 'POST',

@@ -103,7 +103,8 @@ export const convertOpenAIToBetterChatGPTFormat = (
     if (node.message) {
       const { role } = node.message.author;
       const content = node.message.content.parts.join('');
-      if (content.length > 0) messages.push({ role, content });
+      const locked = false;
+      if (content.length > 0) messages.push({ role, content, locked });
     }
 
     // Traverse the last child node if any children exist

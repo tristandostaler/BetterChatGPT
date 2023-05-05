@@ -4,6 +4,7 @@ import {
   Folder,
   FolderCollection,
   LocalStorageInterfaceV0ToV1,
+  LocalStorageInterfaceV12ToV13,
   LocalStorageInterfaceV1ToV2,
   LocalStorageInterfaceV2ToV3,
   LocalStorageInterfaceV3ToV4,
@@ -123,4 +124,14 @@ export const migrateV8 = (persistedState: LocalStorageInterfaceV8ToV9) => {
 
 export const migrateV12 = (persistedState: LocalStorageInterfaceV8ToV12) => {
   persistedState.publicPrompts = defaultPublicPrompts;
+};
+
+export const migrateV13 = (persistedState: LocalStorageInterfaceV12ToV13) => {
+  persistedState.chats.forEach((chat) => {
+    chat.messages.forEach((m) => {
+      if (m.locked == undefined || m.locked == null) {
+        m.locked = false;
+      }
+    })
+  });
 };
