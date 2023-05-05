@@ -1,6 +1,7 @@
 import { MessageInterface, ModelOptions } from '@type/chat';
 
 import { Tiktoken } from '@dqbd/tiktoken/lite';
+import { replaceDynamicContentInMessages } from '@api/helper';
 const cl100k_base = await import('@dqbd/tiktoken/encoders/cl100k_base.json');
 
 const encoder = new Tiktoken(
@@ -24,8 +25,11 @@ export const getChatGPTEncoding = (
   const msgSep = isGpt3 ? '\n' : '';
   const roleSep = isGpt3 ? '\n' : '<|im_sep|>';
 
+  // The only used info is the model. The rest is just to build a valid config object
+  const m = replaceDynamicContentInMessages(messages, { model: model, max_tokens: 4096, temperature: 0.7, presence_penalty: 0.0, frequency_penalty: 0.0, top_p: 1.0 });
+
   const serialized = [
-    messages
+    m
       .map(({ role, content }) => {
         return `<|im_start|>${role}${roleSep}${content}<|im_end|>`;
       })
