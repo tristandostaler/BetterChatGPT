@@ -69,6 +69,7 @@ const ChatContent = () => {
                   role={message.role}
                   content={message.content}
                   messageIndex={index}
+                  isLocked={message.locked ?? false}
                 />
                 {!generating && <NewMessageButton messageIndex={index} />}
               </React.Fragment>
@@ -79,6 +80,7 @@ const ChatContent = () => {
             role={inputRole}
             content=''
             messageIndex={stickyIndex}
+            isLocked={false}
             sticky
           />
           {error !== '' && (

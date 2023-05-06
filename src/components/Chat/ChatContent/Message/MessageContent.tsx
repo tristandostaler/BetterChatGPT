@@ -37,11 +37,13 @@ const MessageContent = ({
   role,
   content,
   messageIndex,
+  isLocked,
   sticky = false,
 }: {
   role: string;
   content: string;
   messageIndex: number;
+  isLocked: Boolean;
   sticky?: boolean;
 }) => {
   const [isEdit, setIsEdit] = useState<boolean>(sticky);
@@ -62,6 +64,7 @@ const MessageContent = ({
           content={content}
           setIsEdit={setIsEdit}
           messageIndex={messageIndex}
+          isLocked={isLocked}
         />
       )}
     </div>
@@ -74,11 +77,13 @@ const ContentView = React.memo(
     content,
     setIsEdit,
     messageIndex,
+    isLocked,
   }: {
     role: string;
     content: string;
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
     messageIndex: number;
+    isLocked: Boolean;
   }) => {
     const { handleSubmit } = useSubmit();
     const [isDelete, setIsDelete] = useState<boolean>(false);
@@ -88,42 +93,28 @@ const ContentView = React.memo(
       state.chats ? state.chats[state.currentChatIndex].messages.length - 1 : 0
     );
 
-    const getChats = () => {
+    const getJsonChats = () => {
       return JSON.parse(
         JSON.stringify(useStore.getState().chats)
-      );
+      )
     }
 
-    const getCurrentMessageLockStatus = () => {
-      var defaultLocked = false;
+    const handleCurrentMessageLockStatus = () => {
       try {
-        defaultLocked = getChats()[currentChatIndex].messages[messageIndex].locked
-      } catch { }
-      return defaultLocked
-    }
-
-    const setCurrentMessageLockStatus = (locked: boolean) => {
-      try {
-        const updatedChats = getChats();
-        updatedChats[currentChatIndex].messages[messageIndex].locked = locked
+        const updatedChats = getJsonChats();
+        updatedChats[currentChatIndex].messages[messageIndex].locked = !isLocked
         setChats(updatedChats);
       } catch { }
     }
 
-    const [isLocked, setIsLocked] = useState<boolean>(getCurrentMessageLockStatus());
-
-    useEffect(() => {
-      setCurrentMessageLockStatus(isLocked);
-    }, [isLocked]);
-
     const handleDelete = () => {
-      const updatedChats = getChats();
+      const updatedChats = getJsonChats();
       updatedChats[currentChatIndex].messages.splice(messageIndex, 1);
       setChats(updatedChats);
     };
 
     const handleMove = (direction: 'up' | 'down') => {
-      const updatedChats = getChats();
+      const updatedChats = getJsonChats();
       const updatedMessages = updatedChats[currentChatIndex].messages;
       const temp = updatedMessages[messageIndex];
       if (direction === 'up') {
@@ -145,7 +136,7 @@ const ContentView = React.memo(
     };
 
     const handleRefresh = () => {
-      const updatedChats = getChats();
+      const updatedChats = getJsonChats();
       const updatedMessages = updatedChats[currentChatIndex].messages;
       updatedMessages.splice(updatedMessages.length - 1, 1);
       setChats(updatedChats);
@@ -200,7 +191,7 @@ const ContentView = React.memo(
               <CopyButton onClick={handleCopy} />
               <EditButton setIsEdit={setIsEdit} />
               <DeleteButton setIsDelete={setIsDelete} />
-              <LockButton setIsLocked={setIsLocked} isLocked={isLocked} />
+              <LockButton setIsLocked={handleCurrentMessageLockStatus} isLocked={isLocked} />
             </>
           )}
           {isDelete && (
@@ -273,8 +264,8 @@ const LockButton = React.memo(
     setIsLocked,
     isLocked,
   }: {
-    setIsLocked: React.Dispatch<React.SetStateAction<boolean>>;
-    isLocked: boolean;
+    setIsLocked: React.Dispatch<React.SetStateAction<Boolean>>;
+    isLocked: Boolean;
   }) => {
     return (
       <MessageButton icon={<FontAwesomeIcon icon={isLocked ? faLock : faLockOpen} className="dark:text-white" onClick={() => setIsLocked(!isLocked)} />} onClick={() => setIsLocked(!isLocked)} />
