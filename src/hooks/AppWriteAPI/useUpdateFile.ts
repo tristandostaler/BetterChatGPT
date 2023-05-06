@@ -6,11 +6,11 @@ import useCreateFile from './useCreateFile';
 
 const useUpdateFile = () => {
     const fileId = () => { return useStore.getState().fileId ?? "" };
-    var fileName = fileId();
     const reLogin = useReLogin();
     const createFile = useCreateFile(false);
 
     const updateFile = (fileContent: string): Promise<any> => {
+        var fileName = fileId();
         return createFile(fileName, fileContent)
         // .catch((reason) => {
         //     reLogin();
