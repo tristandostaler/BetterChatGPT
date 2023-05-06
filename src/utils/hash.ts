@@ -5,7 +5,8 @@ export const sha1Hash = (input: string) => {
 }
 
 export const md5Hash = (input: string) => {
-    return MD5(input).toString().substring(0, 28);
+    var maxLength = 30; // The max filename length using AppWrite is 36. Because we add "aw-" and ".js", we can only use 30 chars
+    return MD5(input + MD5(input).toString().substring(0, maxLength)).toString().substring(0, maxLength);
 }
 
 // export const sha1Hash = (input: string) => {
