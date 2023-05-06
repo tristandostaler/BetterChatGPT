@@ -17,7 +17,8 @@ const useGetFile = (isLoginProcess: boolean) => {
         }
         var contentUrl = storage.getFileView(storageBucketId, fileName)
         return fetch(contentUrl, {
-            credentials: "include"
+            credentials: "include",
+            cache: "no-cache",
         }).then((res) => {
             if (!res.ok) {
                 reLogin();
