@@ -45,7 +45,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@react-oauth/google": "^0.9.0",
+    "appwrite": "^11.0.0",
     "crypto-hash": "^2.0.1",
+    "crypto-js": "^4.1.1",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^5.3.0",
@@ -72,6 +74,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "@types/crypto-js": "^4.1.1",
     "@types/lodash": "^4.14.192",
     "@types/papaparse": "^5.3.7",
     "@types/react": "^18.0.27",

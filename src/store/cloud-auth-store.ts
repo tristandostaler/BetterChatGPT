@@ -21,6 +21,7 @@ const useCloudAuthStore = create<StoreState>()(
         googleRefreshToken: state.googleRefreshToken,
         googleRefreshTokenExpirationTime: state.googleRefreshTokenExpirationTime,
         fileId: state.fileId,
+        isAppWriteLoggedIn: state.isAppWriteLoggedIn,
       }),
       version: 1,
     }

@@ -1,40 +1,87 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useStore from '@store/cloud-auth-store';
-import useLogin from '@hooks/GoogleAPI/useLogin';
-import useLogout from '@hooks/GoogleAPI/useLogout';
+import useLoginGoogle from '@hooks/GoogleAPI/useLogin';
+import useLogoutGoogle from '@hooks/GoogleAPI/useLogout';
+import useLoginAppWrite from '@hooks/AppWriteAPI/useLogin';
+import useLogoutAppWrite from '@hooks/AppWriteAPI/useLogout';
+import { fileIdAppWriteMarker } from '@hooks/AppWriteAPI/client';
 
 const LoginButton = () => {
+  var getFileId = () => { return useStore.getState().fileId ?? "" };
+  const syncType = () => { return getFileId().startsWith(fileIdAppWriteMarker) ? 'appwrite' : getFileId() == '' ? '' : 'google' };
+  var loginAppWrite = useLoginAppWrite();
+  var loginGoogle = useLoginGoogle();
+  var logoutAppWrite = useLogoutAppWrite();
+  var logoutoogle = useLogoutGoogle();
+  const isAppWriteLoggedIn = useStore((state) => state.isAppWriteLoggedIn);
   const googleAccessToken = useStore((state) => state.googleAccessToken);
+
+  const login = () => {
+    if (syncType() == 'appwrite') {
+      loginAppWrite();
+    } else if (syncType() == 'google') {
+      loginGoogle();
+    }
+  }
+
+  const logoutAction = () => {
+    if (syncType() == 'appwrite') {
+      logoutAppWrite();
+    } else if (syncType() == 'google') {
+      logoutoogle();
+    }
+  }
+
+  if (syncType() == 'appwrite') {
+    var [isConnected, setIsConnected] = useState<boolean>(isAppWriteLoggedIn ?? false);
+  } else if (syncType() == 'google') {
+    var [isConnected, setIsConnected] = useState<boolean>(googleAccessToken != undefined);
+  } else {
+    var [isConnected, setIsConnected] = useState<boolean>(false);
+  }
+
   const setFileId = useStore((state) => state.setFileId);
-  const login = useLogin();
-  const logoutAction = useLogout();
-  const logout = () => { logoutAction(); setFileId(undefined); };
-  const wasGoogleConnected = useStore(state => state.fileId) ? true : false;
+
+  const [wasConnected, setWasConnected] = useState<boolean>(getFileId() != "");
+  const logout = () => { logoutAction(); setFileId(undefined); setIsConnected(false); setWasConnected(false); };
+
+  useEffect(() => {
+    setIsConnected(googleAccessToken != undefined ? true : isAppWriteLoggedIn ?? false);
+  }, [isAppWriteLoggedIn, googleAccessToken])
 
   return (
     <div>
-      {googleAccessToken ? (
+      {isConnected ? (
         <button className='btn btn-neutral' id="logout" onClick={logout}>
-          Stop syncing data on Google Drive
+          Stop syncing data
         </button>
-      ) : wasGoogleConnected ? (
-        <div className='p-6 border-b border-gray-200 dark:border-gray-600 flex flex-col items-center gap-4'>
+      ) : wasConnected ? (
+        <div className='p-6 flex flex-col items-center gap-4'>
           <div>
             <button className='btn btn-primary' id="login" onClick={() => login()}>
-              Reconnect to Google Drive
+              Reconnect to sync data
             </button>
           </div>
           <div>
             <button className='btn btn-neutral' id="logout" onClick={logout}>
-              Stop syncing data on Google Drive
+              Stop syncing data
             </button>
           </div>
         </div>
       ) : (
-        <button className='btn btn-neutral' id="login" onClick={() => login()}>
-          Start syncing data on Google Drive
-        </button>
+        <div className='p-6 flex flex-col items-center gap-2'>
+          <div>
+            <button className='btn btn-neutral' id="loginGoogle" onClick={() => { loginGoogle() }}>
+              Start syncing data on Google Drive
+            </button>
+          </div>
+          <div>
+            <button className='btn btn-neutral' id="loginAppDrive" onClick={() => { loginAppWrite() }}>
+              Start syncing data on AppDrive
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

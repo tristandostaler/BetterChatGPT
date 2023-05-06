@@ -26,44 +26,43 @@ const useSyncPrompt = () => {
             }
 
             try {
-                return sha1Hash(url).then((publicPromptId) => {
-                    const results = importPromptCSV(csv);
+                var publicPromptId = sha1Hash(url);
+                const results = importPromptCSV(csv);
 
-                    const publicPrompts = useStore.getState().publicPrompts;
-                    if (isNew && publicPrompts.filter(p => p.id === publicPromptId).length > 0) {
-                        return { message: 'This source is already synced', isSuccess: false };
-                    }
-                    try {
-                        const newPrompts = results.map((data) => {
-                            const columns = Object.values(data);
-                            return {
-                                id: uuidv4(),
-                                private: false,
-                                publicSourceId: publicPromptId,
-                                name: columns[0],
-                                prompt: columns[1],
-                            };
-                        });
-
-                        var filteredPrompts = getPrompts().filter((prompt) => {
-                            return prompt.private || prompt.publicSourceId != publicPromptId
-                        });
-
-                        setPrompts(filteredPrompts.concat(newPrompts));
-
-                        if (publicPrompts.filter(p => p.id === publicPromptId).length === 0) {
-                            setPublicPrompts(publicPrompts.concat([{
-                                id: publicPromptId,
-                                name: name,
-                                source: url,
-                            }]));
+                const publicPrompts = useStore.getState().publicPrompts;
+                if (isNew && publicPrompts.filter(p => p.id === publicPromptId).length > 0) {
+                    return { message: 'This source is already synced', isSuccess: false };
+                }
+                try {
+                    const newPrompts = results.map((data) => {
+                        const columns = Object.values(data);
+                        return {
+                            id: uuidv4(),
+                            private: false,
+                            publicSourceId: publicPromptId,
+                            name: columns[0],
+                            prompt: columns[1],
                         };
+                    });
 
-                        return { message: 'Succesfully Synced and imported!', isSuccess: true };
-                    } catch (error: unknown) {
-                        return { message: (error as Error).message, isSuccess: false };
-                    }
-                });
+                    var filteredPrompts = getPrompts().filter((prompt) => {
+                        return prompt.private || prompt.publicSourceId != publicPromptId
+                    });
+
+                    setPrompts(filteredPrompts.concat(newPrompts));
+
+                    if (publicPrompts.filter(p => p.id === publicPromptId).length === 0) {
+                        setPublicPrompts(publicPrompts.concat([{
+                            id: publicPromptId,
+                            name: name,
+                            source: url,
+                        }]));
+                    };
+
+                    return { message: 'Succesfully Synced and imported!', isSuccess: true };
+                } catch (error: unknown) {
+                    return { message: (error as Error).message, isSuccess: false };
+                }
             } catch (error: unknown) {
                 return { message: (error as Error).message, isSuccess: false };
             }

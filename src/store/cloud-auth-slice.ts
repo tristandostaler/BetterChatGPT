@@ -5,10 +5,12 @@ export interface CloudAuthSlice {
   googleRefreshToken?: string;
   googleRefreshTokenExpirationTime?: number;
   fileId?: string;
+  isAppWriteLoggedIn?: boolean;
   setGoogleAccessToken: (googleAccessToken?: string) => void;
   setGoogleRefreshToken: (googleRefreshToken?: string) => void;
   setGoogleRefreshTokenExpirationTime: (googleRefreshTokenExpirationTime?: number) => void;
   setFileId: (fileId?: string) => void;
+  setIsAppWriteLoggedIn: (isAppWriteLoggedIn?: boolean) => void;
 }
 
 export const createCloudAuthSlice: StoreSlice<CloudAuthSlice> = (set, get) => ({
@@ -34,6 +36,12 @@ export const createCloudAuthSlice: StoreSlice<CloudAuthSlice> = (set, get) => ({
     set((prev: CloudAuthSlice) => ({
       ...prev,
       fileId: fileId,
+    }));
+  },
+  setIsAppWriteLoggedIn: (isAppWriteLoggedIn?: boolean) => {
+    set((prev: CloudAuthSlice) => ({
+      ...prev,
+      isAppWriteLoggedIn: isAppWriteLoggedIn,
     }));
   },
 });

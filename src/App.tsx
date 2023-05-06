@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 import useStore, { StoreState } from '@store/store';
-import useCloudAuthStore from '@store/cloud-auth-store'
-import useUpdateFile from '@hooks/GoogleAPI/useUpdateFile';
-import useUpdateLocalStateFromDrive from '@hooks/GoogleAPI/useUpdateLocalStateFromDrive';
+import useCloudAuthStore from '@store/cloud-auth-store';
+
+import useUpdateFileGoogle from '@hooks/GoogleAPI/useUpdateFile';
+import useUpdateLocalStateFromDriveGoogle from '@hooks/GoogleAPI/useUpdateLocalStateFromDrive';
+import useUpdateFileAppWrite from '@hooks/AppWriteAPI/useUpdateFile';
+import useUpdateLocalStateFromDriveAppWrite from '@hooks/AppWriteAPI/useUpdateLocalStateFromDrive';
+
 import i18n from './i18n';
 
 import Chat from '@components/Chat';
@@ -15,6 +19,7 @@ import ApiPopup from '@components/ApiPopup';
 
 import usePeriodicSyncPrompt from '@hooks/PublicPrompts/usePeriodicSyncPrompt';
 import Toast from '@components/Toast';
+import { fileIdAppWriteMarker } from '@hooks/AppWriteAPI/client';
 
 // https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
 // https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
@@ -28,15 +33,47 @@ function App() {
     currentlySaving = status;
   }
 
-  const updateFile = useUpdateFile();
-  const updateLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving, isCurrentlySaving);
-  const initLocalStateFromDrive = useUpdateLocalStateFromDrive(false, setCurrentlySaving, () => { return false; });
+  const fileId = () => { return useCloudAuthStore.getState().fileId };
+
+  const updateFileAppWrite = useUpdateFileAppWrite();
+  const updateFileGoogle = useUpdateFileGoogle();
+  const updateFile = async (fileContent: string) => {
+    var fileIdTemp = fileId() ?? ""
+    if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
+      return updateFileAppWrite(fileContent);
+    } else if (fileIdTemp != "") {
+      return updateFileGoogle(fileContent);
+    }
+  }
+
+  const updateLocalStateFromDriveAppWrite = useUpdateLocalStateFromDriveAppWrite(false, setCurrentlySaving, isCurrentlySaving);
+  const updateLocalStateFromDriveGoogle = useUpdateLocalStateFromDriveGoogle(false, setCurrentlySaving, isCurrentlySaving);
+  const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
+    var fileIdTemp = fileId() ?? ""
+    if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
+      return updateLocalStateFromDriveAppWrite(actionToRunWhenDone);
+    } else if (fileIdTemp != "") {
+      return updateLocalStateFromDriveGoogle(actionToRunWhenDone);
+    }
+  }
+
+  const initLocalStateFromDriveAppWrite = useUpdateLocalStateFromDriveAppWrite(false, setCurrentlySaving, () => { return false; });
+  const initLocalStateFromDriveGoogle = useUpdateLocalStateFromDriveGoogle(false, setCurrentlySaving, () => { return false; });
+  const initLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
+    var fileIdTemp = fileId() ?? ""
+    if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
+      return initLocalStateFromDriveAppWrite(actionToRunWhenDone);
+    } else if (fileIdTemp != "") {
+      return initLocalStateFromDriveGoogle(actionToRunWhenDone);
+    }
+  }
+
   const initialiseNewChat = useInitialiseNewChat();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
-  const fileId = () => { return useCloudAuthStore.getState().fileId };
+
   const periodicSyncPrompt = usePeriodicSyncPrompt();
   var needToSave = false;
   var currentlySaving = true;
