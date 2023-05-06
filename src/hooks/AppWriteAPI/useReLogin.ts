@@ -8,8 +8,9 @@ const useReLogin = () => {
 
 
     const reLogin = () => {
-
-        document.getElementById("settings")?.click();
+        // TODO
+        // logout();
+        // document.getElementById("settings")?.click();
     }
     return reLogin;
 };
