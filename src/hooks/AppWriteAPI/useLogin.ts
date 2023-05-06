@@ -62,7 +62,7 @@ const useLogin = () => {
                     setFileId(fileName);
                     setIsAppWriteLoggedIn(true);
                     storage.getFile(storageBucketId, fileName).then(r => {
-                        updateLocalStateFromDrive()?.then(r => {
+                        updateLocalStateFromDrive(fileName)?.then(r => {
                             showLoggedIn();
                         });
                     }).catch(r => {

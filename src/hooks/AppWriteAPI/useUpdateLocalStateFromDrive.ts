@@ -19,13 +19,13 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
     const setToastShow = useLocalStore((state) => state.setToastShow);
     const getToastShow = () => { return useLocalStore.getState().toastShow; }
 
-    const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
+    const updateLocalStateFromDrive = (fileName: string = "", actionToRunWhenDone: Function = () => { }) => {
         if (isCurrentlySaving()) {
             return;
         }
         setCurrentlySaving(true);
 
-        return getFile().then((state) => {
+        return getFile(fileName).then((state) => {
             if (!state) {
                 return;
             }

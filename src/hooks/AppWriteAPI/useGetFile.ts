@@ -11,8 +11,10 @@ const useGetFile = (isLoginProcess: boolean) => {
         reLogin = useReLogin();
     }
 
-    const getFile = () => {
-        var fileName = fileId();
+    const getFile = (fileName: string = "") => {
+        if (fileName == "") {
+            fileName = fileId();
+        }
         var contentUrl = storage.getFileView(storageBucketId, fileName)
         return fetch(contentUrl, {
             credentials: "include"
