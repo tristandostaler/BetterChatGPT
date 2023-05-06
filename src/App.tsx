@@ -51,7 +51,7 @@ function App() {
   const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
     var fileIdTemp = fileId() ?? ""
     if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
-      return updateLocalStateFromDriveAppWrite(actionToRunWhenDone);
+      return updateLocalStateFromDriveAppWrite("", actionToRunWhenDone);
     } else if (fileIdTemp != "") {
       return updateLocalStateFromDriveGoogle(actionToRunWhenDone);
     }
@@ -62,7 +62,7 @@ function App() {
   const initLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
     var fileIdTemp = fileId() ?? ""
     if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
-      return initLocalStateFromDriveAppWrite(actionToRunWhenDone);
+      return initLocalStateFromDriveAppWrite("", actionToRunWhenDone);
     } else if (fileIdTemp != "") {
       return initLocalStateFromDriveGoogle(actionToRunWhenDone);
     }
