@@ -51,7 +51,7 @@ const useLogin = () => {
                 email,
                 password
             ).then(r => {
-                sleep(300).then(() => {
+                account.createEmailSession(email, password).then(r => {
                     createFile(fileName, JSON.stringify(useLocalStore.getState())).then(r => {
                         setFileId(fileName);
                         setIsAppWriteLoggedIn(true);
@@ -59,6 +59,8 @@ const useLogin = () => {
                     }).catch(error => {
                         showErrorLoggingIn('An error occured trying to create the state file - ' + error);
                     })
+                }).catch(error => {
+                    showErrorLoggingIn('An error occured trying to login - ' + error);
                 })
             }).catch(r => {
                 account.createEmailSession(email, password).then(r => {
