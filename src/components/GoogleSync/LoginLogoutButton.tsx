@@ -77,8 +77,8 @@ const LoginButton = () => {
             </button>
           </div>
           <div>
-            <button className='btn btn-neutral' id="loginAppDrive" onClick={() => { loginAppWrite() }}>
-              Start syncing data on AppDrive
+            <button className='btn btn-neutral' id="loginAppWrite" onClick={() => { loginAppWrite() }}>
+              Start syncing data on AppWrite
             </button>
           </div>
         </div>

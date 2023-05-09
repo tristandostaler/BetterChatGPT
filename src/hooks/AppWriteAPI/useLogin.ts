@@ -9,6 +9,7 @@ import { account, getFileName, storage, storageBucketId } from '@hooks/AppWriteA
 
 import { ID } from 'appwrite';
 import { md5Hash } from '@utils/hash';
+import { sleep } from '@utils/utils';
 
 const useLogin = () => {
     const setToastStatus = useLocalStore((state) => state.setToastStatus);
@@ -50,12 +51,14 @@ const useLogin = () => {
                 email,
                 password
             ).then(r => {
-                createFile(fileName, JSON.stringify(useLocalStore.getState())).then(r => {
-                    setFileId(fileName);
-                    setIsAppWriteLoggedIn(true);
-                    showLoggedIn();
-                }).catch(error => {
-                    showErrorLoggingIn('An error occured trying to create the state file - ' + error);
+                sleep(300).then(() => {
+                    createFile(fileName, JSON.stringify(useLocalStore.getState())).then(r => {
+                        setFileId(fileName);
+                        setIsAppWriteLoggedIn(true);
+                        showLoggedIn();
+                    }).catch(error => {
+                        showErrorLoggingIn('An error occured trying to create the state file - ' + error);
+                    })
                 })
             }).catch(r => {
                 account.createEmailSession(email, password).then(r => {
