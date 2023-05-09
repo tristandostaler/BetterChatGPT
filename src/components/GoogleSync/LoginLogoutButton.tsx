@@ -72,13 +72,13 @@ const LoginButton = () => {
       ) : (
         <div className='p-6 flex flex-col items-center gap-2'>
           <div>
+            <div>
+              <button className='btn btn-primary' id="loginAppWrite" onClick={() => { loginAppWrite() }}>
+                Start syncing data on AppWrite (prefered)
+              </button>
+            </div>
             <button className='btn btn-neutral' id="loginGoogle" onClick={() => { loginGoogle() }}>
               Start syncing data on Google Drive
-            </button>
-          </div>
-          <div>
-            <button className='btn btn-neutral' id="loginAppWrite" onClick={() => { loginAppWrite() }}>
-              Start syncing data on AppWrite
             </button>
           </div>
         </div>
