@@ -6,7 +6,7 @@ import { limitMessageTokens } from '@utils/messageUtils';
 
 export const getChatCompletion = async (
   endpoint: string,
-  messages: MessageInterface[],
+  messagesToSend: MessageInterface[],
   config: ConfigInterface,
   apiKey?: string,
   customHeaders?: Record<string, string>
@@ -16,16 +16,16 @@ export const getChatCompletion = async (
     ...customHeaders,
   };
 
-  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
+  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messagesToSend, config);
 
   const adjustedMessagesTuple = limitMessageTokens(
-    messages,
+    messagesToSend,
     tempConfig.max_tokens,
     tempConfig.model
   );
-  const adjustedMessages = adjustedMessagesTuple[0];
+  const messages = adjustedMessagesTuple[0];
   tempConfig.max_tokens -= adjustedMessagesTuple[1];
-  if (adjustedMessages.length === 0) throw new Error('Message exceed max token!');
+  if (messages.length === 0) throw new Error('Message exceed max token!');
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -45,7 +45,7 @@ export const getChatCompletion = async (
     method: 'POST',
     headers,
     body: JSON.stringify({
-      adjustedMessages,
+      messages,
       ...tempConfig,
     }),
   });
@@ -57,7 +57,7 @@ export const getChatCompletion = async (
 
 export const getChatCompletionStream = async (
   endpoint: string,
-  messages: MessageInterface[],
+  messagesToSend: MessageInterface[],
   config: ConfigInterface,
   apiKey?: string,
   customHeaders?: Record<string, string>
@@ -68,16 +68,16 @@ export const getChatCompletionStream = async (
   };
 
 
-  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
+  const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messagesToSend, config);
 
   const adjustedMessagesTuple = limitMessageTokens(
-    messages,
+    messagesToSend,
     tempConfig.max_tokens,
     tempConfig.model
   );
-  const adjustedMessages = adjustedMessagesTuple[0];
+  const messages = adjustedMessagesTuple[0];
   tempConfig.max_tokens -= adjustedMessagesTuple[1];
-  if (adjustedMessages.length === 0) throw new Error('Message exceed max token!');
+  if (messages.length === 0) throw new Error('Message exceed max token!');
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -97,7 +97,7 @@ export const getChatCompletionStream = async (
     method: 'POST',
     headers,
     body: JSON.stringify({
-      adjustedMessages,
+      messages,
       ...tempConfig,
       stream: true,
     }),
