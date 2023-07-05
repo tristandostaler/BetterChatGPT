@@ -2,6 +2,7 @@ import { ShareGPTSubmitBodyInterface } from '@type/api';
 import { ConfigInterface, MessageInterface } from '@type/chat';
 import { isAzureEndpoint } from '@utils/api';
 import { adjustConfigAndRemoveConfigContentInMessages } from './helper';
+import { limitMessageTokens } from '@utils/messageUtils';
 
 export const getChatCompletion = async (
   endpoint: string,
@@ -16,6 +17,13 @@ export const getChatCompletion = async (
   };
 
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
+
+  const adjustedMessages = limitMessageTokens(
+    messages,
+    tempConfig.max_tokens,
+    tempConfig.model
+  );
+  if (adjustedMessages.length === 0) throw new Error('Message exceed max token!');
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -35,7 +43,7 @@ export const getChatCompletion = async (
     method: 'POST',
     headers,
     body: JSON.stringify({
-      messages,
+      adjustedMessages,
       ...tempConfig,
     }),
   });
@@ -57,7 +65,15 @@ export const getChatCompletionStream = async (
     ...customHeaders,
   };
 
+
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
+
+  const adjustedMessages = limitMessageTokens(
+    messages,
+    tempConfig.max_tokens,
+    tempConfig.model
+  );
+  if (adjustedMessages.length === 0) throw new Error('Message exceed max token!');
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -77,7 +93,7 @@ export const getChatCompletionStream = async (
     method: 'POST',
     headers,
     body: JSON.stringify({
-      messages,
+      adjustedMessages,
       ...tempConfig,
       stream: true,
     }),
