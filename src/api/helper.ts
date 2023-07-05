@@ -1,9 +1,10 @@
-import { modelOptions } from '@constants/chat';
+import { defaultUserMaxToken, modelOptions } from '@constants/chat';
 import { EventSourceData } from '@type/api';
 import { ConfigInterface, MessageInterface, ModelOptions } from '@type/chat';
 import { HelperPromptText, SystemPromptText } from '@constants/prompt';
 
 const regexes = {
+  'model': /(?:~ Model: (?<match>[a-zA-Z0-9\-\.]+) ~)/gm,
   'tokens': /(?:~ Max Tokens: (?<match>[0-9]+) ~)/gm,
   'temp': /(?:~ Temperature: (?<match>[0-9\.]+) ~)/gm,
   'topp': /(?:~ Top-p: (?<match>[0-9\.]+) ~)/gm,
@@ -79,6 +80,10 @@ export const adjustConfigAndRemoveConfigContentInMessages = (
     top_p: config.top_p,
   };
 
+  if (adjustedConfig.max_tokens == null || adjustedConfig.max_tokens == 0) {
+    adjustedConfig.max_tokens = defaultUserMaxToken;
+  }
+
   const getMatch = (content: string, regex: RegExp) => {
     let result = regex.exec(content);
     if (!result || !result.groups)
@@ -108,11 +113,17 @@ export const adjustConfigAndRemoveConfigContentInMessages = (
       adjustedConfig.frequency_penalty = +result
     }
 
+    let resultModel = (getMatch(m.content, regexes.model) as ModelOptions)
+    if (resultModel) {
+      adjustedConfig.model = resultModel
+    }
+
     m.content = m.content.replace(regexes.tokens, '')
       .replace(regexes.temp, '')
       .replace(regexes.topp, '')
       .replace(regexes.presence, '')
-      .replace(regexes.frequency, '');
+      .replace(regexes.frequency, '')
+      .replace(regexes.model, '');
   });
 
   return adjustedConfig
