@@ -18,11 +18,13 @@ export const getChatCompletion = async (
 
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
 
-  const adjustedMessages = limitMessageTokens(
+  const adjustedMessagesTuple = limitMessageTokens(
     messages,
     tempConfig.max_tokens,
     tempConfig.model
   );
+  const adjustedMessages = adjustedMessagesTuple[0];
+  tempConfig.max_tokens -= adjustedMessagesTuple[1];
   if (adjustedMessages.length === 0) throw new Error('Message exceed max token!');
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
@@ -68,11 +70,13 @@ export const getChatCompletionStream = async (
 
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messages, config);
 
-  const adjustedMessages = limitMessageTokens(
+  const adjustedMessagesTuple = limitMessageTokens(
     messages,
     tempConfig.max_tokens,
     tempConfig.model
   );
+  const adjustedMessages = adjustedMessagesTuple[0];
+  tempConfig.max_tokens -= adjustedMessagesTuple[1];
   if (adjustedMessages.length === 0) throw new Error('Message exceed max token!');
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;

@@ -48,7 +48,7 @@ export const limitMessageTokens = (
   messagesToSend: MessageInterface[],
   limit: number = 4096,
   model: ModelOptions
-): MessageInterface[] => {
+): [MessageInterface[], number] => {
 
   const messages = replaceDynamicContentInMessages(messagesToSend, model);
 
@@ -73,7 +73,7 @@ export const limitMessageTokens = (
     limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content } });
   }
 
-  return limitedMessages;
+  return [limitedMessages, tokenCount];
 };
 
 export default countTokens;
