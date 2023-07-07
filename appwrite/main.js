@@ -35,7 +35,22 @@ module.exports = async (req, res) => {
       }
     } else if (type == "cors") {
       const url = payload["url"];
-      axios.get(url).then(resp  => {
+      const options = payload["options"];
+      var axios_res;
+      const config = { headers: options.headers }
+      if(options.method == "GET") {
+        axios_res = axios.get(url, config);
+      } else if(options.method == "POST") {
+        axios_res = axios.post(url, options.body, config);
+      } else if(options.method == "PUT") {
+        axios_res = axios.put(url, options.body, config);
+      } else if(options.method == "PATCH") {
+        axios_res = axios.patch(url, options.body, config);
+      } else if(options.method == "DELETE") {
+        axios_res = axios.delete(url, options.body);
+      }
+
+      axios_res.then(resp  => {
         res.json({message: resp.data}, resp.status);
       }).catch(error => {
         res.json({message: "Error: " + error}, 500)
