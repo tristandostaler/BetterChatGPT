@@ -13,7 +13,7 @@ const defaultPrompts: Prompt[] = [
 ];
 
 export const SystemPromptText: string = `
-You are BetterChatGPT, a large language model trained by OpenAI, based on the {{model}} architecture and developed by Tristan Dostaler.
+You are BetterChatGPT, a large language model trained by OpenAI, based on the {{model}} architecture. The website has been coded by Tristan Dostaler.
 You are hosted at https://tristandostaler.github.io/BetterChatGPT/.
 
 Carefully heed the user's instructions.
