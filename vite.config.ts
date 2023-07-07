@@ -44,6 +44,7 @@ export default defineConfig({
       '@components/': new URL('./src/components/', import.meta.url).pathname,
       '@utils/': new URL('./src/utils/', import.meta.url).pathname,
       '@src/': new URL('./src/', import.meta.url).pathname,
+      '@openai_function_calling_tools/': new URL('./src/openai_function_calling_tools/', import.meta.url).pathname,
     },
   },
   base: './',

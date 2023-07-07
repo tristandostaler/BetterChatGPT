@@ -2,12 +2,15 @@ import React from 'react';
 import useStore from '@store/store';
 import { useEffect } from "react";
 import { useTranslation } from 'react-i18next';
-import { ChatInterface, MessageInterface } from '@type/chat';
+import { ChatInterface, ConfigInterface, MessageInterface, ModelOptions } from '@type/chat';
 import { getChatCompletion, getChatCompletionStream } from '@api/api';
 import { parseEventSource } from '@api/helper';
 import { limitMessageTokens } from '@utils/messageUtils';
 import { _defaultChatConfig } from '@constants/chat';
 import { officialAPIEndpoint } from '@constants/auth';
+import { executeFunction, functionsSchemaTokens } from '@api/functions';
+import { ZodError } from 'zod';
+import { AppwriteException } from 'appwrite';
 
 // Determine whether commas should be ignored as sentence separators
 var CN_IGNORE_COMMAS = true;
@@ -148,6 +151,85 @@ const useSubmit = () => {
     return data.choices[0].message.content;
   };
 
+  const getChatCompletionWithFunctionResult = async (config: ConfigInterface, messages: MessageInterface[], fnName: string, fnArgs: any, result: any, user_message: string) => {
+    const minResponseSize = 500;
+
+    var newMessages = messages.concat([
+      { locked: true, role: "assistant", content: "", function_call: { name: fnName, arguments: fnArgs } },
+    ]);
+
+    var resultText = result + ""
+
+    var substring_size = resultText.length - 1;
+    var round = 0;
+    var totalTokens = -1;
+    do {
+      substring_size = substring_size - (round * 10)
+      var tmp = resultText.substring(0, substring_size);
+      if (tmp === "") {
+        throw new Error("Max tokens reached. Please use a model with more tokens available.");
+      }
+      const adjustedMessagesTuple = limitMessageTokens(
+        newMessages.concat([{ locked: true, role: "function", name: fnName, content: tmp }, { role: "user", "content": user_message }]),
+        config.max_tokens - functionsSchemaTokens(config.model),
+        config.model
+      );
+      totalTokens = config.max_tokens - adjustedMessagesTuple[1] - functionsSchemaTokens(config.model);
+      round++
+    } while (totalTokens < minResponseSize)
+
+    resultText = resultText.substring(0, substring_size);
+
+    newMessages.push({ locked: true, role: "function", name: fnName, content: resultText })
+
+    if (user_message != "") {
+      newMessages.push({ locked: true, role: "user", "content": user_message })
+    }
+    return await getChatCompletion(
+      useStore.getState().apiEndpoint,
+      newMessages,
+      config,
+      apiKey
+    );
+  }
+
+  async function handlerFunctionCallResult(config: ConfigInterface, retry_count: number, fnName: string, fnArgs: any, messages: MessageInterface[], funcResult: any, result: any): Promise<any> {
+    if (retry_count < -1) throw new Error("An error occured while handling function call. Max retry count reached. Latest result: " + result);
+
+    if (funcResult.choices[0].finish_reason === "function_call") {
+      return await handleFunctionCall(config, retry_count, funcResult.choices[0].message.function_call.name, funcResult.choices[0].message.function_call.arguments, messages);
+    } else if ((funcResult.choices[0].message.content as string).includes("RETRY")) {
+      let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `If you made an error, retry now. You have ${retry_count} try left.`);
+      return await handlerFunctionCallResult(config, retry_count - 1, fnName, fnArgs, messages, funcResult, result);
+    } else if ((funcResult.choices[0].message.content as string).includes("WORKED")) {
+      let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, ``);
+      return funcResult.choices[0].message.content
+    }
+    throw new Error("An error occured calling the function. Latest content retrived: " + funcResult.choices[0].message.content);
+  }
+
+  const handleFunctionCall = async (config: ConfigInterface, retry_count: number, fnName: string, fnArgs: any, messages: MessageInterface[]) => {
+    if (!useStore.getState().generating) return
+
+    if (retry_count < -1) throw new Error("An error occured while handling function call. Max retry count reached");
+
+    var result = await executeFunction(fnName, JSON.parse(fnArgs)).catch(error => error)
+
+    if (result instanceof ZodError) {
+      result = `Failed to execute script: ${result.message}`;
+    } else if (result instanceof AppwriteException) {
+      throw new Error(result.message);
+    } else if (result instanceof Error) {
+      if (retry_count == 0)
+        throw new Error(result.message);
+      result = result.message;
+    }
+
+    let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `If the previous function call worked, reply "WORKED". If not, reply "RETRY".`)
+    return handlerFunctionCallResult(config, retry_count, fnName, fnArgs, messages, funcResult, result)
+
+  }
+
   const handleSubmit = async () => {
     const chats = useStore.getState().chats;
     if (generating || !chats || window.speechSynthesis.speaking) return;
@@ -195,6 +277,10 @@ const useSubmit = () => {
         );
       }
 
+      let fnName = '';
+      let fnArgs = '';
+      let isFunctionCall = false;
+
       if (stream) {
         if (stream.locked)
           throw new Error(
@@ -217,6 +303,16 @@ const useSubmit = () => {
               if (typeof curr === 'string') {
                 partial += curr;
               } else {
+                if (curr.choices[0].delta.function_call?.name) {
+                  fnName += curr.choices[0].delta.function_call?.name;
+                  if (!isFunctionCall) {
+                    isFunctionCall = true;
+                    output += "Function call requested. Loading..."
+                  }
+                }
+                if (curr.choices[0].delta.function_call?.arguments) {
+                  fnArgs += curr.choices[0].delta.function_call?.arguments;
+                }
                 const content = curr.choices[0].delta.content;
                 if (content) output += content;
               }
@@ -240,6 +336,19 @@ const useSubmit = () => {
         }
         reader.releaseLock();
         stream.cancel();
+      }
+
+      if (isFunctionCall) {
+        var functionCallResult = await handleFunctionCall(chats[currentChatIndex].config, 5, fnName, fnArgs, chats[currentChatIndex].messages);
+        if (useStore.getState().generating) {
+          const updatedChats: ChatInterface[] = JSON.parse(
+            JSON.stringify(useStore.getState().chats)
+          );
+          const updatedMessages = updatedChats[currentChatIndex].messages;
+          updatedMessages[updatedMessages.length - 1].content = functionCallResult;
+          setChats(updatedChats);
+          speechHandler(functionCallResult);
+        }
       }
 
       // generate title for new chats

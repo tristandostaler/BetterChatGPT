@@ -60,6 +60,8 @@ export const replaceDynamicContentInMessages = (
       role: m.role,
       content: content,
       locked: m.locked,
+      function_call: m.function_call,
+      name: m.name,
     }
     transformedMessages.push(tempM);
   });

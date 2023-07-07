@@ -11,6 +11,10 @@ export type EventSourceData = EventSourceDataInterface | '[DONE]';
 export interface EventSourceDataChoices {
   delta: {
     content?: string;
+    function_call?: {
+      name: string;
+      arguments: string;
+    }
     role?: string;
   };
   finish_reason?: string;

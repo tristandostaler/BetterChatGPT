@@ -25,7 +25,8 @@
       "@api/*": ["./src/api/*"],
       "@components/*": ["./src/components/*"],
       "@utils/*": ["./src/utils/*"],
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@openai_function_calling_tools/*": ["./src/openai_function_calling_tools/*"]
     }
   },
   "include": ["src", "electron/index.cjs"],

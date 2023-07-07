@@ -3,6 +3,7 @@ import { ConfigInterface, MessageInterface } from '@type/chat';
 import { isAzureEndpoint } from '@utils/api';
 import { adjustConfigAndRemoveConfigContentInMessages } from './helper';
 import { limitMessageTokens } from '@utils/messageUtils';
+import { functionsSchemas, functionsSchemaTokens } from './functions'
 
 export const getChatCompletion = async (
   endpoint: string,
@@ -17,6 +18,7 @@ export const getChatCompletion = async (
   };
 
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messagesToSend, config);
+  tempConfig.max_tokens -= functionsSchemaTokens(tempConfig.model);
 
   const adjustedMessagesTuple = limitMessageTokens(
     messagesToSend,
@@ -47,6 +49,7 @@ export const getChatCompletion = async (
     body: JSON.stringify({
       messages,
       ...tempConfig,
+      functions: functionsSchemas
     }),
   });
   if (!response.ok) throw new Error(await response.text());
@@ -69,6 +72,7 @@ export const getChatCompletionStream = async (
 
 
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messagesToSend, config);
+  tempConfig.max_tokens -= functionsSchemaTokens(tempConfig.model);
 
   const adjustedMessagesTuple = limitMessageTokens(
     messagesToSend,
@@ -100,6 +104,7 @@ export const getChatCompletionStream = async (
       messages,
       ...tempConfig,
       stream: true,
+      functions: functionsSchemas
     }),
   });
   if (response.status === 404 || response.status === 405) {

@@ -2,12 +2,17 @@ import { Prompt } from './prompt';
 import { PublicPrompt } from './public-prompt';
 import { Theme } from './theme';
 
-export type Role = 'user' | 'assistant' | 'system';
+export type Role = 'user' | 'assistant' | 'system' | 'function';
 export const roles: Role[] = ['user', 'assistant', 'system'];
 
 export interface MessageInterface {
   role: Role;
   content: string;
+  name?: string;
+  function_call?: {
+    name: string;
+    arguments: any;
+  }
   locked?: Boolean; // If true, this chat will never get removed when the tokens limit is reached
 }
 

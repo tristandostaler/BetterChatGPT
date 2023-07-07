@@ -4,7 +4,7 @@ import { Tiktoken } from '@dqbd/tiktoken/lite';
 import { replaceDynamicContentInMessages } from '@api/helper';
 const cl100k_base = await import('@dqbd/tiktoken/encoders/cl100k_base.json');
 
-const encoder = new Tiktoken(
+export const encoder = new Tiktoken(
   cl100k_base.bpe_ranks,
   {
     ...cl100k_base.special_tokens,
@@ -29,8 +29,8 @@ export const getChatGPTEncoding = (
 
   const serialized = [
     m
-      .map(({ role, content }) => {
-        return `<|im_start|>${role}${roleSep}${content}<|im_end|>`;
+      .map(({ role, content, function_call, name }) => {
+        return `<|im_start|>${role}${roleSep}${content}${JSON.stringify(function_call)}${name}<|im_end|>`;
       })
       .join(msgSep),
     `<|im_start|>assistant${roleSep}`,
@@ -64,13 +64,13 @@ export const limitMessageTokens = (
 
   for (let i = messages.length - 1; i >= 0; i--) {
     if (messages[i].locked) {
-      limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content } });
+      limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content, function_call: messages[i].function_call, name: messages[i].name } });
       continue;
     }
     const count = countTokens([messages[i]], model);
+    if (tokenCount + count > limit) { continue; }
     tokenCount += count;
-    if (tokenCount > limit) { continue; }
-    limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content } });
+    limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content, function_call: messages[i].function_call, name: messages[i].name } });
   }
 
   return [limitedMessages, tokenCount];

@@ -16,8 +16,8 @@ export const _defaultSystemMessage =
   '{{SystemPrompt}}';
 
 export const modelOptions: ModelOptions[] = [
-  'gpt-3.5-turbo-16k',
   'gpt-3.5-turbo',
+  'gpt-3.5-turbo-16k',
   'gpt-4',
   'gpt-4-32k',
   // 'gpt-3.5-turbo-0301',
