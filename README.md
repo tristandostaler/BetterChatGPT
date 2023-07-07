@@ -33,7 +33,7 @@
 </p>
 
 <p align="center">
-    <a href="https://bettergpt.chat">Enter Website</a>
+    <a href="https://tristandostaler.github.io/BetterChatGPT/">Enter Website</a>
     ·
     <a href="https://github.com/tristandostaler/BetterChatGPT/issues/new/choose">Report Bug</a>
     ·
@@ -44,20 +44,20 @@
 ## 👋🏻 Introducing Better ChatGPT
 
 <p align="center">
-    <a href="https://bettergpt.chat" target="_blank">
+    <a href="https://tristandostaler.github.io/BetterChatGPT/" target="_blank">
         <img src="assets/preview.png" alt="landing" width=500 />
     </a>
 </p>
 
-Are you ready to unlock the full potential of ChatGPT with Better ChatGPT?
+Are you ready to unlock the full potential of ChatGPT with BetterChatGPT?
 
-Better ChatGPT is the ultimate destination for anyone who wants to experience the limitless power of conversational AI. With no limits and completely free to use for all, our app harnesses the full potential of OpenAI's ChatGPT API to offer you an unparalleled chatbot experience.
+BetterChatGPT is the ultimate destination for anyone who wants to experience the limitless power of conversational AI. With no limits and completely free to use for all, our app harnesses the full potential of OpenAI's ChatGPT API to offer you an unparalleled chatbot experience.
 
 Whether you're looking to chat with a virtual assistant, improve your language skills, or simply enjoy a fun and engaging conversation, our app has got you covered. So why wait? Join us today and explore the exciting world of Better ChatGPT!
 
 # 🔥 Features
 
-Better ChatGPT comes with a bundle of amazing features! Here are some of them:
+BetterChatGPT comes with a bundle of amazing features! Here are some of them:
 
 - Proxy to bypass ChatGPT regional restrictions
 - Prompt library
@@ -73,10 +73,11 @@ Better ChatGPT comes with a bundle of amazing features! Here are some of them:
 - Import / Export chat
 - Download chat (markdown / image / json)
 - Multiple language support (i18n)
+- Plugins
 
 # 🛠️ Usage
 
-To get started, simply visit our website at <https://bettergpt.chat/>. There are 3 ways for you to start using Better ChatGPT.
+To get started, simply visit our website at <https://tristandostaler.github.io/BetterChatGPT/>. There are 3 ways for you to start using Better ChatGPT.
 
 1. Enter into the API menu your OpenAI API Key obtained from [OpenAI API Keys](https://platform.openai.com/account/api-keys).
 2. Utilise the api endpoint proxy provided by [ayaka14732/ChatGPTAPIFree](https://github.com/ayaka14732/ChatGPTAPIFree) (if you are in a region with no access to ChatGPT)
