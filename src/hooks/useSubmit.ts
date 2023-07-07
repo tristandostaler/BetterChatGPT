@@ -307,7 +307,7 @@ const useSubmit = () => {
                   fnName += curr.choices[0].delta.function_call?.name;
                   if (!isFunctionCall) {
                     isFunctionCall = true;
-                    output += "Function call requested. Loading..."
+                    output += "Plugin call requested. Loading..."
                   }
                 }
                 if (curr.choices[0].delta.function_call?.arguments) {
