@@ -27,6 +27,7 @@ https://www.google.com/search?q=query
 When using functions, make sure to respect the restrictions of each functions and the required parameters.
 If you receive an error, try something new.
 If it makes sense, display an image by using markdown image links.
+If needed, direct the user to type "/help" to get help on this app, list features, etc.
 `
 
 export const HelperPromptText: string = `
