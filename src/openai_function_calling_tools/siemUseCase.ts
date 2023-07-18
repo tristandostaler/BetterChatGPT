@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export function createSIEMUseCaseMetadata() {
   const paramsSchema = z.object({
-    description: z.string(),
+    description: z.string().array(),
     potentialFalsePositives: z.string().array(),
     mitreAttack: z.string().array(),
     reference: z.string(),
@@ -12,7 +12,7 @@ export function createSIEMUseCaseMetadata() {
   const name = 'SIEMUseCaseMetadata';
   const description = `useful for when you need to create a SIEM Use Case metadata. 
 inputs are:
-- Description: A string representing the description of the Use Case.
+- Description: An array of strings representing each required sentences of the description of the Use Case.
 - PotentialFalsePositives: An array of strings describing potential false positives of this Use Case.
 - MitreAttack: An array of strings for Mitre ATT&CK sub-techniques IDs related to the Use Case.
 - Reference: A string representing ONE valid http URL including protocol.
@@ -24,7 +24,7 @@ inputs are:
       
 
       return `\`\`\`markdown
-Description: ${description}
+Description: ${description.join("\n")}
 
 Potential False Positives:
 ${potentialFalsePositives.map(element => "  - " + element).join("\n")}
