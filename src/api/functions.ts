@@ -41,4 +41,4 @@ export const functionsSchemas = [
     // webBrowserSchema,
 ]
 
-export const functionsSchemaTokens = (model: ModelOptions) => encoder.encode(JSON.stringify(functionsSchemas), 'all').length - (functionsSchemas.length * 35) - 3;
+export const functionsSchemaTokens = (model: ModelOptions) => encoder.encode(JSON.stringify(functionsSchemas), 'all').length - (functionsSchemas.length * 40) - 3;
