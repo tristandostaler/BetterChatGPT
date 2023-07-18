@@ -10,7 +10,7 @@ export function createSIEMUseCaseMetadata() {
     tags: z.string().array(),
   });
   const name = 'SIEMUseCaseMetadata';
-  const description = `useful for when you need to create a SIEM Use Case metadata. 
+  const description = `useful for when you need to create a SIEM Use Case metadata. Keep the resulting format, NEVER rewrite the content.
 inputs are:
 - Description: An array of strings representing each required sentences of the description of the Use Case.
 - PotentialFalsePositives: An array of strings describing potential false positives of this Use Case.
