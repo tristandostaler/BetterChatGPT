@@ -6,7 +6,7 @@ import { ChatInterface, ConfigInterface, MessageInterface, ModelOptions } from '
 import { getChatCompletion, getChatCompletionStream } from '@api/api';
 import { parseEventSource } from '@api/helper';
 import { limitMessageTokens } from '@utils/messageUtils';
-import { _defaultChatConfig } from '@constants/chat';
+import { _defaultChatConfig, minResponseSize } from '@constants/chat';
 import { officialAPIEndpoint } from '@constants/auth';
 import { executeFunction, functionsSchemaTokens } from '@api/functions';
 import { ZodError } from 'zod';
@@ -124,9 +124,20 @@ const useSubmit = () => {
   }
 
   const generateTitle = async (
-    message: MessageInterface[]
+    message: MessageInterface[],
+    max_tokens: number,
+    model: ModelOptions,
   ): Promise<string> => {
     let data;
+    const adjustedConfig: ConfigInterface = {
+      frequency_penalty: _defaultChatConfig.frequency_penalty,
+      max_tokens: max_tokens,
+      model: model,
+      presence_penalty: _defaultChatConfig.presence_penalty,
+      temperature: _defaultChatConfig.temperature,
+      top_p: _defaultChatConfig.top_p,
+    };
+
     if (!apiKey || apiKey.length === 0) {
       // official endpoint
       if (apiEndpoint === officialAPIEndpoint) {
@@ -137,14 +148,14 @@ const useSubmit = () => {
       data = await getChatCompletion(
         useStore.getState().apiEndpoint,
         message,
-        _defaultChatConfig
+        adjustedConfig
       );
     } else if (apiKey) {
       // own apikey
       data = await getChatCompletion(
         useStore.getState().apiEndpoint,
         message,
-        _defaultChatConfig,
+        adjustedConfig,
         apiKey
       );
     }
@@ -152,8 +163,6 @@ const useSubmit = () => {
   };
 
   const getChatCompletionWithFunctionResult = async (config: ConfigInterface, messages: MessageInterface[], fnName: string, fnArgs: any, result: any, user_message: string) => {
-    const minResponseSize = 500;
-
     var newMessages = messages.concat([
       { locked: true, role: "assistant", content: "", function_call: { name: fnName, arguments: fnArgs } },
     ]);
@@ -369,7 +378,7 @@ const useSubmit = () => {
           content: `Generate a title in less than 6 words for the following message (language: ${i18n.language}):\n"""\nUser: ${user_message}\nAssistant: ${assistant_message}\n"""`,
         };
 
-        let title = (await generateTitle([message])).trim();
+        let title = (await generateTitle([message], chats[currentChatIndex].config.max_tokens, chats[currentChatIndex].config.model)).trim();
         if (title.startsWith('"') && title.endsWith('"')) {
           title = title.slice(1, -1);
         }

@@ -2,6 +2,7 @@ import { MessageInterface, ModelOptions } from '@type/chat';
 
 import { Tiktoken } from '@dqbd/tiktoken/lite';
 import { replaceDynamicContentInMessages } from '@api/helper';
+import { minResponseSize } from '@constants/chat';
 const cl100k_base = await import('@dqbd/tiktoken/encoders/cl100k_base.json');
 
 export const encoder = new Tiktoken(
@@ -47,7 +48,8 @@ const countTokens = (messages: MessageInterface[], model: ModelOptions) => {
 export const limitMessageTokens = (
   messagesToSend: MessageInterface[],
   limit: number = 4096,
-  model: ModelOptions
+  model: ModelOptions,
+  minResponseLength: number = minResponseSize,
 ): [MessageInterface[], number] => {
 
   const messages = replaceDynamicContentInMessages(messagesToSend, model);
@@ -56,19 +58,19 @@ export const limitMessageTokens = (
   let tokenCount = 0;
 
   for (let i = messages.length - 1; i >= 0; i--) {
-    if (messages[i].locked) {
+    if (messages[i].locked || i == messages.length - 1) {
       const count = countTokens([messages[i]], model);
       tokenCount += count;
     }
   }
 
   for (let i = messages.length - 1; i >= 0; i--) {
-    if (messages[i].locked) {
+    if (messages[i].locked || i == messages.length - 1) {
       limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content, function_call: messages[i].function_call, name: messages[i].name } });
       continue;
     }
     const count = countTokens([messages[i]], model);
-    if (tokenCount + count > limit) { continue; }
+    if (tokenCount + count + minResponseLength > limit) { continue; }
     tokenCount += count;
     limitedMessages.unshift({ ...{ role: messages[i].role, content: messages[i].content, function_call: messages[i].function_call, name: messages[i].name } });
   }
