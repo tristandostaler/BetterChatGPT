@@ -37,13 +37,22 @@ function App() {
 
   const fileId = () => { return useCloudAuthStore.getState().fileId };
 
+  const isAppWrite = () => {
+    var fileIdTemp = fileId() ?? ""
+    return fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker);
+  }
+
+  const isGoogleDrive = () => {
+    var fileIdTemp = fileId() ?? ""
+    return (!isAppWrite() && fileIdTemp != "")
+  }
+
   const updateFileAppWrite = useUpdateFileAppWrite();
   const updateFileGoogle = useUpdateFileGoogle();
   const updateFile = async (fileContent: string) => {
-    var fileIdTemp = fileId() ?? ""
-    if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
+    if (isAppWrite()) {
       return updateFileAppWrite(fileContent);
-    } else if (fileIdTemp != "") {
+    } else if (isGoogleDrive()) {
       return updateFileGoogle(fileContent);
     }
   }
@@ -51,10 +60,9 @@ function App() {
   const updateLocalStateFromDriveAppWrite = useUpdateLocalStateFromDriveAppWrite(false, setCurrentlySaving, isCurrentlySaving);
   const updateLocalStateFromDriveGoogle = useUpdateLocalStateFromDriveGoogle(false, setCurrentlySaving, isCurrentlySaving);
   const updateLocalStateFromDrive = (savingSyncSemaphoreFunction: Function, actionToRunWhenDone: Function = () => { }) => {
-    var fileIdTemp = fileId() ?? ""
-    if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
+    if (isAppWrite()) {
       return updateLocalStateFromDriveAppWrite(savingSyncSemaphoreFunction, "", actionToRunWhenDone);
-    } else if (fileIdTemp && fileIdTemp != "") {
+    } else if (isGoogleDrive()) {
       return updateLocalStateFromDriveGoogle(savingSyncSemaphoreFunction, actionToRunWhenDone);
     }
   }
@@ -62,10 +70,9 @@ function App() {
   const initLocalStateFromDriveAppWrite = useUpdateLocalStateFromDriveAppWrite(false, setCurrentlySaving, () => { return false; });
   const initLocalStateFromDriveGoogle = useUpdateLocalStateFromDriveGoogle(false, setCurrentlySaving, () => { return false; });
   const initLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
-    var fileIdTemp = fileId() ?? ""
-    if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
+    if (isAppWrite()) {
       return initLocalStateFromDriveAppWrite(() => { }, "", actionToRunWhenDone);
-    } else if (fileIdTemp != "") {
+    } else if (isGoogleDrive()) {
       return initLocalStateFromDriveGoogle(() => { }, actionToRunWhenDone);
     }
   }
@@ -140,7 +147,7 @@ function App() {
         }
       }
 
-      // --------------- Section: Google drive
+      // --------------- Section: Google drive and AppWrite
       if (fileId()) {
         await initLocalStateFromDrive();
       }
@@ -185,7 +192,7 @@ function App() {
         } else {
           reset();
         }
-      }, 5 * 60 * 1000)
+      }, (isAppWrite() ? 1 : 5) * 60 * 1000)
 
       // --------------- Section: Public prompt sync
       await periodicSyncPrompt();

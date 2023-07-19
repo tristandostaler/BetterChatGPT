@@ -25,7 +25,7 @@ const useGetFile = (isLoginProcess: boolean) => {
                 return null;
             }
             return res.json();
-        }).catch(() => { reLogin(); return null; });
+        }).catch((reason) => { console.log(reason); reLogin(); return null; });
     }
     return getFile;
 };

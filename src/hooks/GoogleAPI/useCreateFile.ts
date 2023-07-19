@@ -33,7 +33,7 @@ const useCreateFile = (isLoginProcess: boolean) => {
                 return null;
             }
             return res.json();
-        }).catch(() => { reLogin(); });
+        }).catch((reason) => { console.log(reason); reLogin(); });
     }
     return createFile;
 };

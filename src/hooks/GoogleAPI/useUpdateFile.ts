@@ -36,6 +36,7 @@ const useUpdateFile = () => {
             }
             return res.json();
         }).catch((reason) => {
+            console.log(reason);
             reLogin();
         });
     }
