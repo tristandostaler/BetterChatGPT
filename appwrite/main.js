@@ -42,26 +42,36 @@ module.exports = async (req, res) => {
       var axios_res;
       const config = { headers: options.headers }
       if (options.method == "GET") {
-        axios_res = axios.get(url, config);
+        axios_res = axios.get(url, config).catch(error => {
+          res.json({ message: "Error: " + error }, 400)
+        });
       } else if (options.method == "POST") {
-        axios_res = axios.post(url, options.body, config);
+        axios_res = axios.post(url, options.body, config).catch(error => {
+          res.json({ message: "Error: " + error }, 400)
+        });
       } else if (options.method == "PUT") {
-        axios_res = axios.put(url, options.body, config);
+        axios_res = axios.put(url, options.body, config).catch(error => {
+          res.json({ message: "Error: " + error }, 400)
+        });
       } else if (options.method == "PATCH") {
-        axios_res = axios.patch(url, options.body, config);
+        axios_res = axios.patch(url, options.body, config).catch(error => {
+          res.json({ message: "Error: " + error }, 400)
+        });
       } else if (options.method == "DELETE") {
-        axios_res = axios.delete(url, options.body);
+        axios_res = axios.delete(url, options.body).catch(error => {
+          res.json({ message: "Error: " + error }, 400)
+        });
       }
 
       axios_res.then(resp => {
         res.json({ message: resp.data }, resp.status);
       }).catch(error => {
-        res.json({ message: "Error: " + error }, 500)
+        res.json({ message: "Error: " + error }, 400)
       })
     } else {
-      res.json({ message: "Invalid type!" }, 500)
+      res.json({ message: "Invalid type!" }, 400)
     }
   } catch (error) {
-    res.json({ message: "An error occured!" }, 500)
+    res.json({ message: "An error occured!" }, 400)
   }
 };
