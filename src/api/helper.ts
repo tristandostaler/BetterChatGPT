@@ -2,6 +2,7 @@ import { defaultUserMaxToken, modelOptions } from '@constants/chat';
 import { EventSourceData } from '@type/api';
 import { ConfigInterface, MessageInterface, ModelOptions } from '@type/chat';
 import { HelperPromptText, SystemPromptText } from '@constants/prompt';
+import { functionsSchemas } from '@api/functions';
 
 const regexes = {
   'model': /(?:~ Model: (?<match>[a-zA-Z0-9\-\.]+) ~)/gm,
@@ -47,6 +48,7 @@ export const replaceDynamicContentInMessages = (
     'model': model,
     'HelperPrompt': HelperPromptText,
     'SystemPrompt': SystemPromptText,
+    'Functions': functionsSchemas.map(element => `- ${element.name}\n    Description: ${element.description}`).join("\n"),
   }
 
   messages.forEach((m) => {
