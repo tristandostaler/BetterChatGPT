@@ -38,7 +38,7 @@ const useLogin = () => {
                     }
                     if (fileIdTemp) {
                         setFileId(fileIdTemp);
-                        updateLocalStateFromDrive();
+                        updateLocalStateFromDrive(() => { });
                     } else {
                         var fileContent = JSON.stringify(useLocalStore.getState());
                         createFile(fileContent).then((resp) => {
@@ -54,7 +54,7 @@ const useLogin = () => {
                     }
                 })
             } else {
-                updateLocalStateFromDrive();
+                updateLocalStateFromDrive(() => { });
             }
             setToastStatus('success');
             setToastMessage('Logged in!');

@@ -67,7 +67,7 @@ const useLogin = () => {
                     setFileId(fileName);
                     setIsAppWriteLoggedIn(true);
                     storage.getFile(storageBucketId, fileName).then(r => {
-                        updateLocalStateFromDrive(fileName)?.then(r => {
+                        updateLocalStateFromDrive(() => { }, fileName)?.then(r => {
                             showLoggedIn();
                         });
                     }).catch(r => {
@@ -84,7 +84,7 @@ const useLogin = () => {
                 })
             })
         } else {
-            updateLocalStateFromDrive()?.then(r => {
+            updateLocalStateFromDrive(() => { })?.then(r => {
                 setIsAppWriteLoggedIn(true);
                 setToastStatus('success');
                 setToastMessage('Logged in!');
