@@ -21,6 +21,8 @@ import usePeriodicSyncPrompt from '@hooks/PublicPrompts/usePeriodicSyncPrompt';
 import Toast from '@components/Toast';
 import { fileIdAppWriteMarker } from '@hooks/AppWriteAPI/client';
 
+import Semaphore from 'ts-semaphore';
+
 // https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
 // https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
 
@@ -48,12 +50,12 @@ function App() {
 
   const updateLocalStateFromDriveAppWrite = useUpdateLocalStateFromDriveAppWrite(false, setCurrentlySaving, isCurrentlySaving);
   const updateLocalStateFromDriveGoogle = useUpdateLocalStateFromDriveGoogle(false, setCurrentlySaving, isCurrentlySaving);
-  const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
+  const updateLocalStateFromDrive = (savingSyncSemaphoreFunction: Function, actionToRunWhenDone: Function = () => { }) => {
     var fileIdTemp = fileId() ?? ""
     if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
-      return updateLocalStateFromDriveAppWrite("", actionToRunWhenDone);
-    } else if (fileIdTemp != "") {
-      return updateLocalStateFromDriveGoogle(actionToRunWhenDone);
+      return updateLocalStateFromDriveAppWrite(savingSyncSemaphoreFunction, "", actionToRunWhenDone);
+    } else if (fileIdTemp && fileIdTemp != "") {
+      return updateLocalStateFromDriveGoogle(savingSyncSemaphoreFunction, actionToRunWhenDone);
     }
   }
 
@@ -62,9 +64,9 @@ function App() {
   const initLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
     var fileIdTemp = fileId() ?? ""
     if (fileIdTemp && fileIdTemp.startsWith(fileIdAppWriteMarker)) {
-      return initLocalStateFromDriveAppWrite("", actionToRunWhenDone);
+      return initLocalStateFromDriveAppWrite(() => { }, "", actionToRunWhenDone);
     } else if (fileIdTemp != "") {
-      return initLocalStateFromDriveGoogle(actionToRunWhenDone);
+      return initLocalStateFromDriveGoogle(() => { }, actionToRunWhenDone);
     }
   }
 
@@ -77,6 +79,8 @@ function App() {
   const periodicSyncPrompt = usePeriodicSyncPrompt();
   var needToSave = false;
   var currentlySaving = true;
+  var savingSyncSemaphore = new Semaphore(1);
+  var isSyncing = false;
   var mostRecentState: StoreState | null = null;
 
   useEffect(() => {
@@ -169,12 +173,15 @@ function App() {
           reset();
         }
       }
-      useStore.subscribe((state, prevState) => {
-        save(state)
+      useStore.subscribe(async (state, prevState) => {
+        if (await savingSyncSemaphore.use(() => { if (isSyncing) { isSyncing = false; return true; } return false; })) {
+          return;
+        }
+        save(state);
       })
       setInterval(() => {
         if (fileId()) {
-          updateLocalStateFromDrive(() => { if (needToSave) { save(mostRecentState); } });
+          updateLocalStateFromDrive(async () => { await savingSyncSemaphore.use(() => { isSyncing = true; }) }, () => { if (needToSave) { save(mostRecentState); } });
         } else {
           reset();
         }

@@ -19,7 +19,7 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
     const setToastShow = useLocalStore((state) => state.setToastShow);
     const getToastShow = () => { return useLocalStore.getState().toastShow; }
 
-    const updateLocalStateFromDrive = (actionToRunWhenDone: Function = () => { }) => {
+    const updateLocalStateFromDrive = (savingSyncSemaphoreFunction: Function, actionToRunWhenDone: Function = () => { }) => {
         if (isCurrentlySaving()) {
             return;
         }
@@ -56,6 +56,7 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
             var tsw = getToastShow();
             var ts = getToastStatus();
             // console.log(state);
+            savingSyncSemaphoreFunction();
             useLocalStore.setState(state);
             setCurrentChatIndex(cci);
             setHideSideMenu(hsm);
