@@ -222,7 +222,7 @@ const useSubmit = () => {
 
     if (retry_count < -1) throw new Error("An error occured while handling function call. Max retry count reached");
 
-    var result = await executeFunction(fnName, JSON.parse(fnArgs)).catch(error => error)
+    var result = await executeFunction(apiKey ?? "", fnName, JSON.parse(fnArgs)).catch(error => error)
 
     if (result instanceof ZodError) {
       result = `Failed to execute script: ${result.message}`;

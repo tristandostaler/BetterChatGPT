@@ -6,12 +6,15 @@ import { createRequest } from "@openai_function_calling_tools/request";
 import { htmlToText } from 'html-to-text';
 import { createGoogleCustomSearch } from "@src/openai_function_calling_tools/googleCustomSearch";
 import { createSIEMUseCaseMetadata } from "@openai_function_calling_tools/siemUseCase";
+import { createImageCreator } from "@openai_function_calling_tools/createImage";
 
 const [calculator, calculatorSchema] = createCalculator();
 const [clock, clockSchema] = createClock();
 const [request, requestSchema] = createRequest();
 const [googleCustomSearch, googleCustomSearchSchema] = createGoogleCustomSearch();
 const [siemUCMetadata, siemUCMetadataSchema] = createSIEMUseCaseMetadata();
+const [createImage, createImageMetadataSchema] = createImageCreator();
+
 // const [webBrowser, webBrowserSchema] = createWebBrowser();
 
 const options = {
@@ -21,13 +24,15 @@ const options = {
     }
 };
 
-export const executeFunction = async (name: string, params?: any) => {
+export const executeFunction = async (apiKey: string, name: string, params?: any) => {
     name = name.toLowerCase();
     if (name == "calculator".toLowerCase()) return calculator(params)
     if (name == "clock".toLowerCase()) return clock(params)
     if (name == "request".toLowerCase()) return htmlToText(await request(params), options)
     if (name == "googleCustomSearch".toLowerCase()) return await googleCustomSearch(params)
     if (name == "SIEMUseCaseMetadata".toLowerCase()) return await siemUCMetadata(params)
+    if (name == "createImage".toLowerCase()) { params.apiKey = apiKey; return await createImage(params) }
+
     // if (name == "webbrowser") return await webBrowser(params)
     return null
 }
@@ -38,6 +43,8 @@ export const functionsSchemas = [
     requestSchema,
     googleCustomSearchSchema,
     siemUCMetadataSchema,
+    createImageMetadataSchema,
+
     // webBrowserSchema,
 ]
 

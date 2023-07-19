@@ -21,7 +21,7 @@ inputs are:
 
   const execute = async ({ description, potentialFalsePositives, mitreAttack, reference, tags }: z.infer<typeof paramsSchema>) => {
     try {
-      
+
 
       return `\`\`\`markdown
 Description: ${description.join("\n")}
@@ -34,7 +34,7 @@ Reference: ${reference}
 Tags: ${tags.join(", ")}
 \`\`\``
     } catch (error) {
-      return `Error in getHtml: ${error}`;
+      return `Error generating the markdown: ${error}`;
     }
   };
 
