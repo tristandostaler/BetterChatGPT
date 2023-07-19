@@ -11,10 +11,9 @@ const useUpdateFile = () => {
 
     const updateFile = (fileContent: string): Promise<any> => {
         var fileName = fileId();
-        return createFile(fileName, fileContent)
-        // .catch((reason) => {
-        //     reLogin();
-        // });
+        return createFile(fileName, fileContent).catch((reason) => {
+            reLogin();
+        });
     }
     return updateFile;
 };

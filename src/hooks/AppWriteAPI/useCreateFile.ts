@@ -11,9 +11,7 @@ const useCreateFile = (isLoginProcess: boolean) => {
 
     const createFile = (fileName: string, fileContent: string) => {
         var file = new File([fileContent], fileName)
-        return storage.createFile(storageBucketId, fileName, file)
-
-        //.catch(() => { reLogin(); });
+        return storage.createFile(storageBucketId, fileName, file).catch(() => { reLogin(); });
     }
     return createFile;
 };

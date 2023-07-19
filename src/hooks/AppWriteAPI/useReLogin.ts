@@ -2,15 +2,15 @@ import React from 'react';
 
 import useLogout from './useLogout';
 import useStore from '@store/cloud-auth-store';
+import useLogin from './useLogin';
 
 const useReLogin = () => {
     const logout = useLogout();
-
+    var login = useLogin();
 
     const reLogin = () => {
-        // TODO
-        // logout();
-        // document.getElementById("settings")?.click();
+        logout();
+        login();
     }
     return reLogin;
 };
