@@ -56,7 +56,7 @@ inputs are:
 
             return JSON.stringify(urls);
         } catch (error) {
-            throw error;
+            throw new Error("An error occured. It seems like appwrite are blocking some words so it's possible that one or more words from your query were blocked. Error: " + error);
         }
     };
 
