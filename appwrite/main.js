@@ -2,13 +2,15 @@ const fetch = require('node-fetch');
 const axios = require('axios');
 
 module.exports = async (req, res) => {
+  console.log('Starting execution...')
+  try {
     const payload = JSON.parse(req.payload)
 
     const type = payload["type"];
 
     if(type == "cse") {
       const query = payload["query"];
-      console.log("query: " + query)
+      console.log('query: ', query)
 
       const google_api_key =
         req.variables.GOOGLE_API_KEY ||
@@ -53,9 +55,14 @@ module.exports = async (req, res) => {
       axios_res.then(resp  => {
         res.json({message: resp.data}, resp.status);
       }).catch(error => {
+        console.error(error.detail);
         res.json({message: "Error: " + error}, 500)
       })
     }else {
       res.json({message: "Invalid type!"}, 500)
     }
-  };
+  } catch (error) {
+    console.error(error.detail);
+    res.json({message: "An error occured!"}, 500)
+  }
+};

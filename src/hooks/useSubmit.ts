@@ -169,7 +169,7 @@ const useSubmit = () => {
 
     var resultText = result + ""
 
-    var substring_size = resultText.length - 1;
+    var substring_size = resultText.length;
     var round = 0;
     var totalTokens = -1;
     do {
