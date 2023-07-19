@@ -56,7 +56,7 @@ inputs are:
 
             return JSON.stringify(urls);
         } catch (error) {
-            throw new Error("An error occured. It seems like appwrite are blocking some words so it's possible that one or more words from your query were blocked. Error: " + error);
+            throw new Error("An error occured. It seems like openai are blocking some words so it's possible that one or more words from your query were blocked (https://harishgarg.com/writing/do-not-use-these-banned-words-in-dall-e-prompts/). Error: " + error);
         }
     };
 
