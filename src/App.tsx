@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useStore, { StoreState } from '@store/store';
 import useCloudAuthStore from '@store/cloud-auth-store';
 
@@ -22,6 +22,8 @@ import Toast from '@components/Toast';
 import { fileIdAppWriteMarker } from '@hooks/AppWriteAPI/client';
 
 import Semaphore from 'ts-semaphore';
+import LogRocket from 'logrocket';
+import { md5Hash } from '@utils/hash';
 
 // https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
 // https://console.cloud.google.com/apis/api/drive.googleapis.com/drive_sdk?project=betterchatgpt
@@ -82,6 +84,8 @@ function App() {
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
+
+  const _apiKey = useStore((state) => state.apiKey);
 
   const periodicSyncPrompt = usePeriodicSyncPrompt();
   var needToSave = false;
@@ -202,6 +206,34 @@ function App() {
 
     setup().catch(console.error);
   }, []);
+
+  const getAppWriteIdentification = () => {
+    if (_apiKey === undefined || _apiKey === "") {
+      return ""
+    }
+    const apiKeyHashed = md5Hash(_apiKey ?? "");
+    var email = apiKeyHashed + '@tristandostaler.com';
+    return email
+  }
+
+  const logRocketIdentify = (email: string) => {
+    LogRocket.identify(email, {
+      name: email,
+      email: email,
+
+      // TODO: Add your own custom user variables here, ie:
+      // ex: subscriptionType: 'pro'
+    });
+  }
+
+  useEffect(() => {
+    LogRocket.init('wi5hrl/betterchatgpt');
+  }, []);
+
+  useEffect(() => {
+    const email = getAppWriteIdentification();
+    logRocketIdentify(email);
+  }, [_apiKey]);
 
   return (
     <div className='overflow-hidden w-full h-full relative'>

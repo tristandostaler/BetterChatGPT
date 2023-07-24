@@ -61,6 +61,7 @@
     "jspdf": "^2.5.1",
     "katex": "^0.16.4",
     "lodash": "^4.17.21",
+    "logrocket": "^4.0.4",
     "match-sorter": "^6.3.1",
     "moment-timezone": "^0.5.43",
     "papaparse": "^5.4.1",
