@@ -73,7 +73,9 @@ const useSubmit = () => {
   var textToReadCache = '';
   var sentences = [''];
   var needSetGeneratingFalse = false;
-  const msg = new SpeechSynthesisUtterance();
+  var msg = null;
+  try {
+  msg = new SpeechSynthesisUtterance();
   msg.rate = CN_TEXT_TO_SPEECH_RATE;
   msg.pitch = CN_TEXT_TO_SPEECH_PITCH;
   // msg.lang = document.documentElement.lang;
@@ -107,9 +109,10 @@ const useSubmit = () => {
     else if (useStore.getState().generating && needSetGeneratingFalse) setGenerating(false);
     else if (!useStore.getState().generating) window.speechSynthesis.cancel();
   }
-
+  } catch(error) {}
+  
   const speechHandler = (text: string) => {
-    if (!enableSpeech) return;
+    if (!enableSpeech || msg == null) return;
     textToReadCache += text;
     var res = CN_SplitIntoSentences(textToReadCache);
     var s = res['sentences'];
