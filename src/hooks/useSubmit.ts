@@ -73,14 +73,15 @@ const useSubmit = () => {
   var textToReadCache = '';
   var sentences = [''];
   var needSetGeneratingFalse = false;
-  var msg = null;
+  var speechInitialized = false;
+  var read = () => {}
   try {
-  msg = new SpeechSynthesisUtterance();
+  var msg = new SpeechSynthesisUtterance();
   msg.rate = CN_TEXT_TO_SPEECH_RATE;
   msg.pitch = CN_TEXT_TO_SPEECH_PITCH;
   // msg.lang = document.documentElement.lang;
 
-  const read = () => {
+  read = () => {
     // window.speechSynthesis.pause()
     // window.speechSynthesis.resume()
     if (!window.speechSynthesis.speaking && sentences.length > 0) {
@@ -109,10 +110,11 @@ const useSubmit = () => {
     else if (useStore.getState().generating && needSetGeneratingFalse) setGenerating(false);
     else if (!useStore.getState().generating) window.speechSynthesis.cancel();
   }
+  speechInitialized = true;
   } catch(error) {}
   
   const speechHandler = (text: string) => {
-    if (!enableSpeech || msg == null) return;
+    if (!enableSpeech || !speechInitialized) return;
     textToReadCache += text;
     var res = CN_SplitIntoSentences(textToReadCache);
     var s = res['sentences'];
