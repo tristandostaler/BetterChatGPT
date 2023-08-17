@@ -84,14 +84,14 @@ const useSubmit = () => {
   read = () => {
     // window.speechSynthesis.pause()
     // window.speechSynthesis.resume()
-    if (!window.speechSynthesis.speaking && sentences.length > 0) {
+    if (!window.speechSynthesis == null && !window.speechSynthesis.speaking && sentences.length > 0) {
       var s = sentences.shift();
       if (!s) return;
       // console.log('reading sentence: ' + s);
       msg.text = s;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(msg);
-    } else if (!window.speechSynthesis.speaking && sentences.length == 0) {
+    } else if (!window.speechSynthesis == null && !window.speechSynthesis.speaking && sentences.length == 0) {
       if (textToReadCache != '') {
         // console.log('reading remiainder: ' + textToReadCache);
         sentences.push(textToReadCache);
@@ -246,7 +246,7 @@ const useSubmit = () => {
 
   const handleSubmit = async () => {
     const chats = useStore.getState().chats;
-    if (generating || !chats || window.speechSynthesis.speaking) return;
+    if (generating || !chats || (!window.speechSynthesis == null && window.speechSynthesis.speaking)) return;
 
     needSetGeneratingFalse = false;
     textToReadCache = '';
@@ -400,7 +400,7 @@ const useSubmit = () => {
       setError(err);
     }
 
-    if (window.speechSynthesis.speaking) {
+    if (!window.speechSynthesis == null && window.speechSynthesis.speaking) {
       needSetGeneratingFalse = true;
     } else {
       setGenerating(false);
