@@ -53,6 +53,8 @@ export const replaceDynamicContentInMessages = (
 
   messages.forEach((m) => {
     var content = m.content;
+    if(content == null) return;
+    
     for (let i = 0; i < 3; i++) { // If a replacement has other raplcements, ex: systemprompt uses model and date
       for (let [key, value] of Object.entries(replacements)) {
         content = content.replaceAll('{{' + key + '}}', value);
