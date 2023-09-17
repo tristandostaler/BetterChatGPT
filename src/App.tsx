@@ -22,7 +22,7 @@ import Toast from '@components/Toast';
 import { fileIdAppWriteMarker } from '@hooks/AppWriteAPI/client';
 
 import Semaphore from 'ts-semaphore';
-import LogRocket from 'logrocket';
+// import LogRocket from 'logrocket';
 import { md5Hash } from '@utils/hash';
 
 // https://console.cloud.google.com/apis/dashboard?project=betterchatgpt
@@ -216,24 +216,23 @@ function App() {
     return email
   }
 
-  const logRocketIdentify = (email: string) => {
-    LogRocket.identify(email, {
-      name: email,
-      email: email,
+  //const logRocketIdentify = (email: string) => {
+  //  LogRocket.identify(email, {
+   //   name: email,
+  //    email: email,
 
       // TODO: Add your own custom user variables here, ie:
       // ex: subscriptionType: 'pro'
-    });
-  }
+//    }); }
+  
+//  useEffect(() => {  
+//    LogRocket.init('wi5hrl/betterchatgpt');
+ // }, []);
 
-  useEffect(() => {
-    LogRocket.init('wi5hrl/betterchatgpt');
-  }, []);
-
-  useEffect(() => {
-    const email = getAppWriteIdentification();
-    logRocketIdentify(email);
-  }, [_apiKey]);
+  //useEffect(() => {
+ //   const email = getAppWriteIdentification();
+   // logRocketIdentify(email);
+  //}, [_apiKey]);
 
   return (
     <div className='overflow-hidden w-full h-full relative'>
