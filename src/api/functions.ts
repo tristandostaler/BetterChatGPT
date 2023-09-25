@@ -24,6 +24,26 @@ const options = {
     }
 };
 
+const mapHasIgnoreCase = (map: Map<string, Function>, key: string) => {
+    for (const [k, v] of map.entries()) {
+        if (k.toLowerCase() === key.toLowerCase()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+const mapGetIgnoreCase = (map: Map<string, Function>, key: string) => {
+    for (const [k, v] of map.entries()) {
+        if (k.toLowerCase() === key.toLowerCase()) {
+            return v;
+        }
+    }
+
+    return undefined;
+}
+
 export const executeFunction = async (apiKey: string, name: string, params?: any) => {
     name = name.toLowerCase();
     let paramsOk = false;
@@ -43,11 +63,11 @@ export const executeFunction = async (apiKey: string, name: string, params?: any
         ["createImage", async () => { params.apiKey = apiKey; return await createImage(params) }],
     ]);
 
-    if (paramsOk && functionMaps.has(name)) {
-        let fun = functionMaps.get(name);
+    if (paramsOk && mapHasIgnoreCase(functionMaps, name)) {
+        let fun = mapGetIgnoreCase(functionMaps, name);
         if (fun === undefined) return "This function does not exist!";
         return await fun();
-    } else if (!functionMaps.has(name)) {
+    } else if (!mapHasIgnoreCase(functionMaps, name)) {
         return "This function does not exist!";
     } else if (!paramsOk) {
         return "Invalid params! Probably not in a json format!";
