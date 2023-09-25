@@ -8,7 +8,7 @@ import { parseEventSource } from '@api/helper';
 import { limitMessageTokens } from '@utils/messageUtils';
 import { _defaultChatConfig, minResponseSize } from '@constants/chat';
 import { officialAPIEndpoint } from '@constants/auth';
-import { executeFunction, functionsSchemaTokens } from '@api/functions';
+import { executeFunction, functionsSchemaTokens, functionsSchemas } from '@api/functions';
 import { ZodError } from 'zod';
 import { AppwriteException } from 'appwrite';
 
@@ -74,45 +74,45 @@ const useSubmit = () => {
   var sentences = [''];
   var needSetGeneratingFalse = false;
   var speechInitialized = false;
-  var read = () => {}
+  var read = () => { }
   try {
-  var msg = new SpeechSynthesisUtterance();
-  msg.rate = CN_TEXT_TO_SPEECH_RATE;
-  msg.pitch = CN_TEXT_TO_SPEECH_PITCH;
-  // msg.lang = document.documentElement.lang;
+    var msg = new SpeechSynthesisUtterance();
+    msg.rate = CN_TEXT_TO_SPEECH_RATE;
+    msg.pitch = CN_TEXT_TO_SPEECH_PITCH;
+    // msg.lang = document.documentElement.lang;
 
-  read = () => {
-    // window.speechSynthesis.pause()
-    // window.speechSynthesis.resume()
-    if (!window.speechSynthesis == null && !window.speechSynthesis.speaking && sentences.length > 0) {
-      var s = sentences.shift();
-      if (!s) return;
-      // console.log('reading sentence: ' + s);
-      msg.text = s;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(msg);
-    } else if (!window.speechSynthesis == null && !window.speechSynthesis.speaking && sentences.length == 0) {
-      if (textToReadCache != '') {
-        // console.log('reading remiainder: ' + textToReadCache);
-        sentences.push(textToReadCache);
-        textToReadCache = '';
-        read();
-      } else {
-        if (needSetGeneratingFalse) {
-          setGenerating(false);
+    read = () => {
+      // window.speechSynthesis.pause()
+      // window.speechSynthesis.resume()
+      if (!window.speechSynthesis == null && !window.speechSynthesis.speaking && sentences.length > 0) {
+        var s = sentences.shift();
+        if (!s) return;
+        // console.log('reading sentence: ' + s);
+        msg.text = s;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(msg);
+      } else if (!window.speechSynthesis == null && !window.speechSynthesis.speaking && sentences.length == 0) {
+        if (textToReadCache != '') {
+          // console.log('reading remiainder: ' + textToReadCache);
+          sentences.push(textToReadCache);
+          textToReadCache = '';
+          read();
+        } else {
+          if (needSetGeneratingFalse) {
+            setGenerating(false);
+          }
         }
       }
     }
-  }
 
-  msg.onend = () => {
-    if (useStore.getState().generating && (sentences.length > 0 || textToReadCache != '')) read();
-    else if (useStore.getState().generating && needSetGeneratingFalse) setGenerating(false);
-    else if (!useStore.getState().generating) window.speechSynthesis.cancel();
-  }
-  speechInitialized = true;
-  } catch(error) {}
-  
+    msg.onend = () => {
+      if (useStore.getState().generating && (sentences.length > 0 || textToReadCache != '')) read();
+      else if (useStore.getState().generating && needSetGeneratingFalse) setGenerating(false);
+      else if (!useStore.getState().generating) window.speechSynthesis.cancel();
+    }
+    speechInitialized = true;
+  } catch (error) { }
+
   const speechHandler = (text: string) => {
     if (!enableSpeech || !speechInitialized) return;
     textToReadCache += text;
@@ -208,7 +208,7 @@ const useSubmit = () => {
   }
 
   async function handlerFunctionCallResult(config: ConfigInterface, retry_count: number, fnName: string, fnArgs: any, messages: MessageInterface[], funcResult: any, result: any): Promise<any> {
-    if (retry_count < -1) throw new Error("An error occured while handling function call. Max retry count reached. Latest result: " + result);
+    if (retry_count < -1) throw new Error(`An error occured while handling function call. Max retry count reached. Latest result while trying to use the function "${fnName}": ` + result);
 
     if (funcResult.choices[0].finish_reason === "function_call") {
       return await handleFunctionCall(config, retry_count, funcResult.choices[0].message.function_call.name, funcResult.choices[0].message.function_call.arguments, messages);
@@ -218,6 +218,9 @@ const useSubmit = () => {
     } else if ((funcResult.choices[0].message.content as string).includes("WORKED")) {
       let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, ``);
       return funcResult.choices[0].message.content
+    } else if ((funcResult.choices[0].message.content as string).includes("UNEXISTENT_FUNCTION")) {
+      let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `The function "${fnName}" does not exists. Retry now using a different function described below. You have ${retry_count} try left. Available functions: \n${functionsSchemas.map(element => `- ${element.name}`).join("\n")}\n. Knowing this, retry now using a function in the list of functions described above.`);
+      return await handlerFunctionCallResult(config, retry_count - 1, fnName, fnArgs, messages, funcResult, result);
     }
     throw new Error("An error occured calling the function. Latest content retrived: " + funcResult.choices[0].message.content);
   }
@@ -227,7 +230,7 @@ const useSubmit = () => {
 
     if (retry_count < -1) throw new Error("An error occured while handling function call. Max retry count reached");
 
-    var result = await executeFunction(apiKey ?? "", fnName, JSON.parse(fnArgs)).catch(error => error)
+    var result = await executeFunction(apiKey ?? "", fnName, fnArgs).catch(error => error)
 
     if (result instanceof ZodError) {
       result = `Failed to execute script: ${result.message}`;
@@ -239,7 +242,7 @@ const useSubmit = () => {
       result = result.message;
     }
 
-    let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `If the previous function call worked, reply "WORKED". If not, reply "RETRY".`)
+    let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `If the previous function call worked, reply "WORKED". Else If the fonction does not exists, reply "UNEXISTENT_FUNCTION". Else, reply "RETRY".`)
     return handlerFunctionCallResult(config, retry_count, fnName, fnArgs, messages, funcResult, result)
 
   }
@@ -321,7 +324,7 @@ const useSubmit = () => {
                   fnName += curr.choices[0].delta.function_call?.name;
                   if (!isFunctionCall) {
                     isFunctionCall = true;
-                    output += "Plugin call requested. Loading..."
+                    output += " Plugin call requested. Loading..."
                   }
                 }
                 if (curr.choices[0].delta.function_call?.arguments) {

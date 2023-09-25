@@ -26,15 +26,34 @@ const options = {
 
 export const executeFunction = async (apiKey: string, name: string, params?: any) => {
     name = name.toLowerCase();
-    if (name == "calculator".toLowerCase()) return calculator(params)
-    if (name == "clock".toLowerCase()) return clock(params)
-    if (name == "request".toLowerCase()) return htmlToText(await request(params), options)
-    if (name == "googleCustomSearch".toLowerCase()) return await googleCustomSearch(params)
-    if (name == "SIEMUseCaseMetadata".toLowerCase()) return await siemUCMetadata(params)
-    if (name == "createImage".toLowerCase()) { params.apiKey = apiKey; return await createImage(params) }
+    let paramsOk = false;
 
-    // if (name == "webbrowser") return await webBrowser(params)
-    return null
+    try {
+        if (params) params = JSON.parse(params);
+        paramsOk = true;
+    } catch (error) {
+    }
+
+    let functionMaps: Map<string, Function> = new Map([
+        ["calculator", async () => { return calculator(params) }],
+        ["clock", async () => { return clock(params) }],
+        ["request", async () => { return htmlToText(await request(params), options) }],
+        ["googleCustomSearch", async () => { return await googleCustomSearch(params) }],
+        ["SIEMUseCaseMetadata", async () => { return await siemUCMetadata(params) }],
+        ["createImage", async () => { params.apiKey = apiKey; return await createImage(params) }],
+    ]);
+
+    if (paramsOk && functionMaps.has(name)) {
+        let fun = functionMaps.get(name);
+        if (fun === undefined) return "This function does not exist!";
+        return await fun();
+    } else if (!functionMaps.has(name)) {
+        return "This function does not exist!";
+    } else if (!paramsOk) {
+        return "Invalid params! Probably not in a json format!";
+    }
+
+    return "Something went wrong!";
 }
 
 export const functionsSchemas = [

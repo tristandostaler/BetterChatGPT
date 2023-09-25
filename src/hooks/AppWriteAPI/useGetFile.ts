@@ -6,7 +6,7 @@ import { storage, storageBucketId } from './client';
 
 const useGetFile = (isLoginProcess: boolean) => {
     const fileId = () => { return useStore.getState().fileId ?? "" };
-    var reLogin = () => { };
+    var reLogin = (reason: any) => { };
     if (!isLoginProcess) {
         reLogin = useReLogin();
     }
@@ -21,11 +21,10 @@ const useGetFile = (isLoginProcess: boolean) => {
             cache: "no-cache",
         }).then((res) => {
             if (!res.ok) {
-                reLogin();
-                return null;
+                return reLogin("Response not ok");
             }
             return res.json();
-        }).catch((reason) => { console.log(reason); reLogin(); return null; });
+        }).catch(reLogin);
     }
     return getFile;
 };
