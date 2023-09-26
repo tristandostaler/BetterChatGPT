@@ -27,13 +27,24 @@ export function createGoogleCustomSearch() {
       }
 
       const data = JSON.parse(res.response);
+      let results = [];
 
-      const results = data.items?.map((item: { title?: string; link?: string; snippet?: string; pagemap?: { cse_image?: [{ src?: string; }]; }; }) => ({
-        title: item.title,
-        link: item.link,
-        snippet: item.snippet,
-        image_links: item.pagemap?.cse_image?.map(i => i.src ?? ""),
-      })) ?? [];
+      if (!data?.items) return JSON.stringify([]);
+
+      for (let i in data.items) {
+        // console.log(data.items[i]);
+        let image_links = [];
+        for (let j in data.items[i].pagemap?.cse_image) {
+          image_links.push(data.items[i].pagemap?.cse_image[j].src);
+        }
+        results.push({
+          title: data.items[i].title,
+          link: data.items[i].link,
+          snippet: data.items[i].snippet,
+          image_links: image_links,
+        });
+      }
+
       return JSON.stringify(results);
 
     } catch (error: any) {
