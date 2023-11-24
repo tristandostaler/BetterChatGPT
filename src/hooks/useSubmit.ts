@@ -216,7 +216,7 @@ const useSubmit = () => {
       let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `If you made an error, retry now. You have ${retry_count} try left.`);
       return await handlerFunctionCallResult(config, retry_count - 1, fnName, fnArgs, messages, funcResult, result);
     } else if ((funcResult.choices[0].message.content as string).includes("WORKED")) {
-      let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `In addition to the response you would provide, if you received an updated prompt, please provide this new prompt in your response.`);
+      let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `In addition to the response you would provide, if you received an updated prompt, please provide this new prompt in your response. Never change a single word returned from the executed function (you can add yours, but never change the returned words).`);
       if (funcResult.choices[0].finish_reason === "function_call") {
         var newMessages = messages.concat([
           { locked: true, role: "assistant", content: "", function_call: { name: fnName, arguments: fnArgs } },
