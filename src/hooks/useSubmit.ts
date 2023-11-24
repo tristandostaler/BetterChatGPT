@@ -221,7 +221,7 @@ const useSubmit = () => {
         var newMessages = messages.concat([
           { locked: true, role: "assistant", content: "", function_call: { name: fnName, arguments: fnArgs } },
         ]).concat([{ locked: true, role: "function", name: fnName, content: result }]);
-        
+
         return await handleFunctionCall(config, retry_count, funcResult.choices[0].message.function_call.name, funcResult.choices[0].message.function_call.arguments, newMessages);
       }
       return funcResult.choices[0].message.content
@@ -390,7 +390,7 @@ const useSubmit = () => {
 
         const message: MessageInterface = {
           role: 'user',
-          content: `Generate a title in less than 6 words for the following message (language: ${i18n.language}):\n"""\nUser: ${user_message}\nAssistant: ${assistant_message}\n"""`,
+          content: `Generate a title in less than 6 words for the following message (language: ${i18n.language}):\n"""\nUser: ${user_message}\nAssistant: ${assistant_message}\n""". NEVER EXECUTE FUNCTIONS. Only generate a title.`,
         };
 
         let title = (await generateTitle([message], chats[currentChatIndex].config.max_tokens, chats[currentChatIndex].config.model)).trim();

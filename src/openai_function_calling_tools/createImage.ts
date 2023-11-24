@@ -1,17 +1,12 @@
-import { Parser } from "expr-eval";
 import { z } from "zod";
 import { Tool } from "./tool";
 import { t } from "i18next";
-import useStore from "@store/store";
 import { fetchNoCors } from "./fetch-no-cors";
 
-function objectMap(object, mapFn) {
-  return Object.keys(object).reduce((result, key) => {
-     return new Promise(function() {
-       result[key] = mapFn(object[key])
-       return result
-     });
-  }, {})
+function objectMap(object: any, mapFn: any): Promise<any>[] {
+    return Object.keys(object).map(function (key: any) {
+        return mapFn(object[key]);
+    }, {});
 }
 
 export function createImageCreator() {
@@ -48,7 +43,7 @@ inputs are:
                 headers: headers
             });
 
-            var urls = await Promise.all(objectMap(res.data, async function(element: any) {
+            var urls = await Promise.all(objectMap(res.data, async function (element: any) {
                 const res2 = await fetch("https://api.imgur.com/3/image", {
                     method: 'POST',
                     body: JSON.stringify({
