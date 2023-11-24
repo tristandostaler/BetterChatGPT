@@ -79,12 +79,17 @@ export const adjustConfigAndRemoveConfigContentInMessages = (
 ): ConfigInterface => {
   const adjustedConfig: ConfigInterface = {
     frequency_penalty: config.frequency_penalty,
+    max_tokens: config.max_tokens,
     model: config.model,
     presence_penalty: config.presence_penalty,
     temperature: config.temperature,
     top_p: config.top_p,
   };
 
+  if (adjustedConfig.max_tokens == null || adjustedConfig.max_tokens == 0) {
+    adjustedConfig.max_tokens = defaultUserMaxToken;
+  }
+  
   const getMatch = (content: string, regex: RegExp) => {
     let result = regex.exec(content);
     if (!result || !result.groups)
@@ -94,9 +99,9 @@ export const adjustConfigAndRemoveConfigContentInMessages = (
 
   messages.forEach((m) => {
     let result = getMatch(m.content, regexes.tokens)
-    // if (result) {
-    //   adjustedConfig.max_tokens = +result
-    //}
+    if (result) {
+      adjustedConfig.max_tokens = +result
+    }
     result = getMatch(m.content, regexes.temp)
     if (result) {
       adjustedConfig.temperature = +result
