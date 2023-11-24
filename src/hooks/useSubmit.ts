@@ -217,6 +217,13 @@ const useSubmit = () => {
       return await handlerFunctionCallResult(config, retry_count - 1, fnName, fnArgs, messages, funcResult, result);
     } else if ((funcResult.choices[0].message.content as string).includes("WORKED")) {
       let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, ``);
+      if (funcResult.choices[0].finish_reason === "function_call") {
+        var newMessages = messages.concat([
+          { locked: true, role: "assistant", content: "", function_call: { name: fnName, arguments: fnArgs } },
+        ]).concat([{ locked: true, role: "function", name: fnName, content: result }]);
+        
+        return await handleFunctionCall(config, retry_count, funcResult.choices[0].message.function_call.name, funcResult.choices[0].message.function_call.arguments, newMessages);
+      }
       return funcResult.choices[0].message.content
     } else if ((funcResult.choices[0].message.content as string).includes("UNEXISTENT_FUNCTION")) {
       let funcResult = await getChatCompletionWithFunctionResult(config, messages, fnName, fnArgs, result, `The function "${fnName}" does not exists. Retry now using a different function described below. You have ${retry_count} try left. Available functions: \n${functionsSchemas.map(element => `- ${element.name}`).join("\n")}\n. Knowing this, retry now using a function in the list of functions described above.`);
@@ -226,7 +233,7 @@ const useSubmit = () => {
   }
 
   const handleFunctionCall = async (config: ConfigInterface, retry_count: number, fnName: string, fnArgs: any, messages: MessageInterface[]) => {
-    if (!useStore.getState().generating) return
+    if (!useStore.getState().generating) return;
 
     if (retry_count < -1) throw new Error("An error occured while handling function call. Max retry count reached");
 
