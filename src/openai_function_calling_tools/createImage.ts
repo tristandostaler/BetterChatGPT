@@ -5,6 +5,13 @@ import { t } from "i18next";
 import useStore from "@store/store";
 import { fetchNoCors } from "./fetch-no-cors";
 
+function objectMap(object, mapFn) {
+  return Object.keys(object).reduce(function(result, key) {
+    result[key] = mapFn(object[key])
+    return result
+  }, {})
+}
+
 export function createImageCreator() {
     const paramsSchema = z.object({
         prompt: z.string(),
@@ -39,7 +46,7 @@ inputs are:
                 headers: headers
             });
 
-            var urls = await Promise.all(res.data.map(async (element: any) => {
+            var urls = await Promise.all(objectMap(res.data, (async (element: any) => {
                 const res2 = await fetch("https://api.imgur.com/3/image", {
                     method: 'POST',
                     body: JSON.stringify({
