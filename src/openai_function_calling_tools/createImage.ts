@@ -32,33 +32,22 @@ inputs are:
         };
         try {
 
-            const res = await fetchNoCors(endpoint, {
+            const res = await fetch(endpoint, {
                 method: 'POST',
-                body: {
+                body: JSON.stringify({
+                    model: "dall-e-3",
+                    quality: "hd",
                     prompt,
                     n,
-                    size: "256x256",
-                    response_format: "b64_json"
-                },
+                    size: "1024x1024",
+                    response_format: "url"
+                }),
                 headers: headers
             });
 
-            var urls = await Promise.all(objectMap(res.data, async function (element: any) {
-                const res2 = await fetch("https://api.imgur.com/3/image", {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        image: element.b64_json
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": "Client-ID 047169aabbd6925"
-                    }
-                });
-                var link = (await res2.json()).data.link;
-                return link;
-            }));
-
-            return JSON.stringify(urls);
+            return (await res.json()).data.map((element: any) => {
+                return element.url;
+            });
         } catch (error) {
             throw new Error("An error occured. It seems like openai are blocking some words so it's possible that one or more words from your query were blocked (https://harishgarg.com/writing/do-not-use-these-banned-words-in-dall-e-prompts/). Error: " + error);
         }
