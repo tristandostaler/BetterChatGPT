@@ -46,7 +46,7 @@ inputs are:
                 headers: headers
             });
 
-            var urls = await Promise.all(objectMap(res.data, (async (element: any) => {
+            var urls = await Promise.all(objectMap(res.data, async (element: any) => {
                 const res2 = await fetch("https://api.imgur.com/3/image", {
                     method: 'POST',
                     body: JSON.stringify({
