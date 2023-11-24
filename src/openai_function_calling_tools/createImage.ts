@@ -6,9 +6,11 @@ import useStore from "@store/store";
 import { fetchNoCors } from "./fetch-no-cors";
 
 function objectMap(object, mapFn) {
-  return Object.keys(object).reduce(function(result, key) {
-    result[key] = mapFn(object[key])
-    return result
+  return Object.keys(object).reduce((result, key) => {
+     return new Promise(function() {
+       result[key] = mapFn(object[key])
+       return result
+     });
   }, {})
 }
 
