@@ -16,22 +16,21 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
   var minResponseLength = 1;
 
   const tempConfig = adjustConfigAndRemoveConfigContentInMessages(messagesToSend, config);
-  //if (tempConfig.max_tokens > minResponseSize + 100) {
-  //  minResponseLength = minResponseSize;
-  //}
-  //var functionsSchemaTokenLength = functionsSchemaTokens(tempConfig.model);
-  //tempConfig.max_tokens -= functionsSchemaTokenLength;
+  if (tempConfig.max_tokens > minResponseSize + 100) {
+    minResponseLength = minResponseSize;
+  }
+  var functionsSchemaTokenLength = functionsSchemaTokens(tempConfig.model);
+  tempConfig.max_tokens -= functionsSchemaTokenLength;
 
-  //const adjustedMessagesTuple = limitMessageTokens(
-  //  messagesToSend,
-  //  config.max_tokens,
-  //  tempConfig.model,
-  //  minResponseLength
-  //);
-  //const messages = adjustedMessagesTuple[0];
-  const messages = messagesToSend;
-  //tempConfig.max_tokens -= adjustedMessagesTuple[1];
-  //if (messages.length <= 0 || tempConfig.max_tokens < minResponseLength) throw new Error('Message exceed max token! Minimum needed ' + (Math.abs(adjustedMessagesTuple[1]) + functionsSchemaTokenLength + minResponseLength));
+  const adjustedMessagesTuple = limitMessageTokens(
+    messagesToSend,
+    config.max_tokens,
+    tempConfig.model,
+    minResponseLength
+  );
+  const messages = adjustedMessagesTuple[0];
+  tempConfig.max_tokens -= adjustedMessagesTuple[1];
+  if (messages.length <= 0 || tempConfig.max_tokens < minResponseLength) throw new Error('Message exceed max token! Minimum needed ' + (Math.abs(adjustedMessagesTuple[1]) + functionsSchemaTokenLength + minResponseLength));
 
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
   if (isAzureEndpoint(endpoint) && apiKey) headers['api-key'] = apiKey;
@@ -53,6 +52,7 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
     body: JSON.stringify({
       messages,
       ...tempConfig,
+      max_tokens: undefined,
       stream: stream,
       functions: functionsSchemas
     }),
