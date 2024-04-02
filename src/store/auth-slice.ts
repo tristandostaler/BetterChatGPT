@@ -2,7 +2,7 @@ import { defaultAPIEndpoint } from '@constants/auth';
 import { StoreSlice } from './store';
 
 export interface AuthSlice {
-  apiKey?: string;
+  apiKey: string;
   apiEndpoint: string;
   orgId: string;
   availableOrgIds: string[];
@@ -15,7 +15,7 @@ export interface AuthSlice {
 }
 
 export const createAuthSlice: StoreSlice<AuthSlice> = (set, get) => ({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY || undefined,
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
   orgId: '',
   availableOrgIds: [''],
   apiEndpoint: defaultAPIEndpoint,

@@ -51,12 +51,7 @@
       "@openai_function_calling_tools/*": [
         "./src/openai_function_calling_tools/*"
       ]
-    },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types",
-      "./src/store"
-    ],
+    }
   },
   "include": [
     "src",

@@ -3,7 +3,7 @@ import { ChatInterface, FolderCollection, MessageInterface } from '@type/chat';
 
 export interface ChatSlice {
   messages: MessageInterface[];
-  chats?: ChatInterface[];
+  chats: ChatInterface[];
   currentChatIndex: number;
   generating: boolean;
   error: string;
@@ -18,6 +18,7 @@ export interface ChatSlice {
 
 export const createChatSlice: StoreSlice<ChatSlice> = (set, get) => ({
   messages: [],
+  chats: [],
   currentChatIndex: -1,
   generating: false,
   error: '',
