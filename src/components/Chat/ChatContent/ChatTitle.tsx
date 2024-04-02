@@ -14,8 +14,8 @@ const ChatTitle = React.memo(() => {
         state.chats.length > 0 &&
         state.currentChatIndex >= 0 &&
         state.currentChatIndex < state.chats.length
-        ? state.chats[state.currentChatIndex].config
-        : undefined,
+        ? state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].config
+          : undefined : undefined,
     shallow
   );
   const setChats = useStore((state) => state.setChats);

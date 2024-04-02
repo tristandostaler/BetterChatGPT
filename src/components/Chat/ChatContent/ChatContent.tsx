@@ -21,16 +21,16 @@ const ChatContent = () => {
       state.chats.length > 0 &&
       state.currentChatIndex >= 0 &&
       state.currentChatIndex < state.chats.length
-      ? state.chats[state.currentChatIndex].messages
-      : []
+      ? state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].messages
+        : [] : []
   );
   const stickyIndex = useStore((state) =>
     state.chats &&
       state.chats.length > 0 &&
       state.currentChatIndex >= 0 &&
       state.currentChatIndex < state.chats.length
-      ? state.chats[state.currentChatIndex].messages.length
-      : 0
+      ? state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].messages.length
+        : 0 : 0
   );
   const generating = useStore.getState().generating;
   const hideSideMenu = useStore((state) => state.hideSideMenu);

@@ -90,7 +90,7 @@ const ContentView = React.memo(
     const currentChatIndex = useStore((state) => state.currentChatIndex);
     const setChats = useStore((state) => state.setChats);
     const lastMessageIndex = useStore((state) =>
-      state.chats ? state.chats[state.currentChatIndex].messages.length - 1 : 0
+      state.chats ? state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].messages.length - 1 : 0 : 0
     );
 
     const getJsonChats = () => {

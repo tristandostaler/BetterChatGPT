@@ -10,11 +10,11 @@ const MobileBar = () => {
   const setHideSideMenu = useStore((state) => state.setHideSideMenu);
   const chatTitle = useStore((state) =>
     state.chats &&
-    state.chats.length > 0 &&
-    state.currentChatIndex >= 0 &&
-    state.currentChatIndex < state.chats.length
-      ? state.chats[state.currentChatIndex].title
-      : 'New Chat'
+      state.chats.length > 0 &&
+      state.currentChatIndex >= 0 &&
+      state.currentChatIndex < state.chats.length
+      ? state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].title
+        : 'New Chat' : 'New Chat'
   );
 
   const addChat = useAddChat();
@@ -36,11 +36,10 @@ const MobileBar = () => {
       </h1>
       <button
         type='button'
-        className={`px-3 text-gray-400 transition-opacity ${
-          generating
+        className={`px-3 text-gray-400 transition-opacity ${generating
             ? 'cursor-not-allowed opacity-40'
             : 'cursor-pointer opacity-100'
-        }`}
+          }`}
         onClick={() => {
           if (!generating) addChat();
         }}
