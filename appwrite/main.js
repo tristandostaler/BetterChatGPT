@@ -1,11 +1,27 @@
 const fetch2 = require('node-fetch');
 const axios = require('axios');
 
-module.exports = async (req, res) => {
+module.exports = async ({ req, res }) => {
   console.log("Starting function");
 
+  // console.log("req: ", req);
+  // console.log("res", res);
+
+  var payloadString = "";
+  if (req.payload) {
+    payloadString = req.payload;
+  } else if (req.body) {
+    payloadString = req.body;
+  } else if (req.query) {
+    payloadString = req.query;
+  } else {
+    return res.json({ message: "No payload found!" }, 400)
+  }
+
+  // console.log('payloadString: ', payloadString)
+
   try {
-    const payload = JSON.parse(req.payload)
+    const payload = JSON.parse(payloadString)
 
     const type = payload["type"];
 
@@ -13,12 +29,14 @@ module.exports = async (req, res) => {
       const query = payload["query"];
       console.log('query: ', query)
 
+      // console.log(process.env.GOOGLE_API_KEY)
+
       const google_api_key =
-        req.variables.GOOGLE_API_KEY ||
+        process.env.GOOGLE_API_KEY ||
         console.log('GOOGLE_API_KEY variable not found. You can set it in Function settings.');
 
       const google_cse_id =
-        req.variables.GOOGLE_CSE_ID ||
+        process.env.GOOGLE_CSE_ID ||
         console.log('GOOGLE_CSE_ID variable not found. You can set it in Function settings.');
 
       var fetch_res = await fetch2(
@@ -27,14 +45,14 @@ module.exports = async (req, res) => {
         )}`
       );
 
-      // console.log(fetch_res.status)
+      // console.log('fetch_res: ', fetch_res)
 
       if (fetch_res.status != 200) {
-        res.json({ message: "status not 200! " + (await fetch_res.text()) }, fetch_res.status)
+        return res.json({ message: "status not 200! " + (await fetch_res.text()) }, fetch_res.status)
       } else {
         var j = await fetch_res.json();
         // console.log(j)
-        res.json(j, fetch_res.status)
+        return res.json(j, fetch_res.status)
       }
     } else if (type == "cors") {
       const url = payload["url"];
@@ -43,35 +61,36 @@ module.exports = async (req, res) => {
       const config = { headers: options.headers }
       if (options.method == "GET") {
         axios_res = axios.get(url, config).catch(error => {
-          res.json({ message: "Error: " + error }, 400)
+          return res.json({ message: "Error: " + error }, 400)
         });
       } else if (options.method == "POST") {
         axios_res = axios.post(url, options.body, config).catch(error => {
-          res.json({ message: "Error: " + error }, 400)
+          return res.json({ message: "Error: " + error }, 400)
         });
       } else if (options.method == "PUT") {
         axios_res = axios.put(url, options.body, config).catch(error => {
-          res.json({ message: "Error: " + error }, 400)
+          return res.json({ message: "Error: " + error }, 400)
         });
       } else if (options.method == "PATCH") {
         axios_res = axios.patch(url, options.body, config).catch(error => {
-          res.json({ message: "Error: " + error }, 400)
+          return res.json({ message: "Error: " + error }, 400)
         });
       } else if (options.method == "DELETE") {
         axios_res = axios.delete(url, options.body).catch(error => {
-          res.json({ message: "Error: " + error }, 400)
+          return res.json({ message: "Error: " + error }, 400)
         });
       }
 
       axios_res.then(resp => {
-        res.json({ message: resp.data }, resp.status);
+        return res.json({ message: resp.data }, resp.status);
       }).catch(error => {
-        res.json({ message: "Error: " + error }, 400)
+        return res.json({ message: "Error: " + error }, 400)
       })
     } else {
-      res.json({ message: "Invalid type!" }, 400)
+      return res.json({ message: "Invalid type!" }, 400)
     }
   } catch (error) {
-    res.json({ message: "An error occured!" }, 400)
+    console.log('error: ', error)
+    return res.json({ message: "An error occured!" }, 400)
   }
 };

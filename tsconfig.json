@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -17,18 +21,49 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@icon/*": ["./src/assets/icons/*"],
-      "@type/*": ["./src/types/*"],
-      "@store/*": ["./src/store/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@constants/*": ["./src/constants/*"],
-      "@api/*": ["./src/api/*"],
-      "@components/*": ["./src/components/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@src/*": ["./src/*"],
-      "@openai_function_calling_tools/*": ["./src/openai_function_calling_tools/*"]
-    }
+      "@icon/*": [
+        "./src/assets/icons/*"
+      ],
+      "@type/*": [
+        "./src/types/*"
+      ],
+      "@store/*": [
+        "./src/store/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@constants/*": [
+        "./src/constants/*"
+      ],
+      "@api/*": [
+        "./src/api/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@openai_function_calling_tools/*": [
+        "./src/openai_function_calling_tools/*"
+      ]
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
   },
-  "include": ["src", "electron/index.cjs"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src",
+    "electron/index.cjs"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
