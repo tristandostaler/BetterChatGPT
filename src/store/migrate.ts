@@ -151,6 +151,6 @@ export const migrateV14 = (persistedState: LocalStorageInterfaceV13ToV14) => {
   });
 
   persistedState.publicPrompts.forEach((prompt) => {
-    prompt.prompt = prompt.prompt.replaceAll("~ Model: gpt-4-turbo-preview ~", "~ Model: gpt-4-turbo ~")
+    prompt.source = prompt.source.replaceAll("~ Model: gpt-4-turbo-preview ~", "~ Model: gpt-4-turbo ~")
   });
 };
