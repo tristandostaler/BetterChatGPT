@@ -26,6 +26,7 @@ import defaultPrompts from '@constants/prompt';
 import { Prompt } from '@type/prompt';
 import stateVersion from '@constants/stateVersion';
 import defaultPublicPrompts from '@constants/publicPrompt';
+import { StoreState } from '@store/store';
 
 export const migrateV0 = (persistedState: LocalStorageInterfaceV0ToV1) => {
   persistedState.chats.forEach((chat) => {
