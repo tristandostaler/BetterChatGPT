@@ -31,9 +31,14 @@ export const modelCost = {
     completion: { price: 0.06, unit: 1000 },
     modelMaxToken: 8192,
   },
-  'gpt-4-turbo-preview': {
+  'gpt-4-turbo': {
     prompt: { price: 0.01, unit: 1000 },
     completion: { price: 0.03, unit: 1000 },
+    modelMaxToken: 128000,
+  },
+  'gpt-4o': {
+    prompt: { price: 0.005, unit: 1000 },
+    completion: { price: 0.015, unit: 1000 },
     modelMaxToken: 128000,
   },
 };
