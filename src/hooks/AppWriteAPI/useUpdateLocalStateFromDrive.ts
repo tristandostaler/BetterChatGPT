@@ -3,7 +3,7 @@ import React from 'react';
 import useStore from '@store/cloud-auth-store';
 import useLocalStore from '@store/store';
 import useGetFile from './useGetFile';
-import { migrateState, migrateV8 } from './migrate';
+import { migrateState, migrateV8 } from '@store/migrate';
 import { LocalStorageInterfaceV8ToV9 } from '@type/chat';
 import stateVersion from '@constants/stateVersion';
 
