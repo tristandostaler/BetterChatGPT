@@ -5,6 +5,7 @@ import {
   FolderCollection,
   LocalStorageInterfaceV0ToV1,
   LocalStorageInterfaceV12ToV13,
+  LocalStorageInterfaceV13ToV14,
   LocalStorageInterfaceV1ToV2,
   LocalStorageInterfaceV2ToV3,
   LocalStorageInterfaceV3ToV4,
@@ -133,5 +134,23 @@ export const migrateV13 = (persistedState: LocalStorageInterfaceV12ToV13) => {
         m.locked = false;
       }
     })
+  });
+};
+
+export const migrateV14 = (persistedState: LocalStorageInterfaceV13ToV14) => {
+  persistedState.chats.forEach((chat) => {
+    if(chat.config.model.toString() == "gpt-4-turbo-preview") {
+      chat.config.model = 'gpt-4-turbo';
+    }
+  });
+  if(persistedState.defaultChatConfig.model.toString() == "gpt-4-turbo-preview") {
+    persistedState.defaultChatConfig.model = 'gpt-4-turbo';
+  }
+  persistedState.prompts.forEach((prompt) => {
+    prompt.prompt = prompt.prompt.replaceAll("~ Model: gpt-4-turbo-preview ~", "~ Model: gpt-4-turbo ~")
+  });
+
+  persistedState.publicPrompts.forEach((prompt) => {
+    prompt.prompt = prompt.prompt.replaceAll("~ Model: gpt-4-turbo-preview ~", "~ Model: gpt-4-turbo ~")
   });
 };

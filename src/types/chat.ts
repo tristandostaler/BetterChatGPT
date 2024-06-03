@@ -162,3 +162,6 @@ export interface LocalStorageInterfaceV12ToV13
   extends LocalStorageInterfaceV8ToV12 {
 }
 
+export interface LocalStorageInterfaceV13ToV14
+  extends LocalStorageInterfaceV12ToV13 {
+}
