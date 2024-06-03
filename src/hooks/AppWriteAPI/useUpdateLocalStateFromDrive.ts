@@ -3,8 +3,9 @@ import React from 'react';
 import useStore from '@store/cloud-auth-store';
 import useLocalStore from '@store/store';
 import useGetFile from './useGetFile';
-import { migrateV12, migrateV13, migrateV8 } from '@store/migrate';
-import { LocalStorageInterfaceV12ToV13, LocalStorageInterfaceV8ToV12, LocalStorageInterfaceV8ToV9 } from '@type/chat';
+import { migrateState, migrateV8 } from './migrate';
+import { LocalStorageInterfaceV8ToV9 } from '@type/chat';
+import stateVersion from '@constants/stateVersion';
 
 const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySaving: Function, isCurrentlySaving: Function) => {
     const getFile = useGetFile(isLoginProcess);
@@ -33,21 +34,8 @@ const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySavin
             if (!state.version) {
                 migrateV8(state as LocalStorageInterfaceV8ToV9);
             }
-            else {
-                switch (state.version) {
-                    case 8:
-                    case 9:
-                    case 10:
-                        migrateV8(state as LocalStorageInterfaceV8ToV9);
-                        migrateV12(state as LocalStorageInterfaceV8ToV12);
-                        break;
-                    case 11:
-                        migrateV12(state as LocalStorageInterfaceV8ToV12);
-                        break;
-                    case 12:
-                        migrateV13(state as LocalStorageInterfaceV12ToV13);
-                        break;
-                }
+            else if(state.version < stateVersion){
+                migrateState(state, state.version);
             }
 
             var hsm = getHideSideMenu();
