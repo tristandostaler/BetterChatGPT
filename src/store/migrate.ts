@@ -156,7 +156,7 @@ export const migrateV14 = (persistedState: LocalStorageInterfaceV13ToV14) => {
   });
 };
 
-export const migrateState = (persistedState, version) => {
+export const migrateState = (persistedState: StoreState, version: number) => {
   switch (version) {
     case 0:
       migrateV0(persistedState as LocalStorageInterfaceV0ToV1);

@@ -5,6 +5,7 @@ import useLocalStore from '@store/store';
 import useGetFile from './useGetFile';
 import { migrateState, migrateV8 } from './migrate';
 import { LocalStorageInterfaceV8ToV9 } from '@type/chat';
+import stateVersion from '@constants/stateVersion';
 
 const useUpdateLocalStateFromDrive = (isLoginProcess: boolean, setCurrentlySaving: Function, isCurrentlySaving: Function) => {
     const getFile = useGetFile(isLoginProcess);
