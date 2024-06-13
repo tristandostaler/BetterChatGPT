@@ -40,7 +40,8 @@ const ShareGPT = React.memo(() => {
 
   return (
     <>
-      <button
+      <!-- 
+        <button
         className='btn btn-neutral'
         onClick={() => {
           setIsModalOpen(true);
@@ -56,6 +57,7 @@ const ShareGPT = React.memo(() => {
           handleConfirm={handleConfirm}
         />
       )}
+      -->
     </>
   );
 });
