@@ -41,7 +41,7 @@ const ShareGPT = React.memo(() => {
   return (
     <>
       <button
-        style={{ visibility: 'hidden!important' }}
+        style={{ visibility: "hidden" }}
         className='btn btn-neutral'
         onClick={() => {
           setIsModalOpen(true);
