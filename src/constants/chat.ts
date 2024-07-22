@@ -41,6 +41,11 @@ export const modelCost = {
     completion: { price: 0.015, unit: 1000 },
     modelMaxToken: 128000,
   },
+  'gpt-4o-mini': {
+    prompt: { price: 0.00015, unit: 1000 },
+    completion: { price: 0.006, unit: 1000 },
+    modelMaxToken: 128000,
+  }
 };
 
 export const modelOptions: ModelOptions[] = Object.keys(modelCost) as ModelOptions[];
