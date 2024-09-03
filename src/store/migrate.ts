@@ -157,7 +157,7 @@ export const migrateV14 = (persistedState: LocalStorageInterfaceV13ToV14) => {
   });
 };
 
-export const migrateV15 = (persistedState: LocalStorageInterfaceV14ToV15) => {
+export const migrateV15 = (persistedState: LocalStorageInterfaceV14ToV16) => {
   persistedState.chats.forEach((chat) => {
     if(chat.config.model.toString() == "gpt-3.5-turbo" || chat.config.model.toString() == "gpt-3.5-turbo-16k") {
       chat.config.model = 'gpt-4o-mini';
