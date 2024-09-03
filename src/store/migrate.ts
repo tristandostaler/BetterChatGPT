@@ -156,6 +156,26 @@ export const migrateV14 = (persistedState: LocalStorageInterfaceV13ToV14) => {
   });
 };
 
+export const migrateV15 = (persistedState: LocalStorageInterfaceV14ToV15) => {
+  persistedState.chats.forEach((chat) => {
+    if(chat.config.model.toString() == "gpt-3.5-turbo" || chat.config.model.toString() == "gpt-3.5-turbo-16k") {
+      chat.config.model = 'gpt-4o-mini';
+    }
+  });
+  if(persistedState.defaultChatConfig.model.toString() == "gpt-3.5-turbo" || persistedState.defaultChatConfig.model.toString() == "gpt-3.5-turbo-16k") {
+    persistedState.defaultChatConfig.model = 'gpt-4o-mini';
+  }
+  persistedState.prompts.forEach((prompt) => {
+    prompt.prompt = prompt.prompt.replaceAll("~ Model: gpt-3.5-turbo-16k ~", "~ Model: gpt-4o-mini ~");
+    prompt.prompt = prompt.prompt.replaceAll("~ Model: gpt-3.5-turbo ~", "~ Model: gpt-4o-mini ~");
+  });
+
+  persistedState.publicPrompts.forEach((prompt) => {
+    prompt.source = prompt.source.replaceAll("~ Model: gpt-3.5-turbo-16k ~", "~ Model: gpt-4o-mini ~")
+    prompt.source = prompt.source.replaceAll("~ Model: gpt-3.5-turbo ~", "~ Model: gpt-4o-mini ~")
+  });
+};
+
 export const migrateState = (persistedState: any, version: number) => {
   switch (version) {
     case 0:

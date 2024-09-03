@@ -16,16 +16,6 @@ export const _defaultSystemMessage =
   '{{SystemPrompt}}';
 
 export const modelCost = {
-  'gpt-3.5-turbo-16k': {
-    prompt: { price: 0.003, unit: 1000 },
-    completion: { price: 0.004, unit: 1000 },
-    modelMaxToken: 16384,
-  },
-  'gpt-3.5-turbo': {
-    prompt: { price: 0.002, unit: 1000 },
-    completion: { price: 0.002, unit: 1000 },
-    modelMaxToken: 4096,
-  },
   'gpt-4': {
     prompt: { price: 0.03, unit: 1000 },
     completion: { price: 0.06, unit: 1000 },
@@ -50,7 +40,7 @@ export const modelCost = {
 
 export const modelOptions: ModelOptions[] = Object.keys(modelCost) as ModelOptions[];
 
-export const defaultModel = 'gpt-3.5-turbo-16k';
+export const defaultModel = 'gpt-4o-mini';
 
 export const minResponseSize = 500;
 

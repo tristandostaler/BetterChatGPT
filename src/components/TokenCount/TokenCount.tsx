@@ -13,7 +13,7 @@ const TokenCount = React.memo(() => {
       state.chats ? (state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].messages : []) : [],
     shallow
   );
-  var defaultModel = 'gpt-3.5-turbo' as keyof typeof modelCost;
+  var defaultModel = 'gpt-4o-mini' as keyof typeof modelCost;
   const model = useStore((state) =>
     state.chats
       ? state.chats[state.currentChatIndex] ? state.chats[state.currentChatIndex].config ? state.chats[state.currentChatIndex].config.model
