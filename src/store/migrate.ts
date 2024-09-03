@@ -6,6 +6,7 @@ import {
   LocalStorageInterfaceV0ToV1,
   LocalStorageInterfaceV12ToV13,
   LocalStorageInterfaceV13ToV14,
+  LocalStorageInterfaceV14ToV16,
   LocalStorageInterfaceV1ToV2,
   LocalStorageInterfaceV2ToV3,
   LocalStorageInterfaceV3ToV4,
@@ -219,6 +220,9 @@ export const migrateState = (persistedState: any, version: number) => {
       break;
     case 14:
       migrateV14(persistedState as LocalStorageInterfaceV13ToV14);
+      break;
+    case 15:
+      migrateV15(persistedState as LocalStorageInterfaceV14ToV16);
       break;
   }
   return persistedState as StoreState;

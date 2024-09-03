@@ -1,3 +1,3 @@
-const stateVersion: number = 15;
+const stateVersion: number = 16;
 
 export default stateVersion;
