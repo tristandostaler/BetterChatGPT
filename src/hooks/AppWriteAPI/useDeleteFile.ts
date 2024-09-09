@@ -10,7 +10,7 @@ const useDeleteFile = (isLoginProcess: boolean) => {
     }
 
     const deleteFile = (fileName: string) => {
-        return storage.deleteFile(storageBucketId, fileName).catch(reLogin);;
+        return storage.deleteFile(storageBucketId, fileName).catch((reason) => reLogin(reason));;
     }
     return deleteFile;
 };
