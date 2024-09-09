@@ -11,8 +11,7 @@ const useLogout = () => {
     const logout = () => {
         setIsAppWriteLoggedIn(false);
         setFileId(undefined);
-        var session = account.getSession("current");
-        account.deleteSession(session["$id"]);
+        account.getSession("current").then((session) => { account.deleteSession(session["$id"]); } );
     }
     return logout;
 };
