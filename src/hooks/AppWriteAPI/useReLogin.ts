@@ -11,8 +11,8 @@ const useReLogin = () => {
 
     const reLogin = (reason: any) => {
         console.log(reason);
+        logout();
         return sleep(1000).then(() => {
-            logout();
             login();
         });
     }
