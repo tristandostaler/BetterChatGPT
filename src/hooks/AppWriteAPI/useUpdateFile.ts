@@ -14,7 +14,7 @@ const useUpdateFile = () => {
 
     const updateFile = (fileContent: string): Promise<any> => {
         var fileName = fileId();
-        return deleteFile(fileName).then(() => { return sleep(100).then(() => { return createFile(fileName, fileContent); }) }).catch((reason) => { reLogin(reason); });
+        return deleteFile(fileName).then(() => { return sleep(100).then(() => { return createFile(fileName, fileContent); }) });
     }
     return updateFile;
 };
