@@ -20,31 +20,37 @@ export const modelCost = {
     prompt: { price: 0.015, unit: 1000 },
     completion: { price: 0.06, unit: 1000 },
     modelMaxToken: 32768,
+    supportFunctions: false,
   },
   'o1-mini': {
     prompt: { price: 0.003, unit: 1000 },
     completion: { price: 0.012, unit: 1000 },
     modelMaxToken: 65536,
+    supportFunctions: false,
   },
   'gpt-4': {
     prompt: { price: 0.03, unit: 1000 },
     completion: { price: 0.06, unit: 1000 },
     modelMaxToken: 8192,
+    supportFunctions: true,
   },
   'gpt-4-turbo': {
     prompt: { price: 0.01, unit: 1000 },
     completion: { price: 0.03, unit: 1000 },
     modelMaxToken: 128000,
+    supportFunctions: true,
   },
   'gpt-4o': {
     prompt: { price: 0.005, unit: 1000 },
     completion: { price: 0.015, unit: 1000 },
     modelMaxToken: 128000,
+    supportFunctions: true,
   },
   'gpt-4o-mini': {
     prompt: { price: 0.00015, unit: 1000 },
     completion: { price: 0.006, unit: 1000 },
     modelMaxToken: 128000,
+    supportFunctions: true,
   }
 };
 

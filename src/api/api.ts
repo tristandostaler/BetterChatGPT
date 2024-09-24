@@ -4,7 +4,7 @@ import { isAzureEndpoint } from '@utils/api';
 import { adjustConfigAndRemoveConfigContentInMessages } from './helper';
 import { limitMessageTokens } from '@utils/messageUtils';
 import { functionsSchemas, functionsSchemaTokens } from './functions'
-import { minResponseSize } from '@constants/chat';
+import { modelCost, minResponseSize } from '@constants/chat';
 
 
 async function prepareStreamAndGetResponse(customHeaders: Record<string, string> | undefined, messagesToSend: MessageInterface[], config: ConfigInterface, apiKey: string | undefined, endpoint: string, stream: boolean) {
@@ -19,8 +19,12 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
   if (tempConfig.max_tokens > minResponseSize + 100) {
     minResponseLength = minResponseSize;
   }
-  var functionsSchemaTokenLength = functionsSchemaTokens(tempConfig.model);
-  tempConfig.max_tokens -= functionsSchemaTokenLength;
+
+  var functionsSchemaTokenLength = 0;
+  if(modelCost[tempConfig.model].supportFunctions) {
+    functionsSchemaTokenLength = functionsSchemaTokens(tempConfig.model);
+    tempConfig.max_tokens -= functionsSchemaTokenLength;
+  }
 
   const adjustedMessagesTuple = limitMessageTokens(
     messagesToSend,
@@ -46,16 +50,29 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
     }
   }
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
+  var bodyToSend = "";
+  if(modelCost[tempConfig.model].supportFunctions) {
+    bodyToSend = JSON.stringify({
       messages,
       ...tempConfig,
       max_tokens: undefined,
       stream: stream,
       functions: functionsSchemas
-    }),
+    });
+  } else {
+    bodyToSend = JSON.stringify({
+      messages,
+      ...tempConfig,
+      max_tokens: undefined,
+      stream: stream
+    });
+  }
+  
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers,
+    body: bodyToSend,
   });
   return response;
 }
@@ -87,7 +104,7 @@ export const getChatCompletionStream = async (
     if (text.includes('model_not_found')) {
       throw new Error(
         text +
-        '\nMessage from Better ChatGPT:\nPlease ensure that you have access to the GPT-4 API!'
+        '\nMessage from Better ChatGPT:\nPlease ensure that you have access to the selected API!'
       );
     } else {
       throw new Error(

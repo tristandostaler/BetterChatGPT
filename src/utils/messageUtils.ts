@@ -59,7 +59,7 @@ export const limitMessageTokens = (
 
   for (let i = messages.length - 1; i >= 0; i--) {
     if (messages[i].locked || i == messages.length - 1) {
-      const count = countTokens([messages[i]], model);
+      const count = countTokens([messages[i]], model); // TODO: validate if counting the functions is stil valid when functions are not supported
       tokenCount += count;
     }
   }
