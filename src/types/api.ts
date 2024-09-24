@@ -9,7 +9,7 @@ export interface EventSourceDataInterface {
 export type EventSourceData = EventSourceDataInterface | '[DONE]';
 
 export interface EventSourceDataChoices {
-  delta: {
+  delta?: {
     content?: string;
     function_call?: {
       name: string;
@@ -17,6 +17,11 @@ export interface EventSourceDataChoices {
     }
     role?: string;
   };
+  message?: {
+    role: string;
+    content: string;
+    refusal?: {};
+  }
   finish_reason?: string;
   index: number;
 }

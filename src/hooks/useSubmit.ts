@@ -327,17 +327,25 @@ const useSubmit = () => {
               if (typeof curr === 'string') {
                 partial += curr;
               } else {
-                if (curr.choices[0].delta.function_call?.name) {
-                  fnName += curr.choices[0].delta.function_call?.name;
-                  if (!isFunctionCall) {
-                    isFunctionCall = true;
-                    output += " Plugin call requested. Loading..."
+                var content = undefined;
+                if(curr.choices[0].delta) {
+                  if (curr.choices[0].delta.function_call?.name) {
+                    fnName += curr.choices[0].delta.function_call?.name;
+                    if (!isFunctionCall) {
+                      isFunctionCall = true;
+                      output += " Plugin call requested. Loading..."
+                    }
                   }
+                  if (curr.choices[0].delta.function_call?.arguments) {
+                    fnArgs += curr.choices[0].delta.function_call?.arguments;
+                  }
+
+                  content = curr.choices[0].delta.content
                 }
-                if (curr.choices[0].delta.function_call?.arguments) {
-                  fnArgs += curr.choices[0].delta.function_call?.arguments;
+                if(curr.choices[0].message) {
+                  content = curr.choices[0].message.content
                 }
-                const content = curr.choices[0].delta.content;
+
                 if (content) output += content;
               }
               return output;
