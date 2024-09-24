@@ -6,7 +6,7 @@ import { ChatInterface, ConfigInterface, MessageInterface, ModelOptions } from '
 import { getChatCompletion, getChatCompletionStream } from '@api/api';
 import { parseEventSource } from '@api/helper';
 import { limitMessageTokens } from '@utils/messageUtils';
-import { _defaultChatConfig, minResponseSize } from '@constants/chat';
+import { _defaultChatConfig, minResponseSize, modelCost } from '@constants/chat';
 import { officialAPIEndpoint } from '@constants/auth';
 import { executeFunction, functionsSchemaTokens, functionsSchemas } from '@api/functions';
 import { ZodError } from 'zod';
@@ -134,14 +134,20 @@ const useSubmit = () => {
     model: ModelOptions,
   ): Promise<string> => {
     let data;
+    var temp = _defaultChatConfig.temperature
+    if(!modelCost[model].supportTemperature) {
+      temp = 1;
+    }
     const adjustedConfig: ConfigInterface = {
       frequency_penalty: _defaultChatConfig.frequency_penalty,
       max_tokens: max_tokens,
       model: model,
       presence_penalty: _defaultChatConfig.presence_penalty,
-      temperature: _defaultChatConfig.temperature,
+      temperature: temp,
       top_p: _defaultChatConfig.top_p,
     };
+
+
 
     if (!apiKey || apiKey.length === 0) {
       // official endpoint
