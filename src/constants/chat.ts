@@ -16,6 +16,16 @@ export const _defaultSystemMessage =
   '{{SystemPrompt}}';
 
 export const modelCost = {
+  'o1-preview': {
+    prompt: { price: 0.015, unit: 1000 },
+    completion: { price: 0.06, unit: 1000 },
+    modelMaxToken: 32768,
+  },
+  'o1-mini': {
+    prompt: { price: 0.003, unit: 1000 },
+    completion: { price: 0.012, unit: 1000 },
+    modelMaxToken: 65536,
+  },
   'gpt-4': {
     prompt: { price: 0.03, unit: 1000 },
     completion: { price: 0.06, unit: 1000 },
