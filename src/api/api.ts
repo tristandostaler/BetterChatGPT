@@ -26,6 +26,10 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
     tempConfig.max_tokens -= functionsSchemaTokenLength;
   }
 
+  if(!modelCost[tempConfig.model].supportTemperature) {
+    config.temperature = 1;
+  }
+
   const adjustedMessagesTuple = limitMessageTokens(
     messagesToSend,
     config.max_tokens,
@@ -51,12 +55,13 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
   }
 
   var bodyToSend = "";
+
   if(modelCost[tempConfig.model].supportFunctions) {
     bodyToSend = JSON.stringify({
       messages,
       ...tempConfig,
       max_tokens: undefined,
-      stream: stream,
+      stream: (stream && modelCost[tempConfig.model].supportStreaming),
       functions: functionsSchemas
     });
   } else {
@@ -64,7 +69,7 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
       messages,
       ...tempConfig,
       max_tokens: undefined,
-      stream: stream
+      stream: (stream && modelCost[tempConfig.model].supportStreaming)
     });
   }
   
