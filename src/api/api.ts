@@ -27,7 +27,7 @@ async function prepareStreamAndGetResponse(customHeaders: Record<string, string>
   }
 
   if(!modelCost[tempConfig.model].supportTemperature) {
-    config.temperature = 1;
+    tempConfig.temperature = 1;
   }
 
   const adjustedMessagesTuple = limitMessageTokens(
